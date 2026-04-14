@@ -84,3 +84,5 @@ W_O mixes information across all 12 heads into a single unified representation.
 - [[layer-normalization]]
 - [[feed-forward-network]]
 - [[kv-caching]]
+- [[causal-masking]]
+- [[attention-is-all-you-need]]

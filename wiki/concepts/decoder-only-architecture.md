@@ -63,3 +63,5 @@ Modern decoder-only models use **Pre-Layer Normalization** (normalize before the
 - [[layer-normalization]]
 - [[feed-forward-network]]
 - [[embeddings]]
+- [[causal-masking]]
+- [[residual-connections]]

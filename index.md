@@ -22,9 +22,17 @@
 - [Decoding Strategies](wiki/concepts/decoding-strategies.md) — Temperature scaling, top-k sampling, torch.multinomial; quality-creativity trade-off
 - [Weight Tying](wiki/concepts/weight-tying.md) — tok_emb and out_head share the same tensor; reduces 38.6M params, improves convergence
 - [Fine-Tuning](wiki/concepts/fine-tuning.md) — Instruction vs classification fine-tuning; PEFT, LoRA, QLoRA
+- [Positional Embeddings](wiki/concepts/positional-embeddings.md) — Sinusoidal vs learnable (GPT-2) vs RoPE (LLaMA/Mistral); fixes broken wikilink
+- [Residual Connections](wiki/concepts/residual-connections.md) — Skip connections preventing vanishing gradients in deep networks
+- [Causal Masking](wiki/concepts/causal-masking.md) — Look-ahead mask enforcing autoregressive structure; register_buffer pattern
 
 ## Entities
 - [Attention Is All You Need](wiki/entities/attention-is-all-you-need.md) — Vaswani et al. 2017 paper introducing the Transformer
 - [tiktoken](wiki/entities/tiktoken.md) — OpenAI's BPE tokenizer library for GPT models
 - [LLaMA](wiki/entities/llama.md) — Meta's open-source model family; 405B near GPT-4 on MMLU
 - [GPT Family](wiki/entities/gpt-family.md) — OpenAI's decoder-only models GPT-2 through GPT-5.1; architecture details and training data
+
+## Queries
+- [Input Text to Output Tokens](wiki/queries/input-to-output-workflow.md) — End-to-end workflow with shape trace and ASCII diagram
+- [Lint — 2026-04-14](wiki/queries/lint-2026-04-14.md) — 1 broken link, 3 under-linked pages, 4 missing concepts, 5 source gaps
+- [Feasible Research Topics](wiki/queries/research-topics-feasible.md) — Layer-wise emergence probing and few-shot LoRA vs full fine-tuning

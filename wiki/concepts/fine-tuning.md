@@ -64,3 +64,4 @@ PEFT is most valuable for instruction fine-tuning but can also be applied to cla
 - [[scaling-laws]]
 - [[gpt2-from-scratch]]
 - [[decoder-only-architecture]]
+- [[llama]]

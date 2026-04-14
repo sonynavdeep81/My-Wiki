@@ -1,0 +1,225 @@
+{
+  "main": {
+    "id": "a415441ee010a5c5",
+    "type": "split",
+    "children": [
+      {
+        "id": "c32dbef39007d006",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "86e50bf81899f0d9",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "CLAUDE.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "CLAUDE"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "vertical"
+  },
+  "left": {
+    "id": "990d992bbeb40cbb",
+    "type": "split",
+    "children": [
+      {
+        "id": "9872d8749f6ceb46",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "d1c0d21067f8fdaf",
+            "type": "leaf",
+            "state": {
+              "type": "file-explorer",
+              "state": {
+                "sortOrder": "alphabetical",
+                "autoReveal": false
+              },
+              "icon": "lucide-folder-closed",
+              "title": "Files"
+            }
+          },
+          {
+            "id": "2ed0e6007239342a",
+            "type": "leaf",
+            "state": {
+              "type": "search",
+              "state": {
+                "query": "",
+                "matchingCase": false,
+                "explainSearch": false,
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical"
+              },
+              "icon": "lucide-search",
+              "title": "Search"
+            }
+          },
+          {
+            "id": "e63a5f1aac08706a",
+            "type": "leaf",
+            "state": {
+              "type": "bookmarks",
+              "state": {},
+              "icon": "lucide-bookmark",
+              "title": "Bookmarks"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300
+  },
+  "right": {
+    "id": "b4181b98fe7b2084",
+    "type": "split",
+    "children": [
+      {
+        "id": "17102bc69ff23ef0",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "e7ba3b7a52801e86",
+            "type": "leaf",
+            "state": {
+              "type": "backlink",
+              "state": {
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical",
+                "showSearch": false,
+                "searchQuery": "",
+                "backlinkCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-coming-in",
+              "title": "Backlinks"
+            }
+          },
+          {
+            "id": "ffa4475525907110",
+            "type": "leaf",
+            "state": {
+              "type": "outgoing-link",
+              "state": {
+                "linksCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-going-out",
+              "title": "Outgoing links"
+            }
+          },
+          {
+            "id": "924ad00b299bc6fa",
+            "type": "leaf",
+            "state": {
+              "type": "tag",
+              "state": {
+                "sortOrder": "frequency",
+                "useHierarchy": true,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-tags",
+              "title": "Tags"
+            }
+          },
+          {
+            "id": "b777875830149774",
+            "type": "leaf",
+            "state": {
+              "type": "all-properties",
+              "state": {
+                "sortOrder": "frequency",
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-archive",
+              "title": "All properties"
+            }
+          },
+          {
+            "id": "70a1268257bc2afc",
+            "type": "leaf",
+            "state": {
+              "type": "outline",
+              "state": {
+                "file": "Untitled.md",
+                "followCursor": false,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-list",
+              "title": "Outline of Untitled"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300,
+    "collapsed": true
+  },
+  "left-ribbon": {
+    "hiddenItems": {
+      "switcher:Open quick switcher": false,
+      "graph:Open graph view": false,
+      "canvas:Create new canvas": false,
+      "daily-notes:Open today's daily note": false,
+      "templates:Insert template": false,
+      "command-palette:Open command palette": false,
+      "bases:Create new base": false,
+      "marp-slides:Show Slide Preview": false
+    }
+  },
+  "active": "86e50bf81899f0d9",
+  "lastOpenFiles": [
+    "log.md.tmp.426446.1776141410981",
+    "index.md.tmp.426446.1776141399701",
+    "wiki/queries/research-topics-feasible.md",
+    "wiki/queries/research-topics-feasible.md.tmp.426446.1776141386170",
+    "log.md.tmp.426446.1776140689175",
+    "index.md.tmp.426446.1776140673876",
+    "wiki/concepts/decoder-only-architecture.md.tmp.426446.1776140657610",
+    "wiki/concepts/layer-normalization.md.tmp.426446.1776140636930",
+    "wiki/entities/llama.md.tmp.426446.1776140623511",
+    "wiki/concepts/multi-head-attention.md.tmp.426446.1776140609180",
+    "wiki/concepts/fine-tuning.md.tmp.426446.1776140594318",
+    "wiki/concepts/causal-masking.md",
+    "wiki/concepts/causal-masking.md.tmp.426446.1776140575280",
+    "wiki/concepts/residual-connections.md",
+    "wiki/concepts/positional-embeddings.md",
+    "wiki/queries/lint-2026-04-14.md",
+    "wiki/queries/input-to-output-workflow.md",
+    "wiki/entities/gpt-family.md",
+    "wiki/concepts/fine-tuning.md",
+    "wiki/concepts/weight-tying.md",
+    "wiki/concepts/decoding-strategies.md",
+    "wiki/concepts/gpt2-from-scratch.md",
+    "wiki/sources/GPT2_Clean.md",
+    "wiki/entities/llama.md",
+    "wiki/entities/tiktoken.md",
+    "wiki/entities/attention-is-all-you-need.md",
+    "wiki/concepts/inference-scaling.md",
+    "wiki/concepts/kv-caching.md",
+    "wiki/concepts/emergent-abilities.md",
+    "wiki/concepts/scaling-laws.md",
+    "wiki/concepts/feed-forward-network.md",
+    "wiki/concepts/layer-normalization.md",
+    "wiki/concepts/multi-head-attention.md",
+    "wiki/concepts/embeddings.md",
+    "wiki/concepts/byte-pair-encoding.md",
+    "wiki/concepts/tokenization.md",
+    "Untitled.canvas"
+  ]
+}
