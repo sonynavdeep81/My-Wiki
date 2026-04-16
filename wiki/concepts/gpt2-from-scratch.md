@@ -96,3 +96,5 @@ The final `out_head` is NOT in the checkpoint — it shares `wte`, so it's impli
 - [[decoding-strategies]]
 - [[fine-tuning]]
 - [[layer-normalization]]
+- [[pytorch-nn-building-blocks|PyTorch nn Building Blocks]]
+- [[optimizer|Adam and AdamW Optimizers]]

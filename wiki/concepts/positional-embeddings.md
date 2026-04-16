@@ -2,7 +2,7 @@
 title: Positional Embeddings
 type: concept
 tags: [positional-embeddings, transformer, rope, sinusoidal, learnable]
-sources: 1
+sources: 2
 updated: 2026-04-14
 ---
 

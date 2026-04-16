@@ -10,21 +10,28 @@ updated: 2026-04-13
 
 **Summary**: The core mechanism of the transformer that allows each token to attend to all previous tokens simultaneously, using multiple parallel "heads" to capture different types of relationships.
 
+> **Note on concrete numbers**: Shape traces in this page use your GPT-2 implementation (d_model=768, 12 heads) unless explicitly labelled otherwise. The [[attention-is-all-you-need]] paper uses d_model=512, 8 heads.
+
 ## Q, K, V Matrices
 
-Given input X of shape (T, d_model) — e.g., (4, 768):
+Given input X of shape (T, d_model):
 
 ```
-Q = X · W_Q    {(4,768) · (768,768) → (4,768)}
-K = X · W_K    {(4,768) · (768,768) → (4,768)}
-V = X · W_V    {(4,768) · (768,768) → (4,768)}
+Q = X · W_Q    {(T, d_model) · (d_model, d_model) → (T, d_model)}
+K = X · W_K    {(T, d_model) · (d_model, d_model) → (T, d_model)}
+V = X · W_V    {(T, d_model) · (d_model, d_model) → (T, d_model)}
 ```
 
 W_Q, W_K, W_V are **learned weight matrices**.
 
 ## Multiple Heads
 
-For GPT-2 with d_model=768 and 12 heads: each head gets d_k = 768/12 = **64 dimensions**.
+Each head gets d_k = d_model / h dimensions. d_k=64 in both implementations below — a coincidence of the chosen configs.
+
+**In your GPT-2 implementation**: d_model=768, h=12 → d_k = 768/12 = **64**
+**In the Attention Is All You Need paper**: d_model=512, h=8 → d_k = 512/8 = **64**
+
+Using your GPT-2 config as the running example (T=4, d_model=768, 12 heads):
 
 Q, K, V are split into 12 heads:
 - Shape before split: (4, 768)
@@ -81,6 +88,7 @@ W_O mixes information across all 12 heads into a single unified representation.
 
 - [[transformer-architecture]]
 - [[decoder-only-architecture]]
+- [[cross-attention]]
 - [[layer-normalization]]
 - [[feed-forward-network]]
 - [[kv-caching]]
