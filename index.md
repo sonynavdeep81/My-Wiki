@@ -40,12 +40,14 @@
 - [LLaMA](wiki/entities/llama.md) — Meta's open-source model family; 405B near GPT-4 on MMLU
 - [GPT Family](wiki/entities/gpt-family.md) — OpenAI's decoder-only models GPT-2 through GPT-5.1; architecture details and training data
 
+## Lint
+- [Lint — 2026-04-14](wiki/lint/lint-2026-04-14.md) — 1 broken link, 3 under-linked pages, 4 missing concepts, 5 source gaps
+- [Lint — 2026-04-14b](wiki/lint/lint-2026-04-14b.md) — Fixed 3 broken wikilinks + 1 orphan; 4 knowledge gaps suggested
+- [Lint — 2026-04-14c](wiki/lint/lint-2026-04-14c.md) — Clean: 0 orphans, 0 broken links; 3 gaps flagged (Label Smoothing, AdamW, BLEU)
+- [Lint — 2026-04-14d](wiki/lint/lint-2026-04-14d.md) — Fixed 2 orphans (optimizer, label-smoothing); wiki fully clean
+
 ## Queries
 - [Input Text to Output Tokens](wiki/queries/input-to-output-workflow.md) — End-to-end workflow with shape trace and ASCII diagram
-- [Lint — 2026-04-14](wiki/queries/lint-2026-04-14.md) — 1 broken link, 3 under-linked pages, 4 missing concepts, 5 source gaps
-- [Lint — 2026-04-14b](wiki/queries/lint-2026-04-14b.md) — Fixed 3 broken wikilinks + 1 orphan; 4 knowledge gaps suggested
-- [Lint — 2026-04-14c](wiki/queries/lint-2026-04-14c.md) — Clean: 0 orphans, 0 broken links; 3 gaps flagged (Label Smoothing, AdamW, BLEU)
-- [Lint — 2026-04-14d](wiki/queries/lint-2026-04-14d.md) — Fixed 2 orphans (optimizer, label-smoothing); wiki fully clean
 - [Feasible Research Topics](wiki/queries/research-topics-feasible.md) — Layer-wise emergence probing and few-shot LoRA vs full fine-tuning
 - [GPT-2 vs Attention Is All You Need — Params](wiki/queries/gpt2-vs-attention-paper-params.md) — Full parameter comparison: your decoder-only GPT-2 vs the original encoder-decoder Transformer
 - [Evaluation Metrics for a Decoder-Only LLM](wiki/queries/llm-evaluation-metrics.md) — Loss, perplexity, generation quality, fine-tuning metrics; BLEU/ROUGE not applicable

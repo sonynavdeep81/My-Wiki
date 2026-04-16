@@ -12,6 +12,7 @@ The LLM writes and maintains all files in wiki/. I rarely edit them directly.
 - wiki/sources/ → summary per raw source
 - wiki/entities/ → people, tools, papers, models
 - wiki/queries/ → saved Q&A outputs
+- wiki/lint/ → lint run outputs (orphan checks, gap reports, contradiction flags)
 - index.md → master catalog with one-line summary per page
 - log.md → append-only log, format: ## [YYYY-MM-DD] action | title
 
@@ -39,7 +40,7 @@ The LLM writes and maintains all files in wiki/. I rarely edit them directly.
 - Find concepts mentioned but without their own page
 - Flag contradictions between pages
 - Suggest new sources to fill knowledge gaps
-- Append findings to wiki/queries/lint-[date].md
+- Append findings to wiki/lint/lint-[date].md
 
 ## Format for wiki pages:
 
