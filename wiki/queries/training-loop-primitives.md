@@ -23,7 +23,7 @@ The model itself doesn't learn anything when you call these — it's just tellin
 
 | Layer | `model.train()` | `model.eval()` |
 |---|---|---|
-| [[dropout\|Dropout]] | Randomly switches off some neurons | All neurons active |
+| [[dropout]] | Randomly switches off some neurons | All neurons active |
 | BatchNorm | Uses current batch's statistics | Uses stored statistics |
 
 **Why placed where they are:**

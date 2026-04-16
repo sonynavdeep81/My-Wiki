@@ -39,7 +39,7 @@ self.scale = nn.Parameter(torch.ones(768))
 - `requires_grad=True` by default
 - Auto-registered when assigned as a module attribute
 - Use when: you need a **custom weight** not covered by a built-in layer
-  - Examples: [[Layer Normalization|LayerNorm]]'s γ and β, RoPE rotation frequencies, any learned scalar
+  - Examples: [[layer-normalization|LayerNorm]]'s γ and β, RoPE rotation frequencies, any learned scalar
 
 ---
 
@@ -54,7 +54,7 @@ self.proj = nn.Linear(768, 3072)  # W: (3072, 768), b: (3072,)
 - Input: float tensor of shape `(..., in_features)`
 - Output: float tensor of shape `(..., out_features)`
 - Internally holds two `nn.Parameter`s: `weight` and `bias`
-- Use when: projecting continuous feature vectors — Q/K/V projections in [[Multi-Head Attention]], [[feed-forward-network|FFN]] layers, output classification head
+- Use when: projecting continuous feature vectors — Q/K/V projections in [[multi-head-attention]], [[feed-forward-network|FFN]] layers, output classification head
 
 ---
 
@@ -70,7 +70,7 @@ self.tok_emb = nn.Embedding(50257, 768)  # (vocab_size, d_model)
 - Output: float tensor — rows selected from the weight matrix
 - Forward pass is pure indexing (`weight[idx]`), not a matrix multiply
 - Use when: converting discrete tokens or positions into continuous vectors
-- See [[Embeddings]] and [[Weight Tying]] (GPT-2 shares this matrix with the output head)
+- See [[embeddings]] and [[weight-tying]] (GPT-2 shares this matrix with the output head)
 
 **vs `nn.Linear`**: `nn.Embedding` takes `int` indices and does table lookup; `nn.Linear` takes `float` tensors and does `xW^T`.
 
@@ -91,7 +91,7 @@ self.ff = nn.Sequential(
 - No custom `forward()` needed — just list the layers in order
 - Use when: the forward pass is a **simple pipeline** with no branching or intermediate reuse
 - Cannot express: skip/residual connections, attention (needs separate Q/K/V), anything needing intermediate values
-- Works perfectly for the [[feed-forward-network|FFN]] sub-block; a custom `forward()` is needed for [[Multi-Head Attention]]
+- Works perfectly for the [[feed-forward-network|FFN]] sub-block; a custom `forward()` is needed for [[multi-head-attention]]
 
 ---
 
@@ -109,9 +109,9 @@ nn.Module            ← skeleton: registry, device mgmt, save/load
 
 ## Related
 
-- [[Embeddings]]
-- [[Multi-Head Attention]]
+- [[embeddings]]
+- [[multi-head-attention]]
 - [[feed-forward-network|Feed-Forward Network (FFN)]]
-- [[Layer Normalization]]
-- [[Weight Tying]]
+- [[layer-normalization]]
+- [[weight-tying]]
 - [[gpt2-from-scratch|GPT-2 From-Scratch Patterns]]

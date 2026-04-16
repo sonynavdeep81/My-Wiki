@@ -1,3 +1,12 @@
+## [2026-04-16] lint | Wiki Lint (run 5)
+
+- Fixed 6 broken wikilinks: title-case slugs in pytorch-nn-building-blocks, escaped-pipe in training-loop-primitives
+- 0 orphan concepts, 0 orphan entities
+- Under-linked: label-smoothing (1 inbound only)
+- Gaps flagged: softmax, temperature, LoRA, perplexity, warmup, backpropagation
+- Created: wiki/lint/lint-2026-04-16.md
+- Updated: index.md
+
 ## [2026-04-16] restructure | Move lint files to wiki/lint/
 
 - Created: wiki/lint/

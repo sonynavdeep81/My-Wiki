@@ -45,6 +45,7 @@
 - [Lint — 2026-04-14b](wiki/lint/lint-2026-04-14b.md) — Fixed 3 broken wikilinks + 1 orphan; 4 knowledge gaps suggested
 - [Lint — 2026-04-14c](wiki/lint/lint-2026-04-14c.md) — Clean: 0 orphans, 0 broken links; 3 gaps flagged (Label Smoothing, AdamW, BLEU)
 - [Lint — 2026-04-14d](wiki/lint/lint-2026-04-14d.md) — Fixed 2 orphans (optimizer, label-smoothing); wiki fully clean
+- [Lint — 2026-04-16](wiki/lint/lint-2026-04-16.md) — Fixed 6 broken wikilinks; 0 orphan concepts; 5 knowledge gaps flagged (softmax, temperature, LoRA, perplexity, warmup)
 
 ## Queries
 - [Input Text to Output Tokens](wiki/queries/input-to-output-workflow.md) — End-to-end workflow with shape trace and ASCII diagram
