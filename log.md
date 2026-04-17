@@ -1,3 +1,10 @@
+## [2026-04-17] compress | Aggressive compression of verbose pages
+
+- Rewrote to dense format: training-loop-primitives, why-save-optimizer-state, input-to-output-workflow, multi-head-attention, llm-evaluation-metrics
+- Line count reductions: 117→47, 88→43, 140→57, 96→53, 101→45
+- Updated CLAUDE.md: added Dense Storage Format rule
+- No information lost; analogies/padding removed
+
 ## [2026-04-16] lint | Wiki Lint (run 5)
 
 - Fixed 6 broken wikilinks: title-case slugs in pytorch-nn-building-blocks, escaped-pipe in training-loop-primitives

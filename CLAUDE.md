@@ -63,3 +63,12 @@ updated: [date]
 ## Related
 
 - [[Page Name]]
+
+## Dense Storage Format
+
+Wiki pages are notes for the LLM, not explanations for humans. Store information densely:
+- Use tables, bullet key:value pairs, code snippets
+- No prose padding, no analogies, no "think of it like..." sentences
+- The LLM reconstructs full human-friendly explanations from dense notes at query time
+- When answering the user, explain in simple, easy-to-understand language
+- Aim for maximum information per line; cut any line that restates another

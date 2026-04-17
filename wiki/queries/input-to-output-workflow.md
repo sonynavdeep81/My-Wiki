@@ -3,130 +3,54 @@ title: Complete Workflow: Input Text to Output Tokens
 type: query
 tags: [workflow, inference, tokenization, attention, decoding, end-to-end]
 sources: 2
-updated: 2026-04-14
+updated: 2026-04-17
 ---
 
 ## Complete Workflow: Input Text to Output Tokens
 
-**Summary**: End-to-end walkthrough of how a decoder-only LLM (GPT-2) transforms raw input text into output tokens, from tokenization through embedding, 12 transformer blocks, logit projection, and decoding.
+**Summary**: End-to-end shape trace from raw text → next token for a GPT-2 decoder-only LLM.
 
-## Full Pipeline Diagram
+## Pipeline
 
 ```
-INPUT TEXT
 "Every effort takes you"
-         │
-         ▼
-┌─────────────────────────────┐
-│        TOKENIZATION         │
-│  tiktoken BPE (GPT-2)       │
-│  "Every"→464, "effort"→3797 │
-│  "takes"→3332, "you"→319    │
-└─────────────┬───────────────┘
-              │  token IDs: [464, 3797, 3332, 319]   shape: (T,)
-              ▼
-┌─────────────────────────────────────────────────────┐
-│                   EMBEDDING LAYER                    │
-│                                                      │
-│  Token IDs ──► tok_emb  (50,257 × 768)  ──► (T,768) │
-│  [0,1,2,3]  ──► pos_emb (  256  × 768)  ──► (T,768) │
-│                              +                       │
-│                   final_input  (T, 768)              │
-│                    + Dropout(0.1)                    │
-└─────────────────────┬───────────────────────────────┘
-                      │  (T, 768)
-                      │
-          ┌───────────┴───────────┐
-          │   REPEAT ×12 BLOCKS   │
-          │                       │
-          │  ┌─────────────────┐  │
-          │  │   LayerNorm     │  │
-          │  └────────┬────────┘  │
-          │           │           │
-          │  ┌────────▼────────┐  │
-          │  │ MASKED MULTI-   │  │
-          │  │ HEAD ATTENTION  │  │
-          │  │                 │  │
-          │  │ X·W_Q → Q       │  │
-          │  │ X·W_K → K  ×12  │  │
-          │  │ X·W_V → V heads │  │
-          │  │                 │  │
-          │  │ Q·Kᵀ/√64        │  │
-          │  │  + causal mask  │  │  ← future tokens → -∞
-          │  │  → softmax      │  │
-          │  │  → dropout      │  │
-          │  │  ·V → concat    │  │
-          │  │  ·W_O → (T,768) │  │
-          │  └────────┬────────┘  │
-          │           │           │
-          │      + residual X     │
-          │           │           │
-          │  ┌────────▼────────┐  │
-          │  │   LayerNorm     │  │
-          │  └────────┬────────┘  │
-          │           │           │
-          │  ┌────────▼────────┐  │
-          │  │  FEED-FORWARD   │  │
-          │  │  768→3072(GELU) │  │
-          │  │     →768        │  │
-          │  └────────┬────────┘  │
-          │           │           │
-          │      + residual       │
-          │                       │
-          └───────────┬───────────┘
-                      │  (T, 768)  ← rich contextual vectors
-                      ▼
-         ┌────────────────────────┐
-         │     Final LayerNorm    │
-         └────────────┬───────────┘
-                      │
-         ┌────────────▼───────────┐
-         │   Linear Head          │
-         │   768 → 50,257 logits  │
-         └────────────┬───────────┘
-                      │  (T, 50257) — only LAST ROW used at inference
-                      ▼
-         ┌────────────────────────┐
-         │   DECODING STRATEGY    │
-         │                        │
-         │  1. top-k mask (k=25)  │  ← zero out all but top 25 logits
-         │  2. ÷ temperature(1.4) │  ← sharpen/flatten distribution
-         │  3. softmax → probs    │
-         │  4. multinomial sample │
-         └────────────┬───────────┘
-                      │  next token ID, e.g. 2651 ("forward")
-                      ▼
-         ┌────────────────────────┐
-         │   DETOKENIZE           │
-         │   2651 → "forward"     │
-         └────────────┬───────────┘
-                      │
-                      ▼
-         Append to input → repeat until [EOS] or max_length
-
-OUTPUT: "Every effort takes you forward ..."
+  → tiktoken BPE → [464, 3797, 3332, 319]          shape: (T,)
+  → tok_emb(50257×768) + pos_emb(256×768)           shape: (T, 768)
+  → Dropout(0.1)
+  → ×12 TransformerBlock:
+      LayerNorm
+      → MHA: Q=X·W_Q, K=X·W_K, V=X·W_V             (T,768)
+             scores = Q·Kᵀ/√64                      (12,T,T)
+             + causal mask (future→−∞)
+             → softmax → Dropout → ·V → concat·W_O  (T,768)
+      + residual
+      LayerNorm
+      → FFN: 768→3072(GELU)→768
+      + residual
+  → final LayerNorm
+  → out_head Linear(768→50257)                      (T, 50257)
+  → last row only                                   (50257,)
+  → top-k(25) → ÷temperature(1.4) → softmax → multinomial
+  → next token ID → detokenize → append → repeat
 ```
 
 ## Shape Trace
 
-| Stage | Shape | What changes |
+| Stage | Shape | Note |
 |---|---|---|
-| Raw text | string | — |
-| Token IDs | (4,) | Text → integers |
-| Embeddings | (4, 768) | Integers → dense vectors |
-| After each block | (4, 768) | Vectors become more contextual |
-| After 12 blocks | (4, 768) | Full context captured |
-| Logits | (4, 50257) | Project to vocab space |
-| Probabilities | (50257,) | Last row only; softmax applied |
-| Next token | scalar | One new token sampled |
+| Token IDs | (T,) | integers |
+| Embeddings | (T, 768) | tok + pos summed |
+| Each block output | (T, 768) | unchanged shape |
+| Logits | (T, 50257) | all positions |
+| Inference logits | (50257,) | last row only |
+| Sampled token | scalar | one new token |
 
-## Key Points
+## Key Facts
 
-- **Only the last row of logits is used at inference** — earlier rows were useful during training (teacher forcing) but are discarded at inference time
-- **The loop is sequential**: each new token is appended and the full forward pass re-runs — this is why inference is slow and why [[kv-caching]] matters
-- **Transformer blocks are identical in structure** but each has its own independent weights — early blocks learn syntax/grammar, middle blocks learn semantics, late blocks learn reasoning/world knowledge
-- **Causal mask** ensures token at position i can only attend to positions ≤ i — this is what allows parallel training while preserving autoregressive structure
-- **Decoding strategy** (top-k + temperature) is applied only at the final step — the model itself is deterministic up to that point
+- Inference uses last row only; earlier rows used during training (teacher forcing)
+- Forward pass re-runs on full sequence each step → why [[kv-caching]] matters
+- Causal mask enables parallel training while preserving autoregressive order
+- Decoding strategy applied only at final step; model forward is deterministic
 
 ## Related
 

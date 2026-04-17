@@ -2,99 +2,47 @@
 title: Evaluation Metrics for a Decoder-Only LLM
 type: query
 tags: [evaluation, perplexity, loss, metrics, gpt2, training]
-updated: 2026-04-14
+updated: 2026-04-17
 ---
 
 ## Evaluation Metrics for a Decoder-Only LLM
 
-**Summary**: For a decoder-only language model like your GPT-2 implementation, the primary metrics are cross-entropy loss and perplexity; generation quality is assessed manually; downstream task metrics apply only after fine-tuning.
+**Summary**: Primary metrics are cross-entropy loss + perplexity; generation quality checked manually; task metrics only after fine-tuning.
 
----
+## Training-Time Metrics
 
-## 1. Training-Time Metrics
+| Metric | Formula | Note |
+|---|---|---|
+| Cross-entropy loss | `-1/T · Σ log P(tₜ \| t<ₜ)` | Direct training objective; lower=better |
+| Perplexity | `exp(loss)` | Avg tokens model is uncertain between; GPT-2 124M ~29 on WebText |
+| Train/val gap | val_loss − train_loss | Widening → overfitting |
 
-### Cross-Entropy Loss
-The direct training objective — average negative log-likelihood over all predicted tokens:
+**Primary signal**: val_loss curve. Plateau or rise → stopped improving or overfitting.
 
-```
-Loss = -1/T · Σ log P(token_t | token_1 ... token_{t-1})
-```
+## Generation Quality (Qualitative)
 
-- Lower = better
-- Monitor both **train loss** and **validation loss**
-- Widening gap between the two = overfitting
+Manual inspection: coherence, fluency, repetition/degeneration, sampling diversity (greedy vs top-k).
 
-### Perplexity
-Exponentiation of cross-entropy loss:
-
-```
-Perplexity = exp(Loss)
-```
-
-- Intuition: on average, how many tokens is the model equally confused between?
-- Perplexity 10 → model is as uncertain as choosing uniformly among 10 tokens
-- Perplexity 1 → perfect prediction
-- GPT-2 (124M, OpenAI) achieves ~29 perplexity on WebText
-
-**This is your primary metric** — computed directly from the loss already in your training loop.
-
----
-
-## 2. Generation Quality (Qualitative)
-
-Manual inspection of generated samples:
-
-| Check | What to look for |
-|---|---|
-| Coherence | Does output make logical sense across sentences? |
-| Fluency | Does it read naturally? |
-| Repetition | Does it loop or degenerate? |
-| Sampling sanity | Does greedy differ meaningfully from top-k? |
-
-A model can have decent perplexity but still generate repetitive or incoherent text — manual checks catch this.
-
----
-
-## 3. Downstream Task Metrics (Post Fine-Tuning)
-
-Your GPT-2 notebook includes classification fine-tuning. Once fine-tuned, use task-specific metrics:
+## Post Fine-Tuning Metrics
 
 | Task | Metric |
 |---|---|
-| Text classification | Accuracy, F1 |
-| Instruction following | Win-rate vs baseline, human eval |
-| Text generation quality | Coherence scores, human preference |
+| Classification | Accuracy, F1 |
+| Instruction following | Win-rate, human eval |
 
-See [[fine-tuning]] for fine-tuning approaches.
+See [[fine-tuning]].
 
----
+## Not Applicable
 
-## What Does NOT Apply to Your Model
-
-| Metric | Why not applicable |
+| Metric | Reason |
 |---|---|
-| **[[bleu-score|BLEU]]** | For translation models — your model does not translate |
-| **ROUGE** | For summarisation tasks |
-| **Exact Match (EM)** | For QA with ground-truth answers |
-
----
-
-## Summary for Your GPT-2
-
-```
-During training:    cross-entropy loss (train + val)
-Primary LM metric:  perplexity = exp(val_loss)
-Generation sanity:  manual inspection of sampled text
-If fine-tuned:      accuracy / F1 on classification head
-```
-
-The validation loss curve is the most honest signal — if it plateaus or rises, the model has stopped improving or is overfitting.
-
----
+| [[bleu-score\|BLEU]] | Translation only |
+| ROUGE | Summarisation only |
+| Exact Match | QA with ground-truth answers |
 
 ## Related
 
-- [[gpt2-from-scratch|GPT-2 From-Scratch Patterns]]
+- [[gpt2-from-scratch]]
 - [[decoding-strategies]]
 - [[fine-tuning]]
 - [[bleu-score]]
