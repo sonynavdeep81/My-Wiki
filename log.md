@@ -1,3 +1,13 @@
+## [2026-04-17] query | Research B3 — strengthened novelty, 4-model set, domain-specific
+
+- Updated: wiki/queries/research-b3-prompt-sensitivity.md
+- Added: prior work disclosure (Zhao 2021, Lu 2021, Webson & Pavlick 2022) + novelty gap analysis
+- Added: C4 contribution — cross-model sensitivity curve across 4 sizes
+- Updated model set: GPT-2 Large + Phi-3 Mini 3.8B + Mistral 7B (4-bit) + LLaMA 3 8B (4-bit)
+- Added: hardware table, 4-bit quantization code (BitsAndBytesConfig), 2 domain tasks (medical, legal)
+- Updated: timeline 6→7 weeks, paper structure reflects 3 results tables
+- Updated: index.md
+
 ## [2026-04-17] query | Research B3 full implementation guide
 
 - Created: wiki/queries/research-b3-prompt-sensitivity.md
