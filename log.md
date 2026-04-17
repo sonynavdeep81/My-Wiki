@@ -1,3 +1,11 @@
+## [2026-04-17] query | Expanded research topics with Scopus journal targets
+
+- Updated: wiki/queries/research-topics-feasible.md
+- Added 6 Scopus journal topics (B1–B6) with 3 explicit novel contributions each
+- Kept 2 existing conference topics (A1–A2); added Part A/B structure
+- Added conference vs journal distinction, contribution types, full comparison table
+- Updated: index.md
+
 ## [2026-04-17] compress | Aggressive compression of verbose pages
 
 - Rewrote to dense format: training-loop-primitives, why-save-optimizer-state, input-to-output-workflow, multi-head-attention, llm-evaluation-metrics
