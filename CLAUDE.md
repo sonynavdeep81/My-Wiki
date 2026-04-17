@@ -72,3 +72,8 @@ Wiki pages are notes for the LLM, not explanations for humans. Store information
 - The LLM reconstructs full human-friendly explanations from dense notes at query time
 - When answering the user, explain in simple, easy-to-understand language
 - Aim for maximum information per line; cut any line that restates another
+
+What to preserve as-is:
+- **ASCII diagrams** — keep exactly; they convey shape/flow/connections more densely than any alternative
+- **Code snippets** — already dense; do not paraphrase
+- **Shape traces and math** — already dense; do not paraphrase
