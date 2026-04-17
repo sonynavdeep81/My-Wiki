@@ -1,3 +1,9 @@
+## [2026-04-17] query | Research B3 full implementation guide
+
+- Created: wiki/queries/research-b3-prompt-sensitivity.md
+- Covers: core idea, metrics explanation, 3 contributions, step-by-step code, analysis, paper structure, 6-week timeline
+- Updated: index.md
+
 ## [2026-04-17] query | Expanded research topics with Scopus journal targets
 
 - Updated: wiki/queries/research-topics-feasible.md

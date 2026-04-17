@@ -180,6 +180,10 @@
   },
   "active": "ada68d3cbc1e3bd9",
   "lastOpenFiles": [
+    "log.md.tmp.506370.1776405244613",
+    "index.md.tmp.506370.1776405238876",
+    "wiki/queries/research-b3-prompt-sensitivity.md",
+    "wiki/queries/research-b3-prompt-sensitivity.md.tmp.506370.1776405232890",
     "log.md.tmp.506370.1776404599188",
     "index.md.tmp.506370.1776404588741",
     "wiki/queries/research-topics-feasible.md.tmp.506370.1776404576315",
@@ -188,9 +192,6 @@
     "transformer-architecture.html.tmp.506370.1776394833907",
     "transformer-architecture.html.tmp.506370.1776394828252",
     "transformer-architecture.html.tmp.506370.1776394824461",
-    "transformer-architecture.html.tmp.506370.1776394818300",
-    "transformer-architecture.html.tmp.506370.1776394811693",
-    "transformer-architecture.html.tmp.506370.1776394801783",
     "node_modules/pptxgenjs/README.md",
     "node_modules/jszip/graph.svg",
     "node_modules/jszip/sponsors.md",
@@ -216,7 +217,6 @@
     "node_modules/@types/node/README.md",
     "node_modules/lie/license.md",
     "node_modules/immediate/README.md",
-    "node_modules/util-deprecate/README.md",
     "Untitled 1.canvas",
     "Untitled.canvas"
   ]

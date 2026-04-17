@@ -50,6 +50,7 @@
 ## Queries
 - [Input Text to Output Tokens](wiki/queries/input-to-output-workflow.md) — End-to-end workflow with shape trace and ASCII diagram
 - [Feasible Research Topics](wiki/queries/research-topics-feasible.md) — 8 topics (2 conference, 6 Scopus journal) with novel contributions, methodology, and target venues per topic
+- [Research B3 — Prompt Sensitivity](wiki/queries/research-b3-prompt-sensitivity.md) — Full implementation guide: setup, experiments, analysis, paper structure, 6-week timeline
 - [GPT-2 vs Attention Is All You Need — Params](wiki/queries/gpt2-vs-attention-paper-params.md) — Full parameter comparison: your decoder-only GPT-2 vs the original encoder-decoder Transformer
 - [Evaluation Metrics for a Decoder-Only LLM](wiki/queries/llm-evaluation-metrics.md) — Loss, perplexity, generation quality, fine-tuning metrics; BLEU/ROUGE not applicable
 - [Why .bool() on the Causal Mask](wiki/queries/causal-mask-bool.md) — masked_fill_ requires BoolTensor; also 4× memory saving over int/float
