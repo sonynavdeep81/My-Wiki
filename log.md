@@ -1,3 +1,31 @@
+## [2026-04-18] query | P3 student-friendly study guide
+
+- Created: wiki/queries/research-p3-study-guide.md
+- Plain-English companion to the technical plan; addresses intimidation factor
+- Covers: problem in simple words, research gap explained, step-by-step work, 5-level study roadmap, week-by-week study pairing with experiments, honest answers to common fears
+- Updated: index.md
+
+## [2026-04-18] cleanup | Deleted superseded research files
+
+- Removed: wiki/queries/research-topics-feasible.md (8 LLM-generated topics, novelty gaps)
+- Removed: wiki/queries/research-b3-prompt-sensitivity.md (saturated prior work + 4GB mismatch)
+- Rationale: decision history already captured in research-p3-sparse-lora.md §Decision Log and memory/project_p3_paper.md; retention added clutter
+- Updated: index.md (removed entries), research-p3-sparse-lora.md (removed wikilinks)
+
+## [2026-04-18] query | Research P3 — LoRA placement transferability paper plan filed
+
+- Created: wiki/queries/research-p3-sparse-lora.md — full research plan
+- Topic: cross-task layer-placement transferability for LoRA in small LMs (100M–1B)
+- Locked title: "Does Layer Importance Transfer? Cross-Task Universal Placement for LoRA Fine-Tuning of Small Language Models"
+- 3 contributions: LOLO protocol (method), τ transferability matrix (empirical), U^K universal placement recipe (practical)
+- Target: IEEE Access (primary), Applied Sciences / NCA / ESWA (backup)
+- Models (4GB fit): GPT-2 medium, Pythia-410M, TinyLlama-1.1B (4-bit)
+- 8-week execution plan with ~350 GPU-hour budget and halving-fallback
+- Prior-work scan (2026-04-18) covered: IST, AdaLoRA, LA-LoRA, NormAL LoRA, AlphaLoRA, Dynamic LoRA, MoDULA, SoRA, LoRA-FA, Task Arithmetic
+- Mandatory baseline: IST (EMNLP Findings 2024); fail-safe: informative-negative-result framing if transferability breaks
+- Superseded: research-topics-feasible.md, research-b3-prompt-sensitivity.md (marked in index.md)
+- Memory updated: project_p3_paper.md + MEMORY.md index
+
 ## [2026-04-17] query | Research B3 — strengthened novelty, 4-model set, domain-specific
 
 - Updated: wiki/queries/research-b3-prompt-sensitivity.md
