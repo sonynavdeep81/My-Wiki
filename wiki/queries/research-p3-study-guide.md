@@ -148,6 +148,9 @@ It's not. That's ~2 weeks of overnight runs. You sleep, the GPU works. You're no
 **"What if I get stuck on a bug?"**
 You will. Every researcher does. Rubber-duck debugging works. Stack Overflow works. When truly stuck, ask Claude / GPT-5 in a specific way: paste the full error + relevant 30 lines of code. Do not ask vague questions like "my training isn't working."
 
+**"Does this count as an SCI paper or only a Scopus paper?"**
+Both. All 5 target venues in the technical plan (IEEE Access, Applied Sciences, Neural Computing and Applications, Expert Systems with Applications, Neurocomputing) are indexed in *both* Scopus and SCIE (the modern name for SCI). If your paper gets accepted at any of them, it counts as both — so UGC points, PhD applications, and career credit work either way. You do not need a separate strategy for "SCI journals vs Scopus journals."
+
 **"What if my results are boring (no transfer / too much transfer)?"**
 Both outcomes publish. A boring positive result = "universal placement works, here's the recipe." A boring negative result = "contrary to implicit assumptions, placement does not transfer; per-task search is necessary." IEEE Access-tier journals accept both framings cleanly. The only outcome that doesn't publish is "I didn't run the experiments carefully" — so just be careful.
 

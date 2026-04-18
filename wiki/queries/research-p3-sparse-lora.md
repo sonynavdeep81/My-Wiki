@@ -285,14 +285,21 @@ for model M in {GPT-2-med, Pythia-410M, TinyLlama-1.1B}:
 
 ## Target Venues (ranked by fit)
 
-| Venue | Type | Scope fit | Acceptance notes |
-|---|---|---|---|
-| **IEEE Access** | Scopus Q1, OA | Strong — broad AI/NLP scope, loves empirical + method | ~30% accept; fast review (4–6 weeks) |
-| **Neural Computing and Applications** (Springer) | Scopus Q1 | Strong — PEFT fits NN applications scope | ~25% accept; 2–4 month review |
-| **Applied Sciences** (MDPI) | Scopus Q2 | Good — applied ML venue | ~45% accept; fast review |
-| **Expert Systems with Applications** (Elsevier) | Scopus Q1 | Moderate — prefers clear practitioner takeaway (our U^K recipe fits) | Longer review; higher bar |
+All target venues are indexed in **both Scopus and SCIE** (Web of Science Core Collection / "SCI"). Acceptance at any of them qualifies as both a Scopus paper and an SCI paper.
 
-**Primary target:** IEEE Access. **Backup:** Applied Sciences.
+| Venue | Scopus | SCIE | Approx. IF | Scope fit | Acceptance notes |
+|---|:---:|:---:|:---:|---|---|
+| **IEEE Access** | ✓ Q1 | ✓ (since 2016) | ~3 | Strong — broad AI/NLP; empirical + method | ~30% accept; fast review (4–6 weeks) |
+| **Applied Sciences** (MDPI) | ✓ Q2 | ✓ | ~2.5 | Good — applied ML venue | ~45% accept; fast review |
+| **Neural Computing and Applications** (Springer) | ✓ Q1 | ✓ | ~5 | Strong — PEFT fits NN applications scope | ~25% accept; 2–4 month review |
+| **Expert Systems with Applications** (Elsevier) | ✓ Q1 | ✓ | ~7+ | Moderate — prefers practitioner takeaway (U^K recipe fits) | Longer review; significantly higher bar |
+| **Neurocomputing** (Elsevier) | ✓ Q1 | ✓ | ~5–6 | Moderate | Higher bar than IEEE Access |
+
+**Primary target:** IEEE Access (SCIE + realistic acceptance for solo master's work). **Backup:** Applied Sciences (SCIE, fast, higher accept rate).
+
+**Avoid on first paper:** Expert Systems with Applications, Neurocomputing — SCIE-indexed but the bar is high for a solo independent submission without track record. Keep them as stretch goals only.
+
+**Why this matters for career:** SCIE-indexed publications count for UGC points (India), PhD applications, and academic hiring in most systems. A Scopus-only paper (in a non-SCIE journal) has weaker weight. All venues in the table above satisfy both criteria — so you do not need to choose between "Scopus" and "SCI" strategies.
 
 ---
 

@@ -1,3 +1,9 @@
+## [2026-04-18] update | P3 venue table — annotate SCIE indexing status
+
+- Updated: wiki/queries/research-p3-sparse-lora.md — Target Venues section now shows Scopus + SCIE columns + approximate IFs; added Neurocomputing; added "avoid on first paper" warning for ESWA + Neurocomputing
+- Updated: wiki/queries/research-p3-study-guide.md — added Scopus-vs-SCI FAQ entry
+- Updated: memory/project_p3_paper.md — noted user's SCIE indexing preference (UGC/India context)
+
 ## [2026-04-18] query | P3 student-friendly study guide
 
 - Created: wiki/queries/research-p3-study-guide.md
