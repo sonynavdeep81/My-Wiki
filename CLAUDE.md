@@ -64,6 +64,35 @@ updated: [date]
 
 - [[Page Name]]
 
+## On Notebooks (.ipynb)
+
+When reading or updating wiki entries for notebook sources:
+- **Never rely solely on context-mode indexing** — it misses sections whose headers use `##` instead of `**`
+- Always verify the full section structure by running: `jq -r '.cells[] | select(.cell_type=="markdown") | .source[0]' notebook.ipynb` or equivalent Python to list all markdown cell first lines
+- Only after confirming the real structure should you update the wiki
+- **When updating from a new version:** for every detail present in the old wiki, explicitly verify it still exists in the new notebook before keeping it — do not assume anything carried over
+
+## On Research Topic Suggestions
+
+Whenever I ask for research topics (any phrasing: "suggest topics", "give me ideas", "what could we publish", etc.), follow this process **before proposing anything**:
+
+1. **Do not propose topics from intuition alone.** Every proposed topic must pass a thorough web-search + prior-work scan first.
+2. **Scan required per topic (minimum 4 searches):**
+   - Exact keyword match ("X on small LMs", "Y placement comparison")
+   - Near-synonym search (terms the authors would actually use)
+   - Venue-specific search (arXiv 2024-2026, EMNLP/ACL/NeurIPS/ICLR, relevant journals)
+   - Negative-result / reproduction search (to check if the finding is already known)
+3. **Report findings honestly:** If a topic has prior work that covers the claimed contribution, say so and kill the topic. Do not paper over prior work with minor axis twists.
+4. **Each surviving topic must have:**
+   - At least 2 concrete contributions (method + empirical, or empirical + practical)
+   - Feasibility under the user's stated budget (GPU VRAM, time, single person)
+   - Explicit prior-work citations showing the novel delta
+   - A realistic target venue (name it; don't say "some journal")
+5. **Venue realism:** For UGC-CARE / low-tier Scopus / Indian journals, the novelty bar is lower — reproduction-on-small-scale is acceptable if reframed with explicit prior-work citations. State this positioning openly.
+6. **UGC-CARE verification (mandatory):** Never trust a journal's own website, Scopus listing, or any third-party site claiming UGC-CARE indexing. Always verify directly against the official UGC-CARE list at https://ugccare.unipune.ac.in. A journal claiming UGC-CARE status without appearing on that list must be treated as unverified and flagged to the user.
+7. **Never propose a topic if I am not confident it will survive peer review.** The user has said: "I don't want to repent later after a month of work." Treat every proposal as if the user will start work immediately.
+8. **Output format when proposing:** For each topic → (a) one-line summary, (b) prior-work scan summary with citations, (c) novel delta, (d) 2 contributions, (e) feasibility numbers, (f) target venue, (g) confidence rating.
+
 ## Dense Storage Format
 
 Wiki pages are notes for the LLM, not explanations for humans. Store information densely:

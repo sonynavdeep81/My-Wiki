@@ -36,7 +36,7 @@ See [[fine-tuning]].
 
 | Metric | Reason |
 |---|---|
-| [[bleu-score\|BLEU]] | Translation only |
+| [[bleu-score|BLEU]] | Translation only |
 | ROUGE | Summarisation only |
 | Exact Match | QA with ground-truth answers |
 

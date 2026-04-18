@@ -1,3 +1,39 @@
+## [2026-04-18] replan | Student papers — killed old topics, verified new ones
+
+- Killed (deleted) research-student-rank-sweep.md and research-student-ffn-attention-placement.md
+- Reason: prior-work scan found Rathore et al. (AACL-IJCNLP Findings 2025, arXiv 2512.15634) covers rank sweep on reasoning tasks; Fomenko et al. (Microsoft 2024, arXiv 2404.05086) covers FFN vs attention placement
+- Created: wiki/queries/research-student-hinglish-lora.md — S1 (Hinglish placement + rank on COMI-LINGUA tasks with XLM-R/MuRIL)
+- Created: wiki/queries/research-student-layer-importance-comparison.md — S2 (IST vs Act-LoRA vs Fisher vs similarity methods on small LMs)
+- Both verified against 12 WebSearches; explicit novel delta per plan's Prior Work Scan table
+- Added CLAUDE.md rule: all future research suggestions must pass 4-search prior-work scan with named-citation novel delta before proposing
+- Sequence: S1 first (India-niche, simpler infra), S2 after (reuses pipeline, bridges to P3 LOLO)
+
+## [2026-04-18] plan | 2 student UGC research papers (companions to P3) [SUPERSEDED]
+
+- Created: wiki/queries/research-student-rank-sweep.md — Student Paper 1 (rank sensitivity, 4–5 weeks); do first
+- Created: wiki/queries/research-student-ffn-attention-placement.md — Student Paper 2 (FFN vs Att placement, 5–6 weeks); do after Paper 1
+- Both are safe carve-outs from P3 (different axes); both serve as building blocks for main paper
+- Sequence rationale: Paper 1 teaches PEFT basics with minimum custom code, produces fast first publication, infrastructure transplants to Paper 2
+
+## [2026-04-18] create | 5 missing concept pages (from lint gaps)
+
+- Created: wiki/concepts/lora.md — LoRA: rank decomposition, QLoRA/AdaLoRA variants, placement question → P3
+- Created: wiki/concepts/temperature.md — temperature scaling in decoding pipeline
+- Created: wiki/concepts/softmax.md — formula, uses in attention + output head, numerical stability
+- Created: wiki/concepts/perplexity.md — exp(loss), intuition, limitations, relationship to val_loss
+- Created: wiki/concepts/lr-warmup.md — linear warmup + cosine decay; note GPT-2 notebook uses no warmup
+
+## [2026-04-18] lint | wiki lint run
+
+- Created: wiki/lint/lint-2026-04-18.md
+- 0 orphans; 7 backslash-malformed wikilinks + 6 title-case links flagged; 5 persistent gaps (LoRA, temperature, softmax, perplexity, warmup); no contradictions
+
+## [2026-04-18] update | GPT2_Clean.ipynb — reflect new notebook (72 cells)
+
+- Updated: wiki/sources/GPT2_Clean.md — corrected cell count (74→72); expanded section 10 inference into Temperature/Multinomial/Top-k subsections; split Fine-Tuning into sections 12+13; updated inference pipeline detail
+- Updated: wiki/sources/GPT2_Clean.md Key Implementation Details — inference loop now documents full pipeline with top-k/temperature/multinomial roles
+- Updated: CLAUDE.md — added rule to always verify notebook structure directly (not rely on context-mode indexing)
+
 ## [2026-04-18] update | P3 venue table — annotate SCIE indexing status
 
 - Updated: wiki/queries/research-p3-sparse-lora.md — Target Venues section now shows Scopus + SCIE columns + approximate IFs; added Neurocomputing; added "avoid on first paper" warning for ESWA + Neurocomputing

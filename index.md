@@ -33,6 +33,11 @@
 - [Label Smoothing](wiki/concepts/label-smoothing.md) — Soft training targets to prevent overconfidence; used in paper (ε=0.1), not in GPT-2 notebook
 - [Adam and AdamW Optimizers](wiki/concepts/optimizer.md) — Adaptive gradient optimizers; AdamW fixes weight decay coupling; your GPT-2 uses AdamW, paper uses Adam
 - [BLEU Score](wiki/concepts/bleu-score.md) — N-gram overlap metric for machine translation; used in paper results, not applicable to GPT-2
+- [LoRA (Low-Rank Adaptation)](wiki/concepts/lora.md) — Freeze base weights, inject trainable rank-r matrices; <0.1% of params matches full fine-tuning
+- [Temperature (Decoding)](wiki/concepts/temperature.md) — Divides logits before softmax; T<1 sharper, T>1 flatter, T→0 greedy, T→∞ uniform
+- [Softmax](wiki/concepts/softmax.md) — Converts scores to probabilities; used in attention weights and output head
+- [Perplexity](wiki/concepts/perplexity.md) — exp(cross-entropy loss); standard LM eval metric; lower = better
+- [Learning Rate Warmup](wiki/concepts/lr-warmup.md) — Gradually ramps LR from 0 to target over first N steps; prevents early divergence
 
 ## Entities
 - [Attention Is All You Need](wiki/entities/attention-is-all-you-need.md) — Vaswani et al. 2017; encoder-decoder, 8 heads, d_model=512, ReLU FFN, Post-LN, sinusoidal PE
@@ -46,6 +51,7 @@
 - [Lint — 2026-04-14c](wiki/lint/lint-2026-04-14c.md) — Clean: 0 orphans, 0 broken links; 3 gaps flagged (Label Smoothing, AdamW, BLEU)
 - [Lint — 2026-04-14d](wiki/lint/lint-2026-04-14d.md) — Fixed 2 orphans (optimizer, label-smoothing); wiki fully clean
 - [Lint — 2026-04-16](wiki/lint/lint-2026-04-16.md) — Fixed 6 broken wikilinks; 0 orphan concepts; 5 knowledge gaps flagged (softmax, temperature, LoRA, perplexity, warmup)
+- [Lint — 2026-04-18](wiki/lint/lint-2026-04-18.md) — 0 orphans; 1 broken link fixed (bleu-score backslash); 5 knowledge gaps persist (LoRA priority)
 
 ## Queries
 - [Input Text to Output Tokens](wiki/queries/input-to-output-workflow.md) — End-to-end workflow with shape trace and ASCII diagram
@@ -59,3 +65,6 @@
 - [Bias Comparison — GPT-2 vs Attention Is All You Need](wiki/queries/bias-comparison-gpt2-vs-paper.md) — Which layers use bias: scratch vs OpenAI checkpoint vs original Transformer paper
 - [Training Loop Primitives](wiki/queries/training-loop-primitives.md) — model.train/eval, zero_grad, backward, optimizer.step, no_grad: what each does and why placed where
 - [Why Save the Optimizer State?](wiki/queries/why-save-optimizer-state.md) — AdamW tracks m, v, step count per param; discarding on resume causes loss spikes
+- [Why Concept Pages Exist](wiki/queries/why-concept-pages.md) — Speed, consistency, token savings; analogy and examples from our discussion
+- [Student Paper S1 — LoRA on Hinglish Code-Mixed Tasks](wiki/queries/research-student-hinglish-lora.md) — **Do first.** Placement + rank study on COMI-LINGUA with XLM-R/MuRIL; 4–5 weeks, UGC; India-niche novelty
+- [Student Paper S2 — Layer-Importance Method Comparison](wiki/queries/research-student-layer-importance-comparison.md) — **Do after S1.** Head-to-head of 4 layer-scoring methods on small LMs; 5 weeks; directly supports P3's LOLO

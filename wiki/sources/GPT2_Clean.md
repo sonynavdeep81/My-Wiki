@@ -3,14 +3,14 @@ title: GPT-2 From Scratch (Notebook)
 type: source
 tags: [gpt2, pytorch, implementation, training, inference, fine-tuning, sampling]
 sources: 1
-updated: 2026-04-13
+updated: 2026-04-18
 ---
 
 ## GPT-2 From Scratch (Notebook)
 
-**Summary**: A complete PyTorch implementation of GPT-2 built from scratch, covering architecture, training on a small text corpus, inference with temperature/top-k sampling, loading OpenAI pretrained weights, and classification fine-tuning.
+**Summary**: A complete PyTorch implementation of GPT-2 built from scratch, covering architecture, training on a small text corpus, inference with temperature/top-k/multinomial sampling, loading OpenAI pretrained weights, and classification fine-tuning.
 
-## Notebook Structure (74 cells)
+## Notebook Structure (72 cells)
 
 1. **Import Modules** — tiktoken, torch, numpy, pandas
 2. **Read text file** — `the-verdict.txt` (from rasbt/LLMs-from-scratch)
@@ -21,9 +21,13 @@ updated: 2026-04-13
 7. **Total Trainable Parameters** — ~162M
 8. **Model Training** — AdamW (lr=0.0004, weight_decay=0.1), cross-entropy loss, CUDA-aware
 9. **Saving/Loading** — `torch.save/load` with model + optimizer state_dict
-10. **Model Inference** — manual top-k + temperature generation loop; batched with eot padding
+10. **Model Inference**
+    - **Temperature** — divides logits before softmax; controls distribution sharpness
+    - **torch.multinomial()** — samples from probability distribution (not argmax); full pipeline: `logits → /T → softmax → probs → multinomial → token index`
+    - **Top-k Sampling** — restricts candidate pool to top-k tokens before softmax; always used with temperature
 11. **Loading GPT-2 Weights from OpenAI** — `load_weights_into_gpt2()` maps OpenAI checkpoint format
-12. **Fine-Tuning** — types overview (instruction vs classification); PEFT/LoRA/QLoRA; SMS spam classification demo
+12. **What is Fine-Tuning?** — instruction vs classification overview with diagrams; PEFT/LoRA/QLoRA tradeoffs
+13. **Implementing Classification Fine-Tuning** — SMS spam demo (UCI dataset, balanced, 70/10/20 split, binary labels spam=1/ham=0)
 
 ## Config
 
@@ -76,17 +80,22 @@ assign(model.trf_blocks[b].att.W_query.weight, q_w.T)
 ```
 Also: OpenAI uses `qkv_bias=True` in their checkpoint — must match at model creation time.
 
-### Inference Loop (Top-k + Temperature)
+### Inference Pipeline (Top-k + Temperature + Multinomial)
+
+Full pipeline per generation step: `logits → /T → softmax → probs → multinomial → token index`
+
 ```python
 logits = model(token_ids)[:, -1, :]          # last token's logits only
 top_values, _ = torch.topk(logits, k=top_k)
-logits[logits < top_values[:, -1]] = -inf    # mask non-top-k
+logits[logits < top_values[:, -1]] = -inf    # mask non-top-k to -∞
 probs = torch.softmax(logits / temperature, dim=-1)
 next_token = torch.multinomial(probs, num_samples=1)
 ```
 
-### Batched Inference Padding
-GPT-2 has no native padding concept — uses `tokenizer.eot_token` as pad token for batching sequences of different lengths.
+- **Top-k**: restricts *which* tokens are candidates
+- **Temperature**: controls *how confidently* to pick (T<1 sharper; T>1 flatter; T→0 greedy; T→∞ uniform)
+- **Multinomial**: the actual random draw — unlike `argmax`, allows lower-prob tokens occasionally
+
 
 ## Fine-Tuning
 
