@@ -1,3 +1,139 @@
+## [2026-05-05] update | CLAUDE.md — 11 new wiki features adopted
+
+- Added: Features 1–8 from feature-menu.md (concept page updates on Q&A, breadcrumb/artifact query types, gap tracking, learning path, slide deck order, contradiction checking on ingest, source transparency, structural-only lint)
+- Added: Q2-A claim confidence tagging, Q2-B verified_against field, Q2-C experiment log
+- Backfilled: verified_against + confidence on all 34 concept pages
+- Created: learning-path.md (7 stages, 34 concepts placed, 10 gaps listed)
+- New directories: wiki/gaps/, wiki/experiments/
+
+## [2026-05-05] fix | Lint fixes — orphans + missing concept pages
+
+- Fixed orphan: instruction-finetuning-collate-padding-trick (backlink added to data-pipeline)
+- Fixed orphan: why-concept-pages (backlink added to fine-tuning.md)
+- Created: wiki/concepts/instruction-fine-tuning.md
+- Created: wiki/concepts/cross-entropy-loss.md
+- Updated: index.md, log.md
+
+## [2026-05-05] lint | Lint 2026-05-05
+
+- Created: wiki/lint/lint-2026-05-05.md
+- Findings: 2 orphans (collate-padding-trick, why-concept-pages), 2 raw .py files need re-ingest check, 2 missing concept pages (Instruction Fine-Tuning, Cross-Entropy Loss)
+- Updated: index.md, log.md
+
+## [2026-05-01] query | Instruction Fine-Tuning — Collate Padding Trick
+
+- Created: wiki/queries/instruction-finetuning-collate-padding-trick.md
+- Updated: index.md
+
+## [2026-04-30] query | Instruction Fine-Tuning — Data Preparation Pipeline
+
+- Created: wiki/queries/instruction-finetuning-data-pipeline.md
+- Updated: index.md
+
+## [2026-04-30] query | Instruction Fine-Tuning — Training Mechanics
+
+- Created: wiki/queries/instruction-finetuning-training-mechanics.md
+- Updated: index.md
+
+## [2026-04-30] lint | lint-2026-04-30
+
+- Fixed: instruction-finetuning-prompt-format orphan (added backlink)
+- Fixed: index.md duplicated description + stale "Cell 45 & 56" reference
+- Created: wiki/entities/stanford-alpaca.md
+- Updated: index.md (new lint entry, new entity entry)
+- Gaps flagged: instruction-finetuning concept page, cross-entropy, quantization
+
+## [2026-04-30] query | Instruction Fine-Tuning — Prompt Format (Alpaca)
+
+- Created: wiki/queries/instruction-finetuning-prompt-format.md
+- Updated: index.md
+
+## [2026-04-30] query | Instruction Fine-Tuning — Data Format
+
+- Created: wiki/queries/instruction-finetuning-data-format.md
+- Updated: index.md
+
+## [2026-04-30] ingest | gpt2_decoder.py + classification_fine_tuning.py (replaced GPT2_Clean.ipynb)
+
+- Deleted source: raw/GPT2_Clean.ipynb
+- New sources: raw/gpt2_decoder.py, raw/classification_fine_tuning.py
+- Renamed: wiki/sources/GPT2_Clean.md → wiki/sources/gpt2_decoder.md
+- Updated all references: index.md, lr-warmup.md, gpt2-parameter-count.md, context-length-assert.md, inference-sliding-window.md
+- Created: wiki/sources/classification_fine_tuning.md
+- Updated: wiki/concepts/fine-tuning.md (head replacement, freeze strategy, drop_rate=0, last-token logits)
+- Updated: wiki/concepts/gpt2-from-scratch.md (sources count)
+- Updated: wiki/queries/inference-sliding-window.md (removed notebook cell references)
+- Updated: index.md
+
+## [2026-04-26] query | Dropout During Fine-Tuning — Why Set drop_rate=0.0
+
+- Created: wiki/queries/dropout-during-finetuning.md
+- Updated: index.md, log.md
+
+## [2026-04-24] query | Train vs Val vs Test Split — Why All Three?
+
+- Created: wiki/queries/train-val-test-split.md
+- Updated: index.md
+
+## [2026-04-22] query | DataLoader parameters — shuffle and drop_last
+
+- Created: wiki/queries/dataloader-parameters.md
+- Updated: index.md
+
+## [2026-04-24] query | requires_grad vs torch.no_grad()
+
+- Created: wiki/queries/requires-grad-vs-no-grad.md
+- Updated: index.md, log.md
+
+## [2026-04-24] query | Classification fine-tuning strategy — what to freeze and train
+
+- Created: wiki/queries/classification-finetuning-strategy.md
+- Updated: index.md, log.md
+
+## [2026-04-24] update | context-length-assert — corrected assert code, added rule table
+
+- Updated: wiki/queries/context-length-assert.md — corrected assert to use max_tokens + GPT_CONFIG_124M (matches actual code); added rule table for auto vs manual max_tokens scenarios; updated title/sources
+- Updated: index.md
+
+## [2026-04-24] lint | Wiki lint run (run 7)
+
+- Created: wiki/lint/lint-2026-04-24.md
+- Fixed 11 orphan pages by adding backlinks across 8 files
+- 0 broken links in active pages (broken links in old lint files are harmless artifacts)
+- 4 acceptable orphans (2 source pages, 1 meta page, 1 lint archive)
+- 3 knowledge gaps flagged: backpropagation, BatchNorm, kv-caching→inference-sliding-window
+- Updated: index.md
+
+## [2026-04-23] query | Inference sliding window — context length handling during generation
+
+- Created: wiki/queries/inference-sliding-window.md — training vs inference comparison; sliding window fix; bug documented in Cell 45 & 56 of GPT2_Clean.ipynb
+- Updated: index.md
+
+## [2026-04-23] query | Context length assert — why max_length must not exceed context_length
+
+- Created: wiki/queries/context-length-assert.md — pos_emb index out of bounds explanation; why auto-truncation doesn't happen; fix via SpamDataset truncation
+- Updated: index.md
+
+## [2026-04-23] update | GPT-2 parameter count — verified 162M from code
+
+- Updated: wiki/queries/gpt2-parameter-count.md — confirmed assign() uses copy_() not tensor aliasing; no weight tying line in __init__; out_head always separate → always 162M in this implementation
+- Verified against: raw/GPT2_Clean.ipynb
+
+## [2026-04-23] query | GPT-2 parameter count — 124M vs 162M
+
+- Created: wiki/queries/gpt2-parameter-count.md — full component breakdown; double-count explanation; deduplicated vs raw count code
+- Updated: index.md
+
+## [2026-04-23] update | Complete input-to-output workflow — expanded with dropout, residuals, per-block steps
+
+- Updated: wiki/queries/input-to-output-workflow.md — added explicit dropout placements table (2 locations), per-block 11-step breakdown, FFN independence note, expanded shape trace with dropout row
+
+## [2026-04-22] update | Fine-tuning concepts from Q&A session
+
+- Updated: wiki/concepts/fine-tuning.md — added PEFT family clarification (LoRA+QLoRA are 2 of many; full family includes Prefix Tuning, Prompt Tuning, Adapters, DoRA, AdaLoRA, Sparse LoRA); added max_tokens consistency rule with code example
+- Created: wiki/queries/spam-dataset-implementation.md — full SpamDataset PyTorch pattern; tokenize→truncate→pad→tensor; dtype=torch.long requirement; max_tokens split consistency
+- Updated: index.md
+
 ## [2026-04-18] replan | Student papers — killed old topics, verified new ones
 
 - Killed (deleted) research-student-rank-sweep.md and research-student-ffn-attention-placement.md

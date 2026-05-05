@@ -4,6 +4,8 @@ type: concept
 tags: [normalization, training-stability, pre-ln, post-ln, gradient]
 sources: 1
 updated: 2026-04-13
+verified_against: Decoder_archtecture, 2026-04-13
+confidence: high
 ---
 
 ## Layer Normalization

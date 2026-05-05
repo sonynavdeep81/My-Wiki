@@ -350,6 +350,7 @@ All target venues are indexed in **both Scopus and SCIE** (Web of Science Core C
 - [[gpt2-from-scratch]]
 - [[multi-head-attention]]
 - [[optimizer]]
+- [[research-p3-study-guide]]
 
 ---
 

@@ -4,6 +4,8 @@ type: concept
 tags: [positional-embeddings, transformer, rope, sinusoidal, learnable]
 sources: 2
 updated: 2026-04-14
+verified_against: Decoder_archtecture, 2026-04-13
+confidence: high
 ---
 
 ## Positional Embeddings

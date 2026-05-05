@@ -4,6 +4,8 @@ type: concept
 tags: [activation, gelu, feed-forward, pytorch]
 sources: 1
 updated: 2026-04-14
+verified_against: Decoder_archtecture, 2026-04-14
+confidence: high
 ---
 
 ## GELU Activation

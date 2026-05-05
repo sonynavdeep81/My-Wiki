@@ -2,8 +2,10 @@
 title: GPT-2 From-Scratch Implementation Patterns
 type: concept
 tags: [gpt2, pytorch, implementation, architecture, patterns]
-sources: 1
-updated: 2026-04-13
+sources: 2
+updated: 2026-04-30
+verified_against: gpt2_decoder, 2026-04-30
+confidence: high
 ---
 
 ## GPT-2 From-Scratch Implementation Patterns
@@ -98,3 +100,7 @@ The final `out_head` is NOT in the checkpoint — it shares `wte`, so it's impli
 - [[layer-normalization]]
 - [[pytorch-nn-building-blocks|PyTorch nn Building Blocks]]
 - [[optimizer|Adam and AdamW Optimizers]]
+- [[lr-warmup]]
+- [[llm-evaluation-metrics]]
+- [[bias-comparison-gpt2-vs-paper]]
+- [[gpt2-vs-attention-paper-params]]

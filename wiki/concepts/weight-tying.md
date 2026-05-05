@@ -4,6 +4,8 @@ type: concept
 tags: [weight-tying, embeddings, output-head, parameters, gpt2]
 sources: 1
 updated: 2026-04-13
+verified_against: gpt2_decoder, 2026-04-30
+confidence: high
 ---
 
 ## Weight Tying
@@ -50,3 +52,4 @@ Modern LLMs universally drop this bias — it's a redundant parameter at this la
 - [[embeddings]]
 - [[gpt2-from-scratch]]
 - [[decoder-only-architecture]]
+- [[gpt2-parameter-count]]

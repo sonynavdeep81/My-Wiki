@@ -4,6 +4,8 @@ type: concept
 tags: [optimizer, adam, adamw, training, pytorch]
 sources: 2
 updated: 2026-04-14
+verified_against: classification_fine_tuning, 2026-04-30
+confidence: high
 ---
 
 ## Adam and AdamW Optimizers

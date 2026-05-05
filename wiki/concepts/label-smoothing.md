@@ -4,6 +4,8 @@ type: concept
 tags: [regularization, label-smoothing, training, classification]
 sources: 1
 updated: 2026-04-14
+verified_against: classification_fine_tuning, 2026-04-30
+confidence: medium
 ---
 
 ## Label Smoothing

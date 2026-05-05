@@ -4,6 +4,8 @@ type: concept
 tags: [ffn, transformer, gelu, non-linearity, neural-network]
 sources: 2
 updated: 2026-04-13
+verified_against: Decoder_archtecture, 2026-04-13
+confidence: high
 ---
 
 ## Feed-Forward Network (FFN)

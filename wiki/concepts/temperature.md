@@ -4,6 +4,8 @@ type: concept
 tags: [decoding, sampling, inference, temperature, generation]
 sources: 1
 updated: 2026-04-18
+verified_against: Decoder_archtecture, 2026-04-13
+confidence: high
 ---
 
 ## Temperature (Decoding)

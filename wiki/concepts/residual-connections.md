@@ -4,6 +4,8 @@ type: concept
 tags: [residual, skip-connections, gradient, training-stability, transformer]
 sources: 1
 updated: 2026-04-14
+verified_against: Decoder_archtecture, 2026-04-13
+confidence: high
 ---
 
 ## Residual Connections

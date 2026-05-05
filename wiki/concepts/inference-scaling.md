@@ -4,6 +4,8 @@ type: concept
 tags: [inference, scaling, reasoning, 2025]
 sources: 1
 updated: 2026-04-13
+verified_against: general-knowledge, 2026-04-13
+confidence: medium
 ---
 
 ## Inference Scaling

@@ -4,6 +4,8 @@ type: concept
 tags: [scaling, training, compute, parameters, data]
 sources: 1
 updated: 2026-04-13
+verified_against: general-knowledge, 2026-04-13
+confidence: medium
 ---
 
 ## Scaling Laws

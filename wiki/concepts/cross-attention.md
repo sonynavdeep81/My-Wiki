@@ -4,6 +4,8 @@ type: concept
 tags: [attention, cross-attention, encoder-decoder, transformer]
 sources: 1
 updated: 2026-04-14
+verified_against: Attention_2023, 2026-04-13
+confidence: high
 ---
 
 ## Cross-Attention

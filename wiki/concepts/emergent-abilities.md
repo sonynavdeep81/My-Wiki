@@ -4,6 +4,8 @@ type: concept
 tags: [emergence, scaling, capabilities, llm]
 sources: 1
 updated: 2026-04-13
+verified_against: general-knowledge, 2026-04-13
+confidence: medium
 ---
 
 ## Emergent Abilities

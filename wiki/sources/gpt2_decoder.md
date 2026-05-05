@@ -1,16 +1,18 @@
 ---
-title: GPT-2 From Scratch (Notebook)
+title: GPT-2 Decoder — Architecture & Pretraining (Python)
 type: source
-tags: [gpt2, pytorch, implementation, training, inference, fine-tuning, sampling]
+tags: [gpt2, pytorch, implementation, training, inference, sampling]
 sources: 1
-updated: 2026-04-18
+updated: 2026-04-30
 ---
 
-## GPT-2 From Scratch (Notebook)
+## GPT-2 Decoder — Architecture & Pretraining (Python)
 
-**Summary**: A complete PyTorch implementation of GPT-2 built from scratch, covering architecture, training on a small text corpus, inference with temperature/top-k/multinomial sampling, loading OpenAI pretrained weights, and classification fine-tuning.
+**Summary**: Python script implementing GPT-2 architecture from scratch in PyTorch, covering data batching, model architecture, pretraining on a small text corpus, inference with temperature/top-k/multinomial sampling, and OpenAI pretrained weight loading.
 
-## Notebook Structure (72 cells)
+**Source file**: `raw/gpt2_decoder.py`
+
+## Script Structure
 
 1. **Import Modules** — tiktoken, torch, numpy, pandas
 2. **Read text file** — `the-verdict.txt` (from rasbt/LLMs-from-scratch)
@@ -26,8 +28,6 @@ updated: 2026-04-18
     - **torch.multinomial()** — samples from probability distribution (not argmax); full pipeline: `logits → /T → softmax → probs → multinomial → token index`
     - **Top-k Sampling** — restricts candidate pool to top-k tokens before softmax; always used with temperature
 11. **Loading GPT-2 Weights from OpenAI** — `load_weights_into_gpt2()` maps OpenAI checkpoint format
-12. **What is Fine-Tuning?** — instruction vs classification overview with diagrams; PEFT/LoRA/QLoRA tradeoffs
-13. **Implementing Classification Fine-Tuning** — SMS spam demo (UCI dataset, balanced, 70/10/20 split, binary labels spam=1/ham=0)
 
 ## Config
 
@@ -96,17 +96,10 @@ next_token = torch.multinomial(probs, num_samples=1)
 - **Temperature**: controls *how confidently* to pick (T<1 sharper; T>1 flatter; T→0 greedy; T→∞ uniform)
 - **Multinomial**: the actual random draw — unlike `argmax`, allows lower-prob tokens occasionally
 
-
-## Fine-Tuning
-
-- **Instruction fine-tuning**: updates full model over long sequences/diverse tasks; high compute; use PEFT (LoRA/QLoRA) to reduce cost
-- **Classification fine-tuning**: replaces output head; lower compute; SMS spam demo (UCI dataset, balanced, 70/10/20 split, binary labels spam=1/ham=0)
-
 ## New Concepts
 
 - [[gpt2-from-scratch]]
 - [[decoding-strategies]]
-- [[fine-tuning]]
 - [[weight-tying]]
 
 ## Entities
@@ -120,3 +113,4 @@ next_token = torch.multinomial(probs, num_samples=1)
 - [[layer-normalization]]
 - [[feed-forward-network]]
 - [[kv-caching]]
+- [[classification_fine_tuning]]

@@ -4,6 +4,8 @@ type: concept
 tags: [evaluation, metrics, language-model, loss, perplexity]
 sources: 1
 updated: 2026-04-18
+verified_against: general-knowledge, 2026-04-13
+confidence: high
 ---
 
 ## Perplexity

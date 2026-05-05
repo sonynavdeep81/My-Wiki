@@ -4,6 +4,8 @@ type: concept
 tags: [embeddings, positional-encoding, representation, transformer]
 sources: 1
 updated: 2026-04-13
+verified_against: Decoder_archtecture, 2026-04-13
+confidence: high
 ---
 
 ## Embeddings (Token & Positional)

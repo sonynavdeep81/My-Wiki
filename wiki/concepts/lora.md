@@ -4,6 +4,8 @@ type: concept
 tags: [fine-tuning, peft, lora, adaptation, low-rank]
 sources: 1
 updated: 2026-04-18
+verified_against: classification_fine_tuning, 2026-04-30
+confidence: high
 ---
 
 ## LoRA (Low-Rank Adaptation)

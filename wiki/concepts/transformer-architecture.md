@@ -4,6 +4,8 @@ type: concept
 tags: [transformer, attention, neural-network, architecture]
 sources: 1
 updated: 2026-04-13
+verified_against: Attention_2023, 2026-04-13
+confidence: high
 ---
 
 ## Transformer Architecture

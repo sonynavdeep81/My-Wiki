@@ -4,6 +4,8 @@ type: concept
 tags: [inference, sampling, temperature, top-k, generation, decoding]
 sources: 1
 updated: 2026-04-13
+verified_against: Decoder_archtecture, 2026-04-13
+confidence: high
 ---
 
 ## Decoding Strategies (Temperature, Top-k, Sampling)

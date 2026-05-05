@@ -4,6 +4,8 @@ type: concept
 tags: [training, optimizer, learning-rate, warmup, schedule]
 sources: 1
 updated: 2026-04-18
+verified_against: classification_fine_tuning, 2026-04-30
+confidence: high
 ---
 
 ## Learning Rate Warmup
@@ -39,9 +41,9 @@ scheduler = torch.optim.lr_scheduler.OneCycleLR(
 | Medium (GPT-2 124M) | 2000 |
 | Large (GPT-3) | 375M tokens |
 
-## GPT-2 Notebook
+## GPT-2 Script
 
-The notebook (GPT2_Clean) uses a fixed lr=0.0004 with AdamW — **no warmup scheduler**. Warmup is recommended for longer training runs or larger models.
+`gpt2_decoder.py` uses a fixed lr=0.0004 with AdamW — **no warmup scheduler**. Warmup is recommended for longer training runs or larger models.
 
 ## Related
 

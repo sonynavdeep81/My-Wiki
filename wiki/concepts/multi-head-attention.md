@@ -4,6 +4,8 @@ type: concept
 tags: [attention, transformer, self-attention, causal-masking, qkv]
 sources: 1
 updated: 2026-04-17
+verified_against: Attention_2023, 2026-04-13
+confidence: high
 ---
 
 ## Multi-Head Attention
@@ -54,3 +56,4 @@ concat → (4,768) → ·W_O → (4,768)
 - [[kv-caching]]
 - [[causal-masking]]
 - [[attention-is-all-you-need]]
+- [[softmax]]

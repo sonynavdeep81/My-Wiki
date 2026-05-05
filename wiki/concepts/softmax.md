@@ -4,6 +4,8 @@ type: concept
 tags: [activation, probability, attention, decoding, normalization]
 sources: 1
 updated: 2026-04-18
+verified_against: Decoder_archtecture, 2026-04-14
+confidence: high
 ---
 
 ## Softmax

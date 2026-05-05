@@ -2,8 +2,10 @@
 title: Fine-Tuning
 type: concept
 tags: [fine-tuning, instruction-tuning, classification, LoRA, PEFT, transfer-learning]
-sources: 1
-updated: 2026-04-13
+sources: 2
+updated: 2026-04-30
+verified_against: classification_fine_tuning, 2026-04-30
+confidence: high
 ---
 
 ## Fine-Tuning
@@ -34,9 +36,47 @@ Replaces the LM output head with a classification head (e.g., 2-class output for
 - Labels: spam=1, ham=0
 - Split: 70% train / 10% val / 20% test
 
+### Classification Head Replacement
+
+```python
+model.out_head = nn.Linear(emb_dim, num_classes, bias=True)  # bias=True required
+```
+
+`bias=True` is mandatory — `bias=False` silently kills convergence (zero gradient on untrained head).
+
+### Freeze Strategy (GPT-2 Classification)
+
+```python
+# Step 1: freeze everything
+for param in model.parameters():
+    param.requires_grad = False
+
+# Step 2: unfreeze head + final transformer block + final layer norm
+for param in model.out_head.parameters():   param.requires_grad = True
+for param in model.trf_blocks[-1].parameters(): param.requires_grad = True
+for param in model.final_norm.parameters(): param.requires_grad = True
+```
+
+- Lower 11 blocks frozen — preserve general pre-trained representations
+- Last block + norm unfrozen — adapts top-level features to classification task
+
+### drop_rate for Fine-Tuning
+
+Set `drop_rate=0` in the config when fine-tuning (was 0.1 for pretraining). See [[dropout-during-finetuning]].
+
+### Classification Forward Pass
+
+Uses **last token's logits** only (not all positions):
+```python
+logits = model(input_batch)[:, -1, :]   # (batch_size, num_classes)
+loss = nn.functional.cross_entropy(logits, target_batch)
+```
+
 ## PEFT: Parameter-Efficient Fine-Tuning
 
 Instruction fine-tuning's high compute cost led to **PEFT** — freeze most model weights and train only a small set of additional parameters.
+
+PEFT is a **broad family** of methods. Members include: Prefix Tuning, Prompt Tuning, Adapters, LoRA, QLoRA, DoRA, AdaLoRA, Sparse LoRA. LoRA and QLoRA are two prominent members, not the full family.
 
 ### LoRA (Low-Rank Adaptation)
 
@@ -58,6 +98,19 @@ Combines LoRA with **4-bit quantization** of the frozen base model weights. Furt
 
 PEFT is most valuable for instruction fine-tuning but can also be applied to classification when the base model is large.
 
+## max_tokens Consistency Rule
+
+When building datasets for classification fine-tuning:
+- Compute `max_tokens` from the **training set only**: `max(len(encoded) for encoded in train_encoded)`
+- Pass the **same value** explicitly to validation and test datasets
+- Mismatch causes shape errors or garbage output — model was trained on fixed-length inputs
+
+```python
+train_dataset = SpamDataset("train.csv", tokenizer)         # computes max_tokens
+val_dataset   = SpamDataset("val.csv",   tokenizer, max_tokens=train_dataset.max_tokens)
+test_dataset  = SpamDataset("test.csv",  tokenizer, max_tokens=train_dataset.max_tokens)
+```
+
 ## Related
 
 - [[large-language-models]]
@@ -65,3 +118,8 @@ PEFT is most valuable for instruction fine-tuning but can also be applied to cla
 - [[gpt2-from-scratch]]
 - [[decoder-only-architecture]]
 - [[llama]]
+- [[dropout-during-finetuning]]
+- [[classification-finetuning-strategy]]
+- [[spam-dataset-implementation]]
+- [[requires-grad-vs-no-grad]]
+- [[why-concept-pages]]

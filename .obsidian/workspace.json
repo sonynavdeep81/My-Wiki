@@ -4,11 +4,11 @@
     "type": "split",
     "children": [
       {
-        "id": "9c8aa0931a8de8ff",
+        "id": "a7da43633e56413e",
         "type": "tabs",
         "children": [
           {
-            "id": "ada68d3cbc1e3bd9",
+            "id": "32f8f242ee6d3ecb",
             "type": "leaf",
             "state": {
               "type": "empty",
@@ -159,12 +159,12 @@
               "title": "Outline of Untitled"
             }
           }
-        ]
+        ],
+        "currentTab": 3
       }
     ],
     "direction": "horizontal",
-    "width": 300,
-    "collapsed": true
+    "width": 300
   },
   "left-ribbon": {
     "hiddenItems": {
@@ -178,20 +178,32 @@
       "marp-slides:Show Slide Preview": false
     }
   },
-  "active": "ada68d3cbc1e3bd9",
+  "active": "b777875830149774",
   "lastOpenFiles": [
-    "log.md.tmp.506370.1776405840368",
-    "wiki/queries/research-b3-prompt-sensitivity.md.tmp.506370.1776405831716",
-    "log.md.tmp.506370.1776405244613",
-    "index.md.tmp.506370.1776405238876",
+    "wiki/queries/dropout-during-finetuning.md.tmp.1216444.1777225779818",
+    "wiki/queries/dropout-during-finetuning.md",
+    "log.md.tmp.707282.1777016780601",
+    "index.md.tmp.707282.1777016771014",
+    "wiki/queries/train-val-test-split.md",
+    "wiki/queries/requires-grad-vs-no-grad.md.tmp.707282.1777000442081",
+    "log.md.tmp.707282.1777000043792",
+    "index.md.tmp.707282.1777000037709",
+    "wiki/queries/requires-grad-vs-no-grad.md",
+    "wiki/queries/requires-grad-vs-no-grad.md.tmp.707282.1777000032133",
+    "log.md.tmp.707282.1776999553757",
+    "index.md.tmp.707282.1776999548105",
+    "wiki/queries/classification-finetuning-strategy.md",
+    "wiki/queries/classification-finetuning-strategy.md.tmp.707282.1776999538120",
+    "log.md.tmp.707282.1776997739424",
+    "wiki/lint/lint-2026-04-24.md",
+    "wiki/queries/inference-sliding-window.md",
+    "wiki/queries/context-length-assert.md",
+    "wiki/queries/gpt2-parameter-count.md",
+    "wiki/queries/dataloader-parameters.md",
+    "wiki/queries/spam-dataset-implementation.md",
+    "blog_finetuning_llms.md",
+    "raw/2026-04-21.md",
     "wiki/queries/research-b3-prompt-sensitivity.md",
-    "wiki/queries/research-b3-prompt-sensitivity.md.tmp.506370.1776405232890",
-    "log.md.tmp.506370.1776404599188",
-    "index.md.tmp.506370.1776404588741",
-    "wiki/queries/research-topics-feasible.md.tmp.506370.1776404576315",
-    "transformer-architecture.html.tmp.506370.1776394844065",
-    "transformer-architecture.html.tmp.506370.1776394838960",
-    "transformer-architecture.html.tmp.506370.1776394833907",
     "node_modules/pptxgenjs/README.md",
     "node_modules/jszip/graph.svg",
     "node_modules/jszip/sponsors.md",
@@ -205,18 +217,6 @@
     "node_modules/readable-stream/doc/wg-meetings/2015-01-30.md",
     "node_modules/lie/README.md",
     "node_modules/util-deprecate/History.md",
-    "node_modules/inherits/README.md",
-    "node_modules/safe-buffer/README.md",
-    "node_modules/core-util-is/README.md",
-    "node_modules/queue/readme.md",
-    "node_modules/process-nextick-args/readme.md",
-    "node_modules/string_decoder/README.md",
-    "node_modules/undici-types/README.md",
-    "node_modules/process-nextick-args/license.md",
-    "node_modules/isarray/README.md",
-    "node_modules/@types/node/README.md",
-    "node_modules/lie/license.md",
-    "node_modules/immediate/README.md",
     "Untitled 1.canvas",
     "Untitled.canvas"
   ]
