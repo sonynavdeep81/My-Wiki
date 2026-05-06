@@ -3,12 +3,12 @@ title: Instruction Fine-Tuning — Training Mechanics (Padding, Shift, Loss Mask
 type: query
 tags: [fine-tuning, instruction-tuning, loss-masking, padding, next-token-prediction, training]
 sources: 1
-updated: 2026-04-30
+updated: 2026-05-06
 ---
 
 ## Instruction Fine-Tuning — Training Mechanics (Padding, Shift, Loss Masking)
 
-**Summary**: Instruction fine-tuning uses dynamic per-batch padding, next-token prediction (target = input shifted by 1), and loss masking so the model only learns from response tokens.
+**Summary**: Instruction fine-tuning uses dynamic per-batch padding, next-token prediction (target = input shifted by 1), and loss masking on padding tokens. Note: instruction token masking is a recommended best practice but is NOT applied in the reference implementation — instruction tokens contribute to loss.
 
 ## 1. Dynamic vs Static Padding
 
@@ -30,21 +30,24 @@ Target:         [    Instruction: Convert... ### Response: 45 km is 45000 m. <eo
 
 At every position the model predicts "what token comes next."
 
-## 3. Loss Masking — Only Learn from the Response
+## 3. Loss Masking — What This Implementation Actually Masks
 
 ```
-Sequence:  [### Instruction: Convert... ### Response: 45 km is 45000 m. <eos>]
-Loss mask: [  ✗   ✗    ✗      ✗         ✗    ✗          ✓   ✓   ✓   ✓    ✓  ]
+Sequence:  [### Instruction: Convert... ### Response: 45 km is 45000 m. <eos> <pad> <pad>]
+Loss mask: [  ✓   ✓    ✓      ✓         ✓    ✓          ✓   ✓   ✓   ✓    ✓     ✗     ✗  ]
 ```
 
-- Instruction + delimiter tokens → label set to **-100** (PyTorch cross-entropy ignores this index)
-- Response tokens → loss computed normally, weights updated
-- Padding tokens → also masked (-100)
+**This implementation (custom_collate) masks padding tokens only:**
+- Instruction tokens → loss computed normally (contribute to weight updates)
+- Response tokens → loss computed normally
+- First `<eos>` (50256) → kept as real prediction target
+- Padding `<eos>` beyond first → masked to **-100** (cross-entropy ignores)
 
-**Analogy:** fill-in-the-blank exam. The model reads the full question but only gets graded on what it writes in the answer box. Marking the model on the question text would teach it the wrong thing.
+**Recommended best practice (not applied here):** also mask instruction tokens so the model is only graded on responses. This gives a cleaner instruction-following signal but requires tracking the instruction length per sample.
 
-**Why not mask the delimiter `### Response:` itself?**
-It is usually masked too. But the model still learns the delimiter pattern from seeing it thousands of times as *input context* — no loss needed for that.
+```
+Ideal mask: [  ✗   ✗    ✗      ✗         ✗    ✗          ✓   ✓   ✓   ✓    ✓     ✗     ✗  ]
+```
 
 ## 4. What `### Response:` Does
 
@@ -58,7 +61,7 @@ It is usually masked too. But the model still learns the delimiter pattern from 
 |---|---|---|
 | Padding | Global max (all batches same length) | Dynamic per-batch |
 | Output target | Single class label (integer) | Tokens shifted by 1 |
-| Loss computed on | Output head only (last token position) | Response tokens only (instruction masked) |
+| Loss computed on | Output head only (last token position) | All tokens except padding (instruction NOT masked in reference impl) |
 | Mechanics | Discrimination | Next-token prediction (same as pretraining) |
 
 ## Related

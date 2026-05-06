@@ -2,9 +2,9 @@
 title: Decoding Strategies (Temperature, Top-k, Sampling)
 type: concept
 tags: [inference, sampling, temperature, top-k, generation, decoding]
-sources: 1
-updated: 2026-04-13
-verified_against: Decoder_archtecture, 2026-04-13
+sources: 2
+updated: 2026-05-06
+verified_against: instruction_fine_tuning, 2026-05-06
 confidence: high
 ---
 
@@ -91,6 +91,18 @@ with torch.no_grad():
         next_token = torch.multinomial(probs, num_samples=1)
         token_ids = torch.cat([token_ids, next_token], dim=-1)
 ```
+
+## Deterministic Evaluation Mode
+
+For testing/evaluating a fine-tuned model where you want the exact best answer (no randomness):
+
+```python
+generate(token_ids, max_length=35, top_k=1, temperature=1, ...)
+```
+
+- `top_k=1` → only the highest-logit token survives → equivalent to greedy decoding
+- `temperature=1` → logits unchanged before softmax
+- Use this when evaluating instruction fine-tuned models; use higher top_k + temperature for creative generation
 
 ## Related
 

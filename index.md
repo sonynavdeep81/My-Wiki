@@ -8,6 +8,7 @@
 - [GPT-2 Decoder — Architecture & Pretraining (Python)](wiki/sources/gpt2_decoder.md) — PyTorch script: data batching, model architecture, pretraining, inference (temperature/top-k/multinomial), OpenAI weight loading
 - [Classification Fine-Tuning (Python)](wiki/sources/classification_fine_tuning.md) — GPT-2 spam classifier: SpamDataset, freeze strategy, head replacement (bias=True), accuracy training loop
 - [Attention Is All You Need (Paper)](wiki/sources/Attention_2023.md) — Vaswani et al. 2017; encoder-decoder Transformer, scaled dot-product attention, sinusoidal PE, ReLU FFN, Post-LN
+- [Instruction Fine-Tuning (Notebook)](wiki/sources/instruction_fine_tuning.md) — GPT-2 355M instruction fine-tuning: Alpaca format, custom_collate (padding-only masking), AdamW 2 epochs, deterministic eval (top_k=1, temp=1)
 
 ## Concepts
 - [Large Language Models (LLMs)](wiki/concepts/large-language-models.md) — Neural nets trained on next-token prediction; parameters, multimodal, open vs closed
@@ -42,7 +43,7 @@
 - [Softmax](wiki/concepts/softmax.md) — Converts scores to probabilities; used in attention weights and output head
 - [Perplexity](wiki/concepts/perplexity.md) — exp(cross-entropy loss); standard LM eval metric; lower = better
 - [Learning Rate Warmup](wiki/concepts/lr-warmup.md) — Gradually ramps LR from 0 to target over first N steps; prevents early divergence
-- [Instruction Fine-Tuning](wiki/concepts/instruction-fine-tuning.md) — (instruction, response) training pairs; loss on response tokens only; dynamic padding; 5-step data pipeline
+- [Instruction Fine-Tuning](wiki/concepts/instruction-fine-tuning.md) — Alpaca prompt format; dynamic padding via custom_collate; masks padding only (NOT instruction tokens); AdamW 2 epochs; deterministic eval top_k=1
 - [Cross-Entropy Loss](wiki/concepts/cross-entropy-loss.md) — -log(p_correct); ignore_index=-100 skips masked positions; do not pre-softmax; exp(CE)=perplexity
 
 ## Entities

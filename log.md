@@ -373,3 +373,10 @@
 - Created concepts: large-language-models, transformer-architecture, decoder-only-architecture, tokenization, byte-pair-encoding, embeddings, multi-head-attention, layer-normalization, feed-forward-network, scaling-laws, emergent-abilities, kv-caching, inference-scaling
 - Created entities: attention-is-all-you-need, tiktoken, llama
 - Updated: index.md
+
+## [2026-05-06] ingest | Instruction Fine-Tuning (Notebook)
+
+- Created: wiki/sources/instruction_fine_tuning.md
+- Updated: wiki/concepts/instruction-fine-tuning.md — fixed masking conflict (padding-only, not instruction tokens); added training hyperparameters section
+- Updated: wiki/concepts/decoding-strategies.md — added deterministic eval mode (top_k=1, temp=1)
+- Updated: index.md

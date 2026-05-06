@@ -2,9 +2,9 @@
 title: Instruction Fine-Tuning
 type: concept
 tags: [fine-tuning, instruction-tuning, loss-masking, padding, collate, alpaca]
-sources: 2
-updated: 2026-05-05
-verified_against: classification_fine_tuning, 2026-05-05
+sources: 3
+updated: 2026-05-06
+verified_against: instruction_fine_tuning, 2026-05-06
 confidence: high
 ---
 
@@ -54,8 +54,8 @@ Full text = instruction_plus_input + `\n\n### Response:\n` + output.
 ## Loss Masking
 
 - `-100` = PyTorch `ignore_index` for `cross_entropy` — positions excluded from loss entirely
-- Only response tokens contribute to weight updates
-- Instruction tokens in target also set to `-100` (model reads them, doesn't get graded on them)
+- **This implementation masks padding tokens only** — instruction tokens are NOT masked and DO contribute to loss
+- First EOS token (50256) kept as real prediction target; all subsequent padding → -100
 
 ```python
 mask = targets == pad_token_id
@@ -63,6 +63,8 @@ indices = torch.nonzero(mask).squeeze()
 if indices.numel() > 1:
     targets[indices[1:]] = ignore_index  # keep first 50256, mask the rest
 ```
+
+> Note: masking instruction tokens (setting them to -100) is a common recommendation for cleaner instruction-following signal, but is a separate design choice not applied here. [single-source]
 
 ## collate_fn / Dynamic Padding
 
@@ -74,6 +76,20 @@ Padding to global max wastes compute. `custom_collate` pads each batch to its ow
 ## Truncation Risk
 
 If tokenized full text > `context_length`, slicing `[:context_length]` may cut into the response. Fix: filter out samples exceeding context_length before training.
+
+## Training Hyperparameters (355M)
+
+| Param | Value |
+|-------|-------|
+| Optimizer | AdamW |
+| lr | 5e-5 |
+| weight_decay | 0.1 |
+| batch_size | 4 |
+| epochs | 2 — more causes val/train divergence on small datasets |
+| drop_rate | 0 |
+| Log interval | every 50 batches |
+
+Two loss trackers: `running_train/val_batch_losses` (batch-level) + `train/val_losses` (epoch-level). Two plots: intermediate batch chart + final epoch chart.
 
 ## Related
 
