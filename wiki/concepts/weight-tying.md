@@ -2,9 +2,9 @@
 title: Weight Tying
 type: concept
 tags: [weight-tying, embeddings, output-head, parameters, gpt2]
-sources: 1
-updated: 2026-04-13
-verified_against: gpt2_decoder, 2026-04-30
+sources: 2
+updated: 2026-05-07
+verified_against: Raschka-LLM-2025, 2026-05-07
 confidence: high
 ---
 
@@ -46,6 +46,10 @@ These are inverse operations — it's natural for them to share weights. The mod
 self.out_head = nn.Linear(cfg['emb_dim'], cfg['vocab_size'], bias=False)
 ```
 Modern LLMs universally drop this bias — it's a redundant parameter at this layer.
+
+## Practical Caveat
+
+Raschka 2025 (Ch. 4): "using separate token embedding and output layers results in better training and model performance." Modern LLMs (LLaMA, Mistral, etc.) use **separate** layers despite the theoretical elegance of tying. Weight tying is primarily seen when loading original OpenAI GPT-2 checkpoints. [single-source]
 
 ## Related
 

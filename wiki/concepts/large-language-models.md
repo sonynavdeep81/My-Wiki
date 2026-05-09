@@ -2,9 +2,9 @@
 title: Large Language Models (LLMs)
 type: concept
 tags: [llm, foundation-model, scaling, multimodal]
-sources: 1
-updated: 2026-04-13
-verified_against: Decoder_archtecture, 2026-04-13
+sources: 2
+updated: 2026-05-07
+verified_against: Raschka-LLM-2025, 2026-05-07
 confidence: high
 ---
 
@@ -45,6 +45,21 @@ In 2025, the industry shifted focus from **parameter scaling** (making models bi
 
 Pre-training is expensive (TPUs/GPUs, weeks of computation). GPT-3 cost ~$4.6M. Pre-trained models are called **foundational models**. See [[decoder-only-architecture]] for how training works.
 
+## GPT-3 Training Data Breakdown
+
+| Dataset | Type | Tokens | % sampled |
+|---|---|---|---|
+| CommonCrawl (filtered) | Web crawl | 410B | 60% |
+| WebText2 | Web crawl | 19B | 22% |
+| Books1 + Books2 | Internet books | 67B | 16% |
+| Wikipedia | High-quality | 3B | 3% |
+
+Trained on 300B of 499B available tokens (reason not specified).
+
+## Generalization Abilities
+
+LLMs generalize to unseen tasks via [[zero-shot-few-shot]] learning — no weight updates needed, only prompt construction. This is an [[emergent-abilities]] of scale.
+
 ## Related
 
 - [[transformer-architecture]]
@@ -52,3 +67,4 @@ Pre-training is expensive (TPUs/GPUs, weeks of computation). GPT-3 cost ~$4.6M. 
 - [[scaling-laws]]
 - [[inference-scaling]]
 - [[tokenization]]
+- [[zero-shot-few-shot]]

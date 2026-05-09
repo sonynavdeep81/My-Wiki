@@ -37,7 +37,13 @@ The LLM writes and maintains all files in wiki/. I rarely edit them directly.
 1. Read index.md to find relevant pages
 2. Read those pages fully
 3. Synthesize answer with [[wikilink]] citations
-4. **Source transparency:** if any part of the answer draws on general training knowledge rather than the wiki, flag it explicitly: *"Note: this is from my general knowledge, not the wiki."*
+4. **Source transparency:** Label every claim with its source at the sentence or claim level:
+   - **[book]** — Raschka "Build a Large Language Model (From Scratch)" 2025
+   - **[notebook]** — user's code files (gpt2_decoder.py, classification_fine_tuning.py, instruction_fine_tuning.py)
+   - **[wiki]** — existing wiki concept/query pages
+   - **[general knowledge]** — model training knowledge not from user's sources
+   - **[web]** — fetched from online during the session
+   Never batch-label whole paragraphs — label at the claim level where sources differ.
 5. **Concept page update:** if the answer added depth not already in the relevant concept pages, update those pages immediately — do not wait for an ingest.
 6. Ask me: "Should I file this answer as a wiki page?"
 7. If yes, choose the type:

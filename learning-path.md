@@ -13,6 +13,7 @@ Canonical reading order. Each stage builds on the previous.
 ## Stage 1: Foundations
 
 - [[Large Language Models]]
+- [[Zero-Shot and Few-Shot Learning]]
 - [[Tokenization]]
 - [[Byte-Pair Encoding]]
 - [[Embeddings]]
@@ -21,6 +22,7 @@ Canonical reading order. Each stage builds on the previous.
 ## Stage 2: Transformer Internals
 
 - [[Transformer Architecture]]
+- [[BERT]]
 - [[Softmax]]
 - [[Multi-Head Attention]]
 - [[Cross-Attention]]
@@ -43,6 +45,8 @@ Canonical reading order. Each stage builds on the previous.
 - [[Cross-Entropy Loss]]
 - [[Optimizer]]
 - [[LR Warmup]]
+- [[Cosine Decay]]
+- [[Gradient Clipping]]
 - [[Label Smoothing]]
 
 ## Stage 5: Inference & Decoding
@@ -72,7 +76,7 @@ Canonical reading order. Each stage builds on the previous.
 Topics that belong in the sequence but have no concept page yet:
 
 - **Stage 2**: Sparse attention, relative positional encodings (RoPE, ALiBi)
-- **Stage 4**: Gradient clipping, mixed precision training (fp16/bf16)
+- **Stage 4**: Mixed precision training (fp16/bf16)
 - **Stage 5**: Beam search internals, speculative decoding
 - **Stage 6**: RLHF, DPO, QLoRA, prefix tuning
 - **Stage 7**: ROUGE score, MT-Bench, MMLU evaluation

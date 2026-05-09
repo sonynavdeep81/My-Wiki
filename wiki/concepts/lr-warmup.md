@@ -2,9 +2,9 @@
 title: Learning Rate Warmup
 type: concept
 tags: [training, optimizer, learning-rate, warmup, schedule]
-sources: 1
-updated: 2026-04-18
-verified_against: classification_fine_tuning, 2026-04-30
+sources: 2
+updated: 2026-05-07
+verified_against: Raschka-LLM-2025, 2026-05-07
 confidence: high
 ---
 
@@ -45,8 +45,24 @@ scheduler = torch.optim.lr_scheduler.OneCycleLR(
 
 `gpt2_decoder.py` uses a fixed lr=0.0004 with AdamW — **no warmup scheduler**. Warmup is recommended for longer training runs or larger models.
 
+## Raschka Appendix D — Full Implementation
+
+```python
+# Phase 1: linear warmup
+if global_step < warmup_steps:
+    lr = initial_lr + global_step * lr_increment   # initial_lr=3e-5
+# Phase 2: cosine decay
+else:
+    progress = (global_step - warmup_steps) / (total_steps - warmup_steps)
+    lr = min_lr + (peak_lr - min_lr) * 0.5 * (1 + math.cos(math.pi * progress))
+```
+
+Always paired with [[gradient-clipping]] (applied after warmup phase) and [[cosine-decay]].
+
 ## Related
 
 - [[optimizer]]
 - [[gpt2-from-scratch]]
 - [[scaling-laws]]
+- [[cosine-decay]]
+- [[gradient-clipping]]

@@ -1,14 +1,15 @@
 # Wiki Index
 
 ## Navigation
-- [Learning Path](learning-path.md) — Canonical reading order across all concept pages (7 stages, 34 concepts, 10 gaps)
+- [Learning Path](learning-path.md) — Canonical reading order across all concept pages (7 stages, 38 concepts, 7 gaps)
 
 ## Sources
 - [Decoder Architecture (Slide Deck)](wiki/sources/Decoder_archtecture.md) — 51-slide walkthrough of LLM internals from tokenization to the full decoder-only transformer
 - [GPT-2 Decoder — Architecture & Pretraining (Python)](wiki/sources/gpt2_decoder.md) — PyTorch script: data batching, model architecture, pretraining, inference (temperature/top-k/multinomial), OpenAI weight loading
 - [Classification Fine-Tuning (Python)](wiki/sources/classification_fine_tuning.md) — GPT-2 spam classifier: SpamDataset, freeze strategy, head replacement (bias=True), accuracy training loop
 - [Attention Is All You Need (Paper)](wiki/sources/Attention_2023.md) — Vaswani et al. 2017; encoder-decoder Transformer, scaled dot-product attention, sinusoidal PE, ReLU FFN, Post-LN
-- [Instruction Fine-Tuning (Notebook)](wiki/sources/instruction_fine_tuning.md) — GPT-2 355M instruction fine-tuning: Alpaca format, custom_collate (padding-only masking), AdamW 2 epochs, deterministic eval (top_k=1, temp=1)
+- [Instruction Fine-Tuning (Notebook)](wiki/sources/instruction_fine_tuning.md) — GPT-2 355M instruction fine-tuning: Alpaca format, custom_collate, EOS stop token in generate(), LLM-as-judge evaluation via Groq
+- [Build a Large Language Model (From Scratch)](wiki/sources/Raschka-LLM-2025.md) — Raschka 2025 (Manning); full GPT-2 from-scratch book; parent source for gpt2_decoder, classification, and instruction fine-tuning code
 
 ## Concepts
 - [Large Language Models (LLMs)](wiki/concepts/large-language-models.md) — Neural nets trained on next-token prediction; parameters, multimodal, open vs closed
@@ -45,9 +46,15 @@
 - [Learning Rate Warmup](wiki/concepts/lr-warmup.md) — Gradually ramps LR from 0 to target over first N steps; prevents early divergence
 - [Instruction Fine-Tuning](wiki/concepts/instruction-fine-tuning.md) — Alpaca prompt format; dynamic padding via custom_collate; masks padding only (NOT instruction tokens); AdamW 2 epochs; deterministic eval top_k=1
 - [Cross-Entropy Loss](wiki/concepts/cross-entropy-loss.md) — -log(p_correct); ignore_index=-100 skips masked positions; do not pre-softmax; exp(CE)=perplexity
+- [LLM Evaluation](wiki/concepts/llm-evaluation.md) — Three approaches: benchmarks (MMLU), human preference (LMSYS), automated LLM scoring (AlpacaEval); fair comparison requires same-size models
+- [Cosine Decay](wiki/concepts/cosine-decay.md) — LR schedule following half-cosine curve from peak to min_lr after warmup; prevents overshoot of loss minima
+- [Gradient Clipping](wiki/concepts/gradient-clipping.md) — Caps gradient L2 norm at max_norm=1.0 to prevent exploding gradients; applied after warmup phase
+- [Zero-Shot and Few-Shot Learning](wiki/concepts/zero-shot-few-shot.md) — GPT generalizes to unseen tasks from prompt alone; zero-shot=no examples, few-shot=small demos
+- [BERT](wiki/concepts/bert.md) — Encoder-only transformer; bidirectional masked prediction; strong at classification, weak at generation
 
 ## Entities
 - [Attention Is All You Need](wiki/entities/attention-is-all-you-need.md) — Vaswani et al. 2017; encoder-decoder, 8 heads, d_model=512, ReLU FFN, Post-LN, sinusoidal PE
+- [Sebastian Raschka](wiki/entities/sebastian-raschka.md) — Author of "Build a Large Language Model"; staff research engineer at Lightning AI
 - [Stanford Alpaca](wiki/entities/stanford-alpaca.md) — LLaMA fine-tuned on 52K GPT-3 instruction pairs; popularized Alpaca prompt template; non-commercial
 - [tiktoken](wiki/entities/tiktoken.md) — OpenAI's BPE tokenizer library for GPT models
 - [LLaMA](wiki/entities/llama.md) — Meta's open-source model family; 405B near GPT-4 on MMLU
@@ -66,8 +73,6 @@
 
 ## Queries
 - [Input Text to Output Tokens](wiki/queries/input-to-output-workflow.md) — End-to-end workflow with shape trace and ASCII diagram
-- [Research P3 — LoRA Placement Transferability](wiki/queries/research-p3-sparse-lora.md) — **Active paper.** Cross-task layer-placement transferability for LoRA in small LMs; 3 contributions, 8-week plan, target IEEE Access
-- [P3 Study Guide (student-friendly)](wiki/queries/research-p3-study-guide.md) — Plain-English companion to P3; explains gap, work, and what to study in what order; start here before the technical file
 - [GPT-2 Parameter Count — 124M vs 162M](wiki/queries/gpt2-parameter-count.md) — component breakdown; why model.parameters() double-counts tied weights to show 162M
 - [GPT-2 vs Attention Is All You Need — Params](wiki/queries/gpt2-vs-attention-paper-params.md) — Full parameter comparison: your decoder-only GPT-2 vs the original encoder-decoder Transformer
 - [Evaluation Metrics for a Decoder-Only LLM](wiki/queries/llm-evaluation-metrics.md) — Loss, perplexity, generation quality, fine-tuning metrics; BLEU/ROUGE not applicable
@@ -84,8 +89,6 @@
 - [requires_grad vs torch.no_grad()](wiki/queries/requires-grad-vs-no-grad.md) — requires_grad freezes specific params permanently; no_grad() suspends all tracking temporarily for inference
 - [Classification Fine-Tuning Strategy — What to Freeze and What to Train](wiki/queries/classification-finetuning-strategy.md) — train final head+block+norm; freeze all other 11 blocks; reasons for each
 - [SpamDataset — Classification Fine-Tuning Dataset Implementation](wiki/queries/spam-dataset-implementation.md) — PyTorch Dataset pattern: tokenize → truncate → pad → tensor; max_tokens consistency across splits
-- [Student Paper S1 — LoRA on Hinglish Code-Mixed Tasks](wiki/queries/research-student-hinglish-lora.md) — **Do first.** Placement + rank study on COMI-LINGUA with XLM-R/MuRIL; 4–5 weeks, UGC; India-niche novelty
-- [Student Paper S2 — Layer-Importance Method Comparison](wiki/queries/research-student-layer-importance-comparison.md) — **Do after S1.** Head-to-head of 4 layer-scoring methods on small LMs; 5 weeks; directly supports P3's LOLO
 - [Train vs Val vs Test Split](wiki/queries/train-val-test-split.md) — Model trains on train only; val guides human decisions (indirect leakage); test is final unbiased eval
 - [Instruction Fine-Tuning — Collate Padding Trick (batch_max_length +1)](wiki/queries/instruction-finetuning-collate-padding-trick.md) — pad to max_len+1; inputs=padded[:-1], targets=padded[1:]; extra token becomes last target position
 - [Instruction Fine-Tuning — Data Preparation Pipeline (5 Steps)](wiki/queries/instruction-finetuning-data-pipeline.md) — format → tokenize → pad → shift target left+append 50256 → replace padding with -100
@@ -93,3 +96,4 @@
 - [Instruction Fine-Tuning — Data Format (Instruction + Desired Response)](wiki/queries/instruction-finetuning-data-format.md) — Training pairs of (instruction, desired response); loss on response only; contrast with classification fine-tuning
 - [Instruction Fine-Tuning — Prompt Format (Alpaca and Others)](wiki/queries/instruction-finetuning-prompt-format.md) — No universal standard; Alpaca template popularized but training/inference format must match
 - [Dropout During Fine-Tuning — Why Set drop_rate=0.0](wiki/queries/dropout-during-finetuning.md) — Dropout noise averages out at pretraining scale (~10⁹ looks) but not at fine-tune scale (~10⁴); turn it off when mostly-frozen + small data
+- [How do we evaluate LLMs? (MMLU & comparison strategy)](wiki/queries/llm-evaluation-mmlu.md) — Breadcrumb: 3 evaluation methods; MMLU structure; fair comparison = same-size models

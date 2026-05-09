@@ -2,12 +2,12 @@
 title: Instruction Fine-Tuning (Notebook)
 type: source
 tags: [instruction-tuning, alpaca, collate, training, generate, peft, lora]
-updated: 2026-05-06
+updated: 2026-05-09
 ---
 
 ## Instruction Fine-Tuning (Notebook)
 
-**Summary**: Colab notebook implementing instruction fine-tuning of GPT-2 355M on the Alpaca-style instruction-data.json dataset, covering data pipeline, collate padding, training loop, and generation.
+**Summary**: Colab notebook implementing instruction fine-tuning of GPT-2 355M on the Alpaca-style instruction-data.json dataset, covering data pipeline, collate padding, training loop, generation, and LLM-as-judge evaluation.
 
 ## Key Points
 
@@ -67,6 +67,21 @@ Below is an instruction that describes a task. Write a response that appropriate
 - top_k=1, temperature=1 for deterministic evaluation (greedy — no creativity, exact answer)
 - top_k filtering → softmax → multinomial sampling
 - model.eval() + torch.no_grad() inside loop
+- **EOS stop token** — stops generation when token 50256 (`<|endoftext|>`) is produced:
+  ```python
+  if next_token_id == 50256:
+      break
+  ```
+  Without this, model continues hallucinating new prompts after the response ends. Token 50256 appearing is correct behavior — the model learned to signal "done" via EOS.
+
+## Evaluation
+
+- Saves all test responses to `instruction-data-with-response.json`
+- LLM-as-judge using Groq API + `llama-3.1-8b-instant`
+- API key via `getpass` (Colab-style — prompts user at runtime)
+- Judge prompt: instruction + optional input + expected response + model response → score 0–100 + reason
+- Scores saved to `evaluation_results.json`, downloaded via `files.download()`
+- Evaluated on first 10 entries of test set (`test_data_response[:10]`)
 
 ## Backlinks
 

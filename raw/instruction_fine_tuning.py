@@ -7,7 +7,7 @@ Original file is located at
     https://colab.research.google.com/drive/1sRJOA7cHGwh03DrVphQ80DBDz9l8gC8g
 """
 
-import os, urllib, tiktoken, torch, torch.nn as nn, numpy as np, pandas as pd, ssl, json
+import os, urllib, tiktoken, torch, torch.nn as nn, numpy as np, pandas as pd, ssl, json, tqdm
 from torch.utils.data import Dataset, DataLoader
 
 torch.manual_seed(123)
@@ -537,6 +537,10 @@ print(model_device)
 Make sure that `temperature = 1 `and `top_k = 1` as we dont want any creativity and just want the exact answer.
 """
 
+top_k = 1
+temperature = 1
+max_length = 256
+
 def generate(token_ids, max_length, top_k, temperature, context_size):
   model_device = next(model.parameters()).device
   token_ids = token_ids.to(model_device)
@@ -565,7 +569,7 @@ def generate(token_ids, max_length, top_k, temperature, context_size):
 
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 token_ids = token_ids.to(device)
-generate(token_ids, 35, 1, 1, GPT_CONFIG_355M["context_length"])
+generate(token_ids, max_length, top_k, temperature, GPT_CONFIG_355M["context_length"])
 
 """### We can see that the output is not as expected as the model wasn't fine-tuned.
 
@@ -656,5 +660,139 @@ plot_losses(epochs_seen, train_losses, val_losses)
 
 model_device = next(model.parameters()).device
 token_ids = token_ids.to(model_device)
-generate(token_ids, 35, 1, 1, GPT_CONFIG_355M["context_length"])
+generate(token_ids, max_length, top_k, temperature, GPT_CONFIG_355M["context_length"])
+
+"""During training you appended token 50256 (`<|endoftext|>`) to mark the end of each example, so the model learned to emit it when it believes the response is complete. That's actually the model working correctly — it's signaling "I'm done here". The trailing text after <|endoftext|> ("The following is an instruction...") is the model continuing to hallucinate new prompts — which is also
+  expected behavior when you don't stop at the EOS token.
+
+The fix is to treat 50256 as a stop token in your generate function. When the model outputs it, stop and strip it before displaying.
+"""
+
+def generate(token_ids, max_length, top_k, temperature, context_size):
+  model_device = next(model.parameters()).device
+  token_ids = token_ids.to(model_device)
+
+  model.eval() # set model to evaluation mode (disables dropout)
+  with torch.no_grad(): # disable gradient tracking (saves memory + compute)
+    for i in range(max_length):
+      logits = model(token_ids) # shape: (batch_size, seq_len, vocab_size)
+      logits = logits[:, -1, :]  # take logits for the last token (next-token prediction), shape: (batch_size, vocab_size)
+      top_values, top_indices = torch.topk(logits, k=top_k)  # select top-k highest logits for each batch
+      min_val = top_values[:, -1] #selects the minimum value from each example in batch
+      logits = torch.where(
+          condition = logits < min_val,
+          input = torch.tensor(float('-inf'), device=logits.device), # or use -torch.inf.to(logits.device)
+          other = logits
+      )
+      # only top-k tokens remain; others get -inf → zero probability after softmax
+      scaled_logits = logits/temperature # scale logits to control randomness (temperature scaling)
+      probs = torch.softmax(scaled_logits, dim = -1)
+      next_token_id = torch.multinomial(probs, num_samples = 1)
+      if next_token_id == 50256: # stop token
+        break
+      token_ids = torch.cat([token_ids, next_token_id], dim = -1)
+
+  tokens = tokenizer.decode(token_ids.squeeze(0).tolist())
+  return tokens
+
+
+device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+token_ids = token_ids.to(device)
+generated_text = generate(token_ids, max_length, top_k, temperature, GPT_CONFIG_355M["context_length"])
+print(generated_text)
+
+response_text = generated_text.split('### Response:')[1].strip()
+print(f'\nModel response:\n{response_text}')
+
+model_device = next(model.parameters()).device
+for entry in test_data[:3]:
+  input_text = format_input(entry)
+  token_ids = torch.tensor(tokenizer.encode(input_text)).unsqueeze(0)
+  token_ids = token_ids.to(model_device)
+  generated_text = generate(token_ids, max_length, top_k, temperature, GPT_CONFIG_355M["context_length"])
+  response_text = generated_text.split('### Response:')[1].strip()
+  correct_text = entry['output']
+
+  print(f'Input Text: {input_text}')
+  print(f'\nCorrect Text: {correct_text}')
+  print(f'\nResponse Text: {response_text}')
+  print('-'*50)
+
+"""## Create another file and store all data in it including model responses for evaluation later"""
+
+from tqdm import tqdm
+
+model_device = next(model.parameters()).device
+
+for i, entry in tqdm(enumerate(test_data), total = len(test_data)):
+  input_text = format_input(entry)
+  token_ids = torch.tensor(tokenizer.encode(input_text)).unsqueeze(0)
+  token_ids = token_ids.to(model_device)
+  generated_text = generate(token_ids, max_length, top_k, temperature, GPT_CONFIG_355M["context_length"])
+  parts = generated_text.split('### Response:')
+  if len(parts) < 2: #If ### Response doesnot appear, it fixes that
+    test_data[i]['model_response'] = ""
+    continue
+  response_text = parts[1].strip()
+  test_data[i]['model_response'] = response_text
+
+with open('instruction-data-with-response.json', 'w') as file:
+  json.dump(test_data, file)
+
+test_data[74]
+
+with open('instruction-data-with-response.json', 'r') as file:
+  test_data_response = json.load(file)
+print(test_data_response[74])
+
+"""## Evaluating the fine-tuned LLM"""
+
+!pip install groq
+
+import getpass
+from groq import Groq
+
+secret_value_0 = getpass.getpass("Enter your Groq API Key:")
+client = Groq(api_key=secret_value_0)
+
+def judge(instruction, input_text, expected, model_response):
+      # include input only if it exists
+      input_part = f"\nInput: {input_text}" if input_text.strip() else ""
+
+      prompt = f"""Instruction: {instruction}{input_part}
+  Expected response: {expected}
+  Model response: {model_response}
+
+  Score the model response from 0 to 100. Give a brief reason."""
+
+      result = client.chat.completions.create(
+      model="llama-3.1-8b-instant",
+      messages=[{"role": "user", "content": prompt}]
+  )
+      return result.choices[0].message.content
+
+import time
+
+scores = []
+for i, entry in enumerate(test_data_response[:10]):
+  score = judge(
+      entry["instruction"],
+      entry["input"],
+      entry["output"],
+      entry["model_response"]
+  )
+  scores.append(score)
+  print(f"Entry {i+1}:")
+  print(f"  Instruction : {entry['instruction']}")
+  print(f"  Expected    : {entry['output']}")
+  print(f"  Model said  : {entry['model_response']}")
+  print(f"  Score       : {score}")
+  print("---")
+  time.sleep(0.5)  # avoid hitting rate limit
+
+with open("evaluation_results.json", "w") as f:
+    json.dump(scores, f, indent=2)
+
+from google.colab import files
+files.download("evaluation_results.json")
 

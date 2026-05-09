@@ -1,3 +1,35 @@
+## [2026-05-09] ingest | raw/instruction_fine_tuning.py (updated version)
+
+- Updated: wiki/sources/instruction_fine_tuning.md (EOS stop token, evaluation section)
+- Updated: wiki/concepts/instruction-fine-tuning.md (EOS stop token, LLM-as-judge pipeline)
+- Updated: index.md summary
+- New content: generate() stops at token 50256; full Groq evaluation pipeline added
+- No conflicts found
+
+## [2026-05-09] remove | research pages moved to separate Research wiki
+
+- Deleted: wiki/queries/research-p3-sparse-lora.md
+- Deleted: wiki/queries/research-p3-study-guide.md
+- Deleted: wiki/queries/research-student-hinglish-lora.md
+- Deleted: wiki/queries/research-student-layer-importance-comparison.md
+- Updated: index.md (removed P3, S1, S2 entries)
+
+## [2026-05-08] update | concept: Instruction Fine-Tuning — added performance improvement strategies
+
+- Updated: wiki/concepts/instruction-fine-tuning.md (added 5 strategies: hyperparameter tuning, more data, prompt engineering, larger model, PEFT/LoRA)
+- Source: screenshot from instruction_fine_tuning notebook
+
+## [2026-05-07] ingest | Raschka S. - Build a Large Language Model - 2025.pdf
+
+- Created: wiki/sources/Raschka-LLM-2025.md
+- Created concepts: cosine-decay.md, gradient-clipping.md, zero-shot-few-shot.md, bert.md
+- Created entity: sebastian-raschka.md
+- Updated concepts: weight-tying.md (Raschka caveat on separate layers), lr-warmup.md (Appendix D formula), instruction-fine-tuning.md (Shi et al. 2024 citation, contested tag), large-language-models.md (GPT-3 data table, zero/few-shot)
+- Updated: index.md (6 new entries), learning-path.md (4 new concepts, 1 gap closed)
+- No significant conflicts found; 1 minor update (weight tying caveat), 1 contested flag added (instruction masking)
+
+## [2026-05-07] create | concept: LLM Evaluation + query: How do we evaluate LLMs?
+
 ## [2026-05-05] update | CLAUDE.md — 11 new wiki features adopted
 
 - Added: Features 1–8 from feature-menu.md (concept page updates on Q&A, breadcrumb/artifact query types, gap tracking, learning path, slide deck order, contradiction checking on ingest, source transparency, structural-only lint)

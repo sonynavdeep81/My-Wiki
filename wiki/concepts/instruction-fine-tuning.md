@@ -2,9 +2,9 @@
 title: Instruction Fine-Tuning
 type: concept
 tags: [fine-tuning, instruction-tuning, loss-masking, padding, collate, alpaca]
-sources: 3
-updated: 2026-05-06
-verified_against: instruction_fine_tuning, 2026-05-06
+sources: 4
+updated: 2026-05-08
+verified_against: Raschka-LLM-2025, 2026-05-07
 confidence: high
 ---
 
@@ -64,7 +64,7 @@ if indices.numel() > 1:
     targets[indices[1:]] = ignore_index  # keep first 50256, mask the rest
 ```
 
-> Note: masking instruction tokens (setting them to -100) is a common recommendation for cleaner instruction-following signal, but is a separate design choice not applied here. [single-source]
+> Note: masking instruction tokens is a common recommendation, but Shi et al. 2024 ("Instruction Tuning With Loss Over Instructions," arXiv:2405.14394) showed that **not masking** instructions benefits LLM performance. Raschka 2025 does not mask instructions by default; masking left as an optional exercise. [contested]
 
 ## collate_fn / Dynamic Padding
 
@@ -90,6 +90,46 @@ If tokenized full text > `context_length`, slicing `[:context_length]` may cut i
 | Log interval | every 50 batches |
 
 Two loss trackers: `running_train/val_batch_losses` (batch-level) + `train/val_losses` (epoch-level). Two plots: intermediate batch chart + final epoch chart.
+
+## EOS Stop Token in generate()
+
+**[notebook]** After fine-tuning, the model emits token 50256 (`<|endoftext|>`) to signal end of response — this is correct behavior (it was trained this way). Without stopping at EOS, the model continues hallucinating new prompts after the response.
+
+Fix: add stop check inside generate loop:
+```python
+if next_token_id == 50256:
+    break
+```
+
+## LLM-as-Judge Evaluation
+
+**[notebook]** Evaluation pipeline after fine-tuning:
+1. Generate responses for all test entries → save to `instruction-data-with-response.json`
+2. For each entry, send instruction + expected + model response to judge LLM
+3. Judge (Llama 3.1 8B via Groq) returns score 0–100 + reason
+4. Save all scores to `evaluation_results.json`
+
+Judge prompt structure:
+```
+Instruction: {instruction}
+Input: {input}          ← omitted if empty
+Expected response: {output}
+Model response: {model_response}
+
+Score the model response from 0 to 100. Give a brief reason.
+```
+
+API key retrieved via `getpass` at runtime (Colab) or Kaggle Secrets (Kaggle).
+
+## Strategies to Improve Performance
+
+**[notebook]** After fine-tuning, if results are unsatisfactory:
+
+1. **Tune hyperparameters** — adjust learning rate, batch size, or number of epochs
+2. **More/better data** — increase training dataset size or diversify examples to cover broader topics and styles
+3. **Prompt engineering** — experiment with different instruction formats to guide responses more effectively
+4. **Larger base model** — a bigger pretrained model has greater capacity to capture complex patterns and generate more accurate responses
+5. **PEFT** — use parameter-efficient fine-tuning techniques like [[lora]] instead of full fine-tuning
 
 ## Related
 
