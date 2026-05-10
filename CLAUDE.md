@@ -192,4 +192,7 @@ What to preserve as-is:
 
 **Auto-update `feature-menu.md`:** Whenever a new feature is added to this wiki (new workflow, new rule, new structural pattern), regenerate `feature-menu.md` immediately to reflect the current state.
 
-**Proactive suggestions:** Whenever a pattern of weakness is noticed — repeated gaps in the same area, stale concept pages, workflow friction, structural inconsistency — surface it to the user proactively with a concrete suggestion. Do not wait to be asked. Keep suggestions short: one sentence on the problem, one sentence on the fix.
+**Proactive suggestions:** Surface improvement ideas to the user proactively — do not wait to be asked. This covers two kinds:
+- **Weaknesses:** repeated gaps in the same area, stale concept pages, workflow friction, structural inconsistency.
+- **Positive improvements:** new features, richer examples, better structure, missing workflows, or anything that would make the wiki more useful — even if nothing is broken.
+Keep suggestions short: one sentence on the idea, one sentence on why it would help. Suggest occasionally, not on every session.
