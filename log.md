@@ -1,3 +1,9 @@
+## [2026-05-10] write | LLM Workflow — Student Notes
+
+- Created: wiki/queries/llm-workflow-student-notes.md
+- Full GPT-2 workflow: tokenization → embeddings → dropout → 12× transformer block → output layer
+- Corrections incorporated: dropout on activations (not weights), probabilistic drop, W_O projection after MHA, FFN 768→3072→768 with GELU
+
 ## [2026-05-09] ingest | raw/instruction_fine_tuning.py (updated version)
 
 - Updated: wiki/sources/instruction_fine_tuning.md (EOS stop token, evaluation section)

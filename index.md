@@ -11,6 +11,9 @@
 - [Instruction Fine-Tuning (Notebook)](wiki/sources/instruction_fine_tuning.md) — GPT-2 355M instruction fine-tuning: Alpaca format, custom_collate, EOS stop token in generate(), LLM-as-judge evaluation via Groq
 - [Build a Large Language Model (From Scratch)](wiki/sources/Raschka-LLM-2025.md) — Raschka 2025 (Manning); full GPT-2 from-scratch book; parent source for gpt2_decoder, classification, and instruction fine-tuning code
 
+## Queries
+- [LLM Workflow — Student Notes](wiki/queries/llm-workflow-student-notes.md) — Complete GPT-2 workflow from tokenization to predicted token; student-friendly with corrections on dropout, FFN, and W_O projection
+
 ## Concepts
 - [Large Language Models (LLMs)](wiki/concepts/large-language-models.md) — Neural nets trained on next-token prediction; parameters, multimodal, open vs closed
 - [Transformer Architecture](wiki/concepts/transformer-architecture.md) — Self-attention neural network; three variants (encoder-decoder, decoder-only, encoder-only)
