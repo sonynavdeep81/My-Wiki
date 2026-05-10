@@ -624,6 +624,21 @@ We generate one token at a time. The last token's row tells us what comes next.
 
 ---
 
+### What Is the Model Actually Learning?
+
+The training objective sounds deceptively simple: *predict the next token*. But to predict the next token well across millions of sentences, the model is forced to learn a remarkable amount:
+
+- **Grammar and syntax** — "The cat ___" is far more likely to be followed by "sat" than "jumped the on" — so the model must learn sentence structure.
+- **Facts about the world** — "The capital of France is ___" requires knowing that Paris follows, not London.
+- **Context and meaning** — "I deposited money at the ___" points to "bank" (financial), while "I sat by the ___" points to "bank" (river). The model must learn to distinguish meaning from context.
+- **Long-range dependencies** — "The trophy didn't fit in the suitcase because it was too ___" — the model must track what "it" refers to across the sentence to predict "big" or "large".
+
+None of this is explicitly taught. The model is never told "this is a grammar rule" or "Paris is the capital of France." It discovers all of it purely by being trained to minimise the loss on next-token prediction across a massive corpus of text.
+
+This is why scale matters: the more text the model is trained on, the richer and more nuanced the patterns it learns — and the more capable it becomes at generating coherent, knowledgeable, and contextually appropriate text.
+
+---
+
 ## Full Workflow at a Glance
 
 ```
