@@ -66,6 +66,7 @@ Canonical reading order. Each stage builds on the previous.
 
 - [[Perplexity]]
 - [[BLEU Score]]
+- [[Ablation Study]]
 - [[Scaling Laws]]
 - [[Emergent Abilities]]
 
@@ -107,6 +108,7 @@ Q&A files in the order they should be read — each group assumes the previous g
 ### Group E — Evaluation
 - [[llm-evaluation-metrics]] — loss, perplexity, train/val gap during pretraining
 - [[llm-evaluation-mmlu]] — MMLU, human eval, LLM-as-judge, and fair comparison rules
+- [[ablation-study-explained]] — what an ablation study is; why every paper needs one; concrete table you could run on your GPT-2 build
 
 ### Group F — Fine-Tuning
 - [[classification-finetuning-strategy]] — what to freeze and what to train for classification

@@ -57,6 +57,7 @@
 - [Gradient Clipping](wiki/concepts/gradient-clipping.md) — Caps gradient L2 norm at max_norm=1.0 to prevent exploding gradients; applied after warmup phase
 - [Zero-Shot and Few-Shot Learning](wiki/concepts/zero-shot-few-shot.md) — GPT generalizes to unseen tasks from prompt alone; zero-shot=no examples, few-shot=small demos
 - [BERT](wiki/concepts/bert.md) — Encoder-only transformer; bidirectional masked prediction; strong at classification, weak at generation
+- [Ablation Study](wiki/concepts/ablation-study.md) — Remove one component at a time, measure the drop; mandatory at top venues; types, examples, what it is NOT
 
 ## Entities
 - [Attention Is All You Need](wiki/entities/attention-is-all-you-need.md) — Vaswani et al. 2017; encoder-decoder, 8 heads, d_model=512, ReLU FFN, Post-LN, sinusoidal PE
@@ -106,3 +107,4 @@
 - [[optimizer-zero-grad]] — why zero_grad is needed each training step; gradient accumulation pattern
 - [LayerNorm — Are Scale and Shift Shared Across Tokens?](wiki/queries/layernorm-scale-shift-sharing.md) — γ, β shared across all tokens & batch; per-feature `(emb_dim,)`; 1536 params per LayerNorm in GPT-2 124M
 - [How Many LayerNorm Layers Does GPT-2 Have?](wiki/queries/layernorm-count-gpt2.md) — `2 × n_layers + 1` formula; GPT-2 124M = 25 LayerNorms = 38,400 params; per-size table
+- [What Is an Ablation Study? (Simple Explanation)](wiki/queries/ablation-study-explained.md) — minus-one experiments; ablation table format; difference from tuning/baseline; concrete table you could run on your GPT-2 code

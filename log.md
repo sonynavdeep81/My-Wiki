@@ -451,3 +451,8 @@
 - gpt2-from-scratch.md: updated OpenAI weight-loading code (w_q/w_k/w_v + bias split), fixed misleading 162M-vs-124M-due-to-context-length explanation (it's weight-tying double-count, not ctx), added 2-config note, expanded class hierarchy with all dropout sites; verified_against bumped to 2026-05-14.
 - pytorch-nn-building-blocks.md: verified_against bumped to 2026-05-14 (no content changes — claims still hold).
 - No new query/concept pages created (per ingest plan).
+## [2026-05-14] concept + query | Ablation Study
+- Created wiki/concepts/ablation-study.md (dense, LLM-readable): definition, mechanics, ablation-table format, what-it-is-NOT table, types, famous examples (Vaswani Table 3, BERT NSP, Chinchilla, LoRA), suggested rows for user's gpt2_decoder.
+- Created wiki/queries/ablation-study-explained.md (full readable article in simple language): why ablation is mandatory, common confusions, practical tips, GPT-2-specific ablation table the user could run.
+- Added [[Ablation Study]] to learning-path.md Stage 7 (Evaluation & Scaling).
+- Added [[ablation-study-explained]] to Query Reading Order Group E (Evaluation).
