@@ -442,3 +442,12 @@
 - Updated: wiki/concepts/instruction-fine-tuning.md — fixed masking conflict (padding-only, not instruction tokens); added training hyperparameters section
 - Updated: wiki/concepts/decoding-strategies.md — added deterministic eval mode (top_k=1, temp=1)
 - Updated: index.md
+## [2026-05-14] query | Why optimizer.zero_grad() Is Needed
+## [2026-05-14] query | LayerNorm — Are Scale and Shift Shared Across Tokens?
+## [2026-05-14] query | How Many LayerNorm Layers Does GPT-2 Have?
+## [2026-05-14] ingest | gpt2_decoder.py (re-ingest of updated Colab export)
+- Source page rewritten to reflect 2 configs (ctx=256 scratch / ctx=1024 OpenAI), torch.where inference idiom, OpenAI bias split, helper-function names (cal_*), and 5 new pedagogical sections (QKV Bias, Sanity Check, __call__ vs forward, Weight-Tying walkthrough, Dropout-3x-per-block).
+- dropout.md: corrected dropout placement (3 sites per block + 1 post-emb = 37 total in GPT-2 124M); verified_against bumped to gpt2_decoder, 2026-05-14.
+- gpt2-from-scratch.md: updated OpenAI weight-loading code (w_q/w_k/w_v + bias split), fixed misleading 162M-vs-124M-due-to-context-length explanation (it's weight-tying double-count, not ctx), added 2-config note, expanded class hierarchy with all dropout sites; verified_against bumped to 2026-05-14.
+- pytorch-nn-building-blocks.md: verified_against bumped to 2026-05-14 (no content changes — claims still hold).
+- No new query/concept pages created (per ingest plan).

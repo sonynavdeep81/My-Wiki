@@ -38,6 +38,26 @@ After normalization, apply learnable **scale (γ)** and **shift (β)**:
 
 This allows the model to partially **undo** normalization if needed, learning the optimal range per layer. At training start: γ=1, β=0 (pure normalization).
 
+### Parameter Sharing
+
+| | Shape | Shared across |
+|---|---|---|
+| `μ`, `σ²` (statistics) | scalar per token | nothing — recomputed per token |
+| `γ` (scale) | `(emb_dim,)` | all tokens, all batch examples |
+| `β` (shift) | `(emb_dim,)` | all tokens, all batch examples |
+
+`γ` and `β` are **per-feature, not per-token**: every token in the sequence and every example in the batch is transformed by the same `(γ, β)` vectors. Within one token's `emb_dim` features, each feature has its own scalar `γᵢ`, `βᵢ`. GPT-2 124M LayerNorm has only `2 × 768 = 1536` params per layer, regardless of `seq_len` or `batch_size`. See [[layernorm-scale-shift-sharing]] for full walkthrough.
+
+### Layer Count in a Pre-LN Stack
+
+Each transformer block contains **two** LayerNorms (one before attention, one before FFN), plus **one final** LayerNorm before the output head:
+
+```
+total_layernorms = 2 × n_layers + 1
+```
+
+For GPT-2 124M: `2 × 12 + 1 = 25` LayerNorms → `25 × 1536 = 38,400` params (~0.03% of 124M). Each block has its own independent `(γ, β)` — they are not shared across depth, because each block sits at a different point in the network and sees a different activation distribution. See [[layernorm-count-gpt2]] for per-model-size table and verification code.
+
 ## Pre-LN vs Post-LN
 
 | | Order | Properties |

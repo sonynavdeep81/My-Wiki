@@ -93,8 +93,11 @@ Q&A files in the order they should be read — each group assumes the previous g
 - [[bias-comparison-gpt2-vs-paper]] — which layers use bias in GPT-2 vs the original paper
 - [[gpt2-vs-attention-paper-params]] — architecture comparison: GPT-2 vs Attention Is All You Need
 - [[gpt2-parameter-count]] — why the model shows 162M instead of 124M, and how to fix it
+- [[layernorm-scale-shift-sharing]] — γ and β are shared across all tokens; per-feature, not per-token; 1536 params total
+- [[layernorm-count-gpt2]] — GPT-2 124M has 25 LayerNorms (2×n_layers + 1); each block keeps its own (γ, β); ~38K params total
 
 ### Group D — Training Mechanics
+- [[optimizer-zero-grad]] — why zero_grad is needed, what happens without it, gradient accumulation
 - [[training-loop-primitives]] — zero_grad, backward, step, train/eval, no_grad explained
 - [[requires-grad-vs-no-grad]] — freezing parameters vs suspending gradient tracking
 - [[why-save-optimizer-state]] — why optimizer state must be checkpointed alongside weights

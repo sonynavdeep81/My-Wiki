@@ -4,17 +4,43 @@
     "type": "split",
     "children": [
       {
-        "id": "a7da43633e56413e",
+        "id": "a6c3544260b583fd",
         "type": "tabs",
         "children": [
           {
-            "id": "32f8f242ee6d3ecb",
+            "id": "4de010bd04608306",
             "type": "leaf",
             "state": {
-              "type": "empty",
-              "state": {},
-              "icon": "lucide-file",
-              "title": "New tab"
+              "type": "localgraph",
+              "state": {
+                "options": {
+                  "collapse-filter": true,
+                  "search": "",
+                  "localJumps": 1,
+                  "localBacklinks": true,
+                  "localForelinks": true,
+                  "localInterlinks": false,
+                  "showTags": false,
+                  "showAttachments": false,
+                  "hideUnresolved": false,
+                  "collapse-color-groups": true,
+                  "colorGroups": [],
+                  "collapse-display": true,
+                  "showArrow": false,
+                  "textFadeMultiplier": 0,
+                  "nodeSizeMultiplier": 1,
+                  "lineSizeMultiplier": 1,
+                  "collapse-forces": true,
+                  "centerStrength": 0.518713248970312,
+                  "repelStrength": 10,
+                  "linkStrength": 1,
+                  "linkDistance": 250,
+                  "scale": 1,
+                  "close": true
+                }
+              },
+              "icon": "lucide-git-fork",
+              "title": "Graph view"
             }
           }
         ]
@@ -74,7 +100,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 300
+    "width": 287.5
   },
   "right": {
     "id": "b4181b98fe7b2084",
@@ -136,7 +162,7 @@
             "state": {
               "type": "all-properties",
               "state": {
-                "sortOrder": "frequency",
+                "sortOrder": "alphabetical",
                 "showSearch": false,
                 "searchQuery": ""
               },
@@ -164,7 +190,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 300
+    "width": 200
   },
   "left-ribbon": {
     "hiddenItems": {
@@ -178,25 +204,38 @@
       "marp-slides:Show Slide Preview": false
     }
   },
-  "active": "b777875830149774",
+  "active": "4de010bd04608306",
   "lastOpenFiles": [
-    "wiki/queries/dropout-during-finetuning.md.tmp.1216444.1777225779818",
-    "wiki/queries/dropout-during-finetuning.md",
-    "log.md.tmp.707282.1777016780601",
-    "index.md.tmp.707282.1777016771014",
-    "wiki/queries/train-val-test-split.md",
-    "wiki/queries/requires-grad-vs-no-grad.md.tmp.707282.1777000442081",
-    "log.md.tmp.707282.1777000043792",
-    "index.md.tmp.707282.1777000037709",
-    "wiki/queries/requires-grad-vs-no-grad.md",
-    "wiki/queries/requires-grad-vs-no-grad.md.tmp.707282.1777000032133",
-    "log.md.tmp.707282.1776999553757",
-    "index.md.tmp.707282.1776999548105",
-    "wiki/queries/classification-finetuning-strategy.md",
-    "wiki/queries/classification-finetuning-strategy.md.tmp.707282.1776999538120",
-    "log.md.tmp.707282.1776997739424",
-    "wiki/lint/lint-2026-04-24.md",
+    "wiki/sources/gpt2_decoder.md",
+    "wiki/concepts/decoding-strategies.md",
     "wiki/queries/inference-sliding-window.md",
+    "raw/Positional Embedding.md",
+    "wiki/queries/gpt2-pretraining-implementation-notes.md",
+    "Untitled.canvas",
+    "log.md",
+    "llm-overview.md",
+    "learning-path.md",
+    "raw/2026-05-14.md",
+    "wiki/concepts/bleu-score.md",
+    "wiki/concepts/tokenization.md",
+    "wiki/concepts/fine-tuning.md",
+    "wiki/concepts/instruction-fine-tuning.md",
+    "wiki/queries/instruction-finetuning-data-format.md",
+    "log.md.tmp.112035.ccb89b58a19b",
+    "CLAUDE.md.tmp.112035.85c0096da9ed",
+    "learning-path.md.tmp.112035.78536533065b",
+    "log.md.tmp.112035.3203d4d0fe83",
+    "wiki/queries/why-save-optimizer-state.md.tmp.112035.301f991e3dbf",
+    "wiki/queries/why-concept-pages.md.tmp.112035.b05e0475e041",
+    "wiki/queries/train-val-test-split.md.tmp.112035.fe33de98748a",
+    "wiki/queries/training-loop-primitives.md.tmp.112035.ec277baff263",
+    "wiki/queries/spam-dataset-implementation.md.tmp.112035.95ae57c44766",
+    "wiki/queries/requires-grad-vs-no-grad.md.tmp.112035.b71341a034ba",
+    "wiki/queries/dropout-during-finetuning.md",
+    "wiki/queries/train-val-test-split.md",
+    "wiki/queries/requires-grad-vs-no-grad.md",
+    "wiki/queries/classification-finetuning-strategy.md",
+    "wiki/lint/lint-2026-04-24.md",
     "wiki/queries/context-length-assert.md",
     "wiki/queries/gpt2-parameter-count.md",
     "wiki/queries/dataloader-parameters.md",
@@ -204,20 +243,7 @@
     "blog_finetuning_llms.md",
     "raw/2026-04-21.md",
     "wiki/queries/research-b3-prompt-sensitivity.md",
-    "node_modules/pptxgenjs/README.md",
     "node_modules/jszip/graph.svg",
-    "node_modules/jszip/sponsors.md",
-    "node_modules/jszip/CHANGES.md",
-    "node_modules/pako/README.md",
-    "node_modules/pako/CHANGELOG.md",
-    "node_modules/image-size/Readme.md",
-    "node_modules/readable-stream/README.md",
-    "node_modules/readable-stream/GOVERNANCE.md",
-    "node_modules/readable-stream/CONTRIBUTING.md",
-    "node_modules/readable-stream/doc/wg-meetings/2015-01-30.md",
-    "node_modules/lie/README.md",
-    "node_modules/util-deprecate/History.md",
-    "Untitled 1.canvas",
-    "Untitled.canvas"
+    "Untitled 1.canvas"
   ]
 }

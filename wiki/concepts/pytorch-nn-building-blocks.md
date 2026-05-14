@@ -4,7 +4,7 @@ type: concept
 tags: [pytorch, nn.Module, nn.Linear, nn.Embedding, nn.Parameter, nn.Sequential]
 sources: 0
 updated: 2026-04-14
-verified_against: gpt2_decoder, 2026-04-30
+verified_against: gpt2_decoder, 2026-05-14
 confidence: high
 ---
 

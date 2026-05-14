@@ -2,9 +2,9 @@
 title: Dropout
 type: concept
 tags: [regularization, dropout, pytorch, training]
-sources: 1
-updated: 2026-04-14
-verified_against: Decoder_archtecture, 2026-04-14
+sources: 2
+updated: 2026-05-14
+verified_against: gpt2_decoder, 2026-05-14
 confidence: high
 ---
 
@@ -37,15 +37,24 @@ From the [[gpt2-from-scratch|GPT-2 class hierarchy]]:
 
 ```
 GPT2Model
-  ├── dropout: nn.Dropout(0.1)        ← after embedding sum
+  ├── dropout: nn.Dropout(0.1)              ← (1) after embedding sum
   └── trf_blocks: 12 × TransformerBlock
         ├── att: MultiHeadAttention
-        │     └── dropout(0.1)        ← after attention weights
-        └── ff:  FeedForward
-              └── dropout(0.1)        ← after FFN
+        │     └── dropout(0.1) on att_weights  ← (2) on attention weights (post-softmax, pre-V multiply)
+        ├── dropout(0.1) on att output         ← (3) after MHA, before residual add
+        └── dropout(0.1) on ffn output         ← (4) after FFN, before residual add
 ```
 
-Three dropout points: post-embedding, post-attention softmax, post-FFN. All use `p=0.1` in GPT-2 small.
+**Per transformer block: 3 dropout sites.** Plus 1 after the embedding sum.
+
+| Site | Where | What it zeros |
+|---|---|---|
+| (1) post-embedding | `GPT2Model.forward` | tok_emb + pos_emb sum |
+| (2) on attention weights | inside `MultiHeadAttention` after softmax | randomly drops token-to-token connections |
+| (3) post-attention | `TransformerBlock.forward` after `att(x)` | attention sublayer's output before residual |
+| (4) post-FFN | `TransformerBlock.forward` after `ff(x)` | FFN sublayer's output before residual |
+
+GPT-2 124M total dropout sites: `1 + 12 × 3 = 37`. All share the same `drop_rate=0.1`. All disabled automatically at inference via `model.eval()`.
 
 ---
 

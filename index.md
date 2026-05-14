@@ -8,7 +8,7 @@
 
 ## Sources
 - [Decoder Architecture (Slide Deck)](wiki/sources/Decoder_archtecture.md) — 51-slide walkthrough of LLM internals from tokenization to the full decoder-only transformer
-- [GPT-2 Decoder — Architecture & Pretraining (Python)](wiki/sources/gpt2_decoder.md) — PyTorch script: data batching, model architecture, pretraining, inference (temperature/top-k/multinomial), OpenAI weight loading
+- [GPT-2 Decoder — Architecture & Pretraining (Python)](wiki/sources/gpt2_decoder.md) — Colab-exported PyTorch script: 2 configs (ctx=256 scratch / ctx=1024 OpenAI), full architecture, sanity check, training, save/load, two inference passes (top-k → /T → softmax → multinomial), OpenAI weight loading w/ bias split
 - [Classification Fine-Tuning (Python)](wiki/sources/classification_fine_tuning.md) — GPT-2 spam classifier: SpamDataset, freeze strategy, head replacement (bias=True), accuracy training loop
 - [Attention Is All You Need (Paper)](wiki/sources/Attention_2023.md) — Vaswani et al. 2017; encoder-decoder Transformer, scaled dot-product attention, sinusoidal PE, ReLU FFN, Post-LN
 - [Instruction Fine-Tuning (Notebook)](wiki/sources/instruction_fine_tuning.md) — GPT-2 355M instruction fine-tuning: Alpaca format, custom_collate, EOS stop token in generate(), LLM-as-judge evaluation via Groq
@@ -103,3 +103,6 @@
 - [Instruction Fine-Tuning — Prompt Format (Alpaca and Others)](wiki/queries/instruction-finetuning-prompt-format.md) — No universal standard; Alpaca template popularized but training/inference format must match
 - [Dropout During Fine-Tuning — Why Set drop_rate=0.0](wiki/queries/dropout-during-finetuning.md) — Dropout noise averages out at pretraining scale (~10⁹ looks) but not at fine-tune scale (~10⁴); turn it off when mostly-frozen + small data
 - [How do we evaluate LLMs? (MMLU & comparison strategy)](wiki/queries/llm-evaluation-mmlu.md) — Breadcrumb: 3 evaluation methods; MMLU structure; fair comparison = same-size models
+- [[optimizer-zero-grad]] — why zero_grad is needed each training step; gradient accumulation pattern
+- [LayerNorm — Are Scale and Shift Shared Across Tokens?](wiki/queries/layernorm-scale-shift-sharing.md) — γ, β shared across all tokens & batch; per-feature `(emb_dim,)`; 1536 params per LayerNorm in GPT-2 124M
+- [How Many LayerNorm Layers Does GPT-2 Have?](wiki/queries/layernorm-count-gpt2.md) — `2 × n_layers + 1` formula; GPT-2 124M = 25 LayerNorms = 38,400 params; per-size table
