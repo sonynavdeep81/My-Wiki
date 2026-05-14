@@ -2,7 +2,7 @@
 title: Complete LLM Workflow — From Input Sentence to Output Token
 type: query
 tags: [transformer, gpt2, workflow, student-notes]
-updated: 2026-05-10
+updated: 2026-05-14
 ---
 
 # Complete LLM Workflow — From Input Sentence to Output Token

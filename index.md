@@ -3,6 +3,9 @@
 ## Navigation
 - [Learning Path](learning-path.md) — Canonical reading order across all concept pages (7 stages, 38 concepts, 7 gaps)
 
+## Queries
+- [GPT-2 Pretraining Implementation — Study Notes](wiki/queries/gpt2-pretraining-implementation-notes.md) — Q&A session: dataset creation, LayerNorm, MultiHeadAttention, weight tying, shapes, and PyTorch mechanics
+
 ## Sources
 - [Decoder Architecture (Slide Deck)](wiki/sources/Decoder_archtecture.md) — 51-slide walkthrough of LLM internals from tokenization to the full decoder-only transformer
 - [GPT-2 Decoder — Architecture & Pretraining (Python)](wiki/sources/gpt2_decoder.md) — PyTorch script: data batching, model architecture, pretraining, inference (temperature/top-k/multinomial), OpenAI weight loading

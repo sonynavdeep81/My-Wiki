@@ -2,12 +2,26 @@
 title: Why .bool() on the Causal Mask
 type: query
 tags: [causal-masking, pytorch, register_buffer, masked_fill, gpt2]
-updated: 2026-04-14
+updated: 2026-05-14
 ---
 
 ## Why `.bool()` on the Causal Mask
 
-**Summary**: `.bool()` is required by `masked_fill_` which only accepts boolean tensors, and it halves memory usage compared to integer tensors.
+**Summary**: `.bool()` is required by `masked_fill` which only accepts boolean tensors, and it saves memory compared to integer tensors.
+
+---
+
+## What Is the Causal Mask?
+
+In a language model, each token should only be able to attend to itself and the tokens that came before it — not the tokens that come after. This is called **causal masking** (also called an autoregressive mask).
+
+The causal mask is a matrix of True/False values that tells the attention mechanism which positions to block:
+- `True` = this is a future token → block it (replace with -infinity)
+- `False` = this is a past or current token → allow it
+
+---
+
+## How It Is Created
 
 ```python
 self.register_buffer('causal_mask',
@@ -15,11 +29,9 @@ self.register_buffer('causal_mask',
                diagonal=1).bool())
 ```
 
----
+**Step 1 — `torch.ones(...)`:** Creates a matrix of all 1s with shape `(context_length, context_length)`.
 
-## What `.bool()` Does to the Tensor
-
-`torch.triu(..., diagonal=1)` produces integer 0s and 1s:
+**Step 2 — `torch.triu(..., diagonal=1)`:** Keeps only the upper triangle (above the main diagonal), setting everything else to 0:
 
 ```
 [[0, 1, 1, 1],
@@ -28,7 +40,9 @@ self.register_buffer('causal_mask',
  [0, 0, 0, 0]]
 ```
 
-After `.bool()`:
+The 1s represent future positions that should be blocked.
+
+**Step 3 — `.bool()`:** Converts 0s and 1s to False and True:
 
 ```
 [[False, True,  True,  True ],
@@ -37,23 +51,23 @@ After `.bool()`:
  [False, False, False, False]]
 ```
 
-`True` = future position (blocked), `False` = past/current position (allowed).
-
 ---
 
-## Purpose 1 — `masked_fill_` requires a BoolTensor
+## Why `.bool()` Is Required
 
-The mask is never added to scores as a value. It is used to **select positions to overwrite**:
+The mask is used with `masked_fill`:
 
 ```python
-scores.masked_fill_(self.causal_mask[:T, :T], float('-inf'))
+att_scores.masked_fill(self.causal_mask[:num_tokens, :num_tokens], -torch.inf)
 ```
 
-`masked_fill_` fills every position where the mask is `True` with the given value (`-inf`). It strictly requires a boolean tensor — passing an integer tensor raises a `RuntimeError`.
+`masked_fill` fills every position where the mask is `True` with `-infinity`. It strictly requires a **boolean tensor** as input. If you pass an integer tensor (0s and 1s), PyTorch raises a `RuntimeError`.
+
+So `.bool()` is not optional — it is required for the code to run.
 
 ---
 
-## Purpose 2 — Memory Efficiency
+## Why `.bool()` Also Saves Memory
 
 | Dtype | Bytes per element | 1024×1024 mask |
 |---|---|---|
@@ -61,24 +75,31 @@ scores.masked_fill_(self.causal_mask[:T, :T], float('-inf'))
 | int32 | 4 bytes | 4 MB |
 | bool | 1 byte | **1 MB** |
 
-The mask lives in GPU memory for the entire training run, so the 4× saving matters.
+The mask lives in GPU memory for the entire training run. Using bool instead of float or int gives a 4× memory saving — which matters when context lengths are large.
 
 ---
 
-## Full Forward-Pass Flow
+## The Full Flow During a Forward Pass
 
 ```
-torch.triu(ones, diagonal=1)        → int tensor  (upper triangle = 1)
-.bool()                             → bool tensor (upper triangle = True)
-register_buffer(...)                → non-trainable, moves to GPU with model
+# Setup (once, at model creation):
+torch.triu(ones, diagonal=1)     → integer tensor (1 = future, 0 = past)
+.bool()                          → bool tensor   (True = future, False = past)
+register_buffer(...)             → non-trainable, moves to GPU with the model
 
-# At each forward pass:
-scores = Q @ K.T / sqrt(d_k)
-scores.masked_fill_(mask[:T,:T], -inf)
-#   True  positions → -inf  (future tokens, blocked)
-#   False positions → unchanged (past/current tokens, visible)
-softmax(scores)                     → -inf becomes 0.0 (zero attention weight)
+# At every forward pass:
+att_scores = Q @ Kᵀ / √d_k      → raw attention scores
+masked_fill(mask[:T,:T], -inf)   → future positions set to -infinity
+softmax(att_scores)              → -infinity becomes 0.0 (zero attention weight)
 ```
+
+The result: each token can only attend to itself and previous tokens. Future tokens are invisible.
+
+---
+
+## Why `mask[:num_tokens, :num_tokens]`?
+
+The mask is pre-built for the full `context_length` (e.g., 256×256). But the actual input sequence may be shorter. Slicing `[:num_tokens, :num_tokens]` trims the mask to match the actual sequence length — no wasted computation, no index errors.
 
 ---
 
@@ -86,5 +107,5 @@ softmax(scores)                     → -inf becomes 0.0 (zero attention weight)
 
 - [[causal-masking]]
 - [[multi-head-attention]]
-- [[gpt2-from-scratch|GPT-2 From-Scratch Patterns]]
-- [[pytorch-nn-building-blocks|PyTorch nn Building Blocks]]
+- [[gpt2-from-scratch]]
+- [[pytorch-nn-building-blocks]]

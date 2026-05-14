@@ -47,6 +47,7 @@ The LLM writes and maintains all files in wiki/. I rarely edit them directly.
 5. **Concept page update:** if the answer added depth not already in the relevant concept pages, update those pages immediately — do not wait for an ingest.
 6. Ask me: "Should I file this answer as a wiki page?"
 7. If yes, choose the type:
+   - After filing, insert the new query into the correct position in the **Query Reading Order** section of `learning-path.md` — place it in the group whose prerequisite knowledge it assumes, in dependency order within that group.
    - **Breadcrumb** — short summary + links to concept pages. Use when the answer draws from existing pages and the depth now lives there.
    - **Format artifact** — full content kept. Use when the output format itself is the value (study notes, audience-specific explainer, structured comparison). Default to breadcrumb.
 
@@ -172,16 +173,24 @@ During Q&A, surface these tags explicitly rather than presenting contested claim
 
 Concept pages carry a `verified_against:` frontmatter field — the source name and date the page was last checked against a raw source. When a raw source is deleted or updated, treat all concept pages with `verified_against: [that source]` as potentially stale and flag them.
 
-## Dense Storage Format
+## Storage Format by File Type
 
-Wiki pages are notes for the LLM, not explanations for humans. Store information densely:
+Different file types serve different readers — format accordingly:
+
+### wiki/concepts/ and wiki/sources/ — Dense (LLM reads these)
 - Use tables, bullet key:value pairs, code snippets
 - No prose padding, no analogies, no "think of it like..." sentences
-- The LLM reconstructs full human-friendly explanations from dense notes at query time
-- When answering the user, explain in simple, easy-to-understand language
-- Aim for maximum information per line; cut any line that restates another
+- The LLM reads these frequently to answer questions — maximum information per line
+- Cut any line that restates another
 
-What to preserve as-is:
+### wiki/queries/ — Full readable articles (human reads these)
+- Write as a complete article from A to Z — simple, easy-to-understand language
+- Use examples, tables, code snippets with explanations
+- Explain the why, not just the what
+- A student should be able to read this file without asking any follow-up questions
+- Do NOT use dense shorthand — this file is for human revision, not LLM lookup
+
+### All file types — preserve as-is:
 - **ASCII diagrams** — keep exactly; they convey shape/flow/connections more densely than any alternative
 - **Code snippets** — already dense; do not paraphrase
 - **Shape traces and math** — already dense; do not paraphrase

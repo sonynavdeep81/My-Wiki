@@ -71,6 +71,51 @@ Canonical reading order. Each stage builds on the previous.
 
 ---
 
+## Query Reading Order
+
+Q&A files in the order they should be read — each group assumes the previous group is done. New queries are inserted here at the correct position when filed.
+
+### Group A — Meta & Basic ML (no prerequisites)
+- [[why-concept-pages]] — how this wiki works and why it is structured this way
+- [[train-val-test-split]] — train / val / test splits and why all three are needed
+
+### Group B — PyTorch Foundations
+- [[model-parameters-numel]] — what model.parameters() yields and how to count params
+- [[register-buffer]] — why register_buffer exists vs nn.Parameter vs plain attribute
+- [[dataloader-parameters]] — shuffle, drop_last, and when to use each
+
+### Group C — GPT-2 Architecture & Data Pipeline
+- [[llm-workflow-student-notes]] — complete end-to-end LLM workflow with examples (start here)
+- [[input-to-output-workflow]] — concise shape-traced workflow from text to token
+- [[gpt2-pretraining-implementation-notes]] — full implementation Q&A covering all components
+- [[context-length-assert]] — why sequences must not exceed context_length
+- [[causal-mask-bool]] — why .bool() on the causal mask and how masked_fill works
+- [[bias-comparison-gpt2-vs-paper]] — which layers use bias in GPT-2 vs the original paper
+- [[gpt2-vs-attention-paper-params]] — architecture comparison: GPT-2 vs Attention Is All You Need
+- [[gpt2-parameter-count]] — why the model shows 162M instead of 124M, and how to fix it
+
+### Group D — Training Mechanics
+- [[training-loop-primitives]] — zero_grad, backward, step, train/eval, no_grad explained
+- [[requires-grad-vs-no-grad]] — freezing parameters vs suspending gradient tracking
+- [[why-save-optimizer-state]] — why optimizer state must be checkpointed alongside weights
+- [[spam-dataset-implementation]] — SpamDataset: tokenization, truncation, padding
+- [[inference-sliding-window]] — how to handle sequences longer than context_length at inference
+
+### Group E — Evaluation
+- [[llm-evaluation-metrics]] — loss, perplexity, train/val gap during pretraining
+- [[llm-evaluation-mmlu]] — MMLU, human eval, LLM-as-judge, and fair comparison rules
+
+### Group F — Fine-Tuning
+- [[classification-finetuning-strategy]] — what to freeze and what to train for classification
+- [[dropout-during-finetuning]] — why drop_rate=0.0 during partial fine-tuning
+- [[instruction-finetuning-data-format]] — instruction + response pair format
+- [[instruction-finetuning-prompt-format]] — Alpaca and other prompt templates
+- [[instruction-finetuning-data-pipeline]] — 5-step data preparation pipeline
+- [[instruction-finetuning-collate-padding-trick]] — batch_max_length +1 padding trick
+- [[instruction-finetuning-training-mechanics]] — dynamic padding, loss masking, instruction tokens
+
+---
+
 ## Gaps in This Path
 
 Topics that belong in the sequence but have no concept page yet:

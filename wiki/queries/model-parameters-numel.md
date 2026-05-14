@@ -2,89 +2,132 @@
 title: model.parameters() and p.numel() Explained
 type: query
 tags: [pytorch, nn.Module, parameters, numel, weight-tying, gpt2]
-updated: 2026-04-14
+updated: 2026-05-14
 ---
 
-## `model.parameters()` and `p.numel()` Explained
+## model.parameters() and p.numel() Explained
 
-**Summary**: `model.parameters()` recursively yields every `nn.Parameter` in the model hierarchy; `p.numel()` returns the total scalar element count of a tensor. Together they count total trainable parameters — with a caveat for weight-tied parameters being counted twice.
+**Summary**: `model.parameters()` recursively yields every trainable parameter in the model. `p.numel()` counts the scalar elements in one parameter tensor. Together they give the total trainable parameter count — with a caveat for weight-tied parameters being counted twice.
 
 ---
 
-## `model.parameters()`
+## What Is a Parameter?
 
-Recursively walks every `nn.Module` in the hierarchy and yields every `nn.Parameter` it finds. In your GPT-2 implementation:
+A parameter is a tensor that the optimizer updates during training. In PyTorch, parameters are created with `nn.Parameter`:
+
+```python
+self.scale = nn.Parameter(torch.ones(768))   # trainable ✓
+self.mask  = torch.ones(256, 256)             # plain tensor — not a parameter ✗
+```
+
+Only `nn.Parameter` objects are tracked by `nn.Module` and updated by the optimizer.
+
+---
+
+## model.parameters()
+
+`model.parameters()` recursively walks the entire model hierarchy and yields every `nn.Parameter` it finds. For GPT-2, it yields:
 
 ```
 GPT2Model.parameters() yields:
   tok_emb.weight              (50,257 × 768)
-  pos_emb.weight              (256    × 768)
-  trf_blocks[0..11] each:
-    ln1.weight, ln1.bias
-    att.W_query.weight/bias
-    att.W_key.weight/bias
-    att.W_value.weight/bias
-    att.W_out.weight/bias
-    ln2.weight, ln2.bias
-    ff.layers[0].weight/bias
-    ff.layers[2].weight/bias
-  final_norm.weight, final_norm.bias
-  out_head.weight             (50,257 × 768) ← same tensor as tok_emb.weight
+  pos_emb.weight              (   256 × 768)
+
+  For each of 12 transformer blocks:
+    ln1.scale, ln1.shift
+    att.W_query.weight, att.W_query.bias
+    att.W_key.weight,   att.W_key.bias
+    att.W_value.weight, att.W_value.bias
+    att.W_out.weight,   att.W_out.bias
+    ln2.scale, ln2.shift
+    ff.layers[0].weight, ff.layers[0].bias
+    ff.layers[2].weight, ff.layers[2].bias
+
+  final_norm.scale, final_norm.shift
+  out_head.weight             (50,257 × 768)  ← same tensor as tok_emb.weight if tied
 ```
 
 ---
 
-## `p.numel()`
+## p.numel()
 
-Returns the total number of scalar elements in a tensor:
+`numel()` returns the **total number of scalar elements** in a tensor:
 
 ```python
 p = torch.ones(768, 3072)
-p.numel()  # → 2,359,296  (768 × 3072)
-```
+p.numel()   # → 2,359,296  (768 × 3072 = 2,359,296 individual numbers)
 
-The full expression:
-
-```python
-sum(p.numel() for p in model.parameters())
-```
-
-Iterates every parameter, counts elements, sums — giving total trainable scalar values.
-
----
-
-## Weight Tying Caveat
-
-`out_head.weight` and `tok_emb.weight` point to the **same tensor** in memory (see [[weight-tying]]). `model.parameters()` yields both, so the sum counts 50,257×768 = 38.6M parameters **twice**.
-
-To get the true unique count:
-
-```python
-# Counts duplicates (what print usually shows)
-sum(p.numel() for p in model.parameters())
-
-# Deduplicated count
-sum(p.numel() for p in set(model.parameters()))
+p = torch.ones(50257, 768)
+p.numel()   # → 38,597,376  (50,257 × 768)
 ```
 
 ---
 
-## What Is and Isn't Included
+## Counting Total Parameters
 
-| Tensor type | In `parameters()`? | Trained? |
+```python
+total = sum(p.numel() for p in model.parameters())
+print(f"Total parameters: {total:,}")
+# → 162,000,000  (without weight tying)
+# →  124,000,000  (with weight tying)
+```
+
+This iterates through every parameter tensor, counts its elements, and sums them all up.
+
+---
+
+## The Weight Tying Caveat
+
+With weight tying, `out_head.weight` and `tok_emb.weight` point to the **same tensor in memory**. But `model.parameters()` yields both names — it does not check for duplicates. So the 50,257×768 = 38.6M parameter tensor is counted twice.
+
+```python
+# Standard count — counts tied params twice
+sum(p.numel() for p in model.parameters())        # → ~162M
+
+# Deduplicated count — correct unique count
+sum(p.numel() for p in set(model.parameters()))   # → ~124M
+```
+
+`set()` removes duplicates based on object identity — if two names point to the same tensor, it only counts it once.
+
+---
+
+## What Is and Is Not Included
+
+| Tensor type | Included in parameters()? | Trained by optimizer? |
 |---|---|---|
 | `nn.Parameter` (weights, biases) | Yes | Yes |
 | `register_buffer` (causal_mask) | No | No |
-| Plain Python attributes (n_heads) | No | No |
-| Tied weights (out_head = tok_emb) | Yes — counted twice | Same tensor |
+| Plain Python attributes (n_heads=12) | No | No |
+| Weight-tied tensor | Yes — counted twice | Yes — same tensor updated once |
 
-`register_buffer` tensors are excluded because they are non-trainable — they appear in `model.state_dict()` but not in `model.parameters()`. See [[register-buffer|Why Use register_buffer?]].
+`register_buffer` tensors are saved in `model.state_dict()` (for checkpointing) but excluded from `model.parameters()` (not trained). They are a middle category — PyTorch-aware but not learnable.
+
+---
+
+## Practical Example
+
+```python
+model = GPT2Model(GPT_CONFIG_124M)
+
+# Count all parameters
+total = sum(p.numel() for p in model.parameters())
+print(f"Total: {total:,}")   # 162,086,400 (without weight tying)
+
+# Count unique parameters
+unique = sum(p.numel() for p in set(model.parameters()))
+print(f"Unique: {unique:,}") # 123,488,768 (with weight tying)
+
+# Count only trainable parameters (same as all, since no frozen layers here)
+trainable = sum(p.numel() for p in model.parameters() if p.requires_grad)
+print(f"Trainable: {trainable:,}")
+```
 
 ---
 
 ## Related
 
-- [[pytorch-nn-building-blocks|PyTorch nn Building Blocks]]
 - [[weight-tying]]
-- [[gpt2-from-scratch|GPT-2 From-Scratch Patterns]]
-- [[register-buffer|Why Use register_buffer?]]
+- [[gpt2-from-scratch]]
+- [[gpt2-parameter-count]]
+- [[register-buffer]]

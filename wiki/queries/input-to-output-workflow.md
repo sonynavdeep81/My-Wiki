@@ -1,154 +1,203 @@
 ---
-title: Complete Workflow: Input Text to Output Tokens
+title: Complete Workflow — Input Text to Output Token
 type: query
 tags: [workflow, inference, tokenization, attention, decoding, end-to-end, dropout, residual]
 sources: 2
-updated: 2026-04-23
+updated: 2026-05-14
 ---
 
-## Complete Workflow: Input Text to Output Tokens
+## Complete Workflow — Input Text to Output Token
 
-**Summary**: End-to-end shape trace from raw text → next token for a GPT-2 decoder-only LLM, including all dropout placements and residual connections.
+**Summary**: End-to-end walkthrough from raw input text to a generated next token in GPT-2, including shapes, dropout placements, and residual connections at every stage.
+
+---
+
+## Overview
+
+GPT-2 takes a sequence of text, converts it to numbers, passes those numbers through 12 transformer blocks, and produces a probability distribution over its 50,257-word vocabulary. It then samples from that distribution to pick the next word. This process repeats until the full output is generated.
+
+---
+
+## Stage 1 — Tokenization
+
+```
+Input text:  "Every effort takes you"
+             ↓
+Token IDs:   [464, 3797, 3332, 319]   shape: (4,)
+```
+
+The text is converted to integer IDs using tiktoken's BPE tokenizer (the same one OpenAI used for GPT-2). Each word or sub-word maps to a number in the 50,257-word vocabulary.
+
+---
+
+## Stage 2 — Embedding Layer
+
+```
+Token IDs: [464, 3797, 3332, 319]   shape: (4,)
+           ↓
+tok_emb:   shape (4, 768)    ← each ID looked up in 50,257×768 table
+pos_emb:   shape (4, 768)    ← positions [0,1,2,3] looked up in 256×768 table
+           ↓
+x = tok_emb + pos_emb        shape: (4, 768)
+x = Dropout(0.1)(x)          shape: (4, 768)  ← training only
+```
+
+Each token gets two embeddings added together:
+- **Token embedding:** what is this token? (meaning)
+- **Positional embedding:** where is this token in the sequence? (position)
+
+Dropout is applied once here during training to regularize the embedding layer.
+
+---
+
+## Stage 3 — 12 Transformer Blocks (Repeated)
+
+Each of the 12 blocks does the same two operations in sequence, both with residual connections:
+
+### Attention Sub-Block
+
+```
+shortcut = x                              ← save input for residual
+x = LayerNorm(x)                          ← normalize before attention
+x = MultiHeadAttention(x)                 ← tokens attend to each other
+x = Dropout(0.1)(x)                       ← training only
+x = x + shortcut                          ← residual connection 1
+```
+
+Inside MultiHeadAttention:
+- `Q = x @ W_Q`, `K = x @ W_K`, `V = x @ W_V` — project to queries, keys, values
+- Split into 12 heads, each with dimension 64 (768 / 12 = 64)
+- `att_scores = Q @ Kᵀ / √64` — scaled dot-product attention
+- Apply causal mask: set future positions to -∞ (after softmax these become 0)
+- `att_weights = softmax(att_scores)` → apply dropout on weights
+- `context = att_weights @ V` → concat 12 heads → project via W_O
+
+### FeedForward Sub-Block
+
+```
+shortcut = x                              ← save input for residual
+x = LayerNorm(x)                          ← normalize before FFN
+x = FeedForward(x)                        ← 768 → 3072 → 768
+x = Dropout(0.1)(x)                       ← training only
+x = x + shortcut                          ← residual connection 2
+```
+
+The FFN processes each token independently (no token mixing here — all mixing happens in attention). GELU activation between the two linear layers.
+
+---
+
+## Stage 4 — Final LayerNorm and Output Head
+
+```
+x = LayerNorm(x)              shape: (4, 768)
+logits = out_head(x)          shape: (4, 50257)
+```
+
+The output head maps each token's 768-dim vector to 50,257 scores — one per vocabulary word. This gives a score for "what comes next after this token?"
+
+---
+
+## Stage 5 — Decoding (Inference Only)
+
+Only the **last token's** scores are used at inference time:
+
+```
+logits[-1]           shape: (50257,)   ← scores for "what comes after 'you'?"
+         ↓
+top-k masking        zero out all but top-25 scores
+         ↓
+÷ temperature (1.4)  flatten the distribution (higher = more random)
+         ↓
+softmax              convert scores to probabilities
+         ↓
+multinomial sample   randomly pick one token from the distribution
+         ↓
+token ID: 2651       → decoded to "forward"
+```
+
+---
+
+## Full Shape Trace
+
+| Stage | Shape | Note |
+|---|---|---|
+| Token IDs | (4,) | integer token indices |
+| After embedding | (4, 768) | tok_emb + pos_emb |
+| After each block | (4, 768) | shape unchanged through all 12 blocks |
+| After final norm | (4, 768) | |
+| Logits | (4, 50257) | all positions |
+| Inference logits | (50257,) | last row only |
+| Sampled token | scalar | one new token ID |
+
+---
+
+## Dropout Placements — 3 Per Block
+
+| Location | When active |
+|---|---|
+| After embedding (tok + pos) | Training only |
+| After attention weights (inside MHA) | Training only |
+| After MHA output (before residual) | Training only |
+| After FFN output (before residual) | Training only |
+
+All disabled automatically at inference via `model.eval()`.
+
+---
 
 ## Full Pipeline Diagram
 
 ```
-INPUT TEXT
 "Every effort takes you"
          │
+    TOKENIZATION
+    tiktoken BPE
+         │ [464, 3797, 3332, 319]
          ▼
-┌─────────────────────────────┐
-│        TOKENIZATION         │
-│  tiktoken BPE (GPT-2)       │
-│  "Every"→464, "effort"→3797 │
-│  "takes"→3332, "you"→319    │
-└─────────────┬───────────────┘
-              │  token IDs: [464, 3797, 3332, 319]   shape: (T,)
-              ▼
-┌─────────────────────────────────────────────────────┐
-│                   EMBEDDING LAYER                    │
-│                                                      │
-│  Token IDs ──► tok_emb  (50,257 × 768)  ──► (T,768) │
-│  [0,1,2,3]  ──► pos_emb (  256  × 768)  ──► (T,768) │
-│                              +                       │
-│                   final_input  (T, 768)              │
-│                    + Dropout(0.1)                    │
-└─────────────────────┬───────────────────────────────┘
-                      │  (T, 768)
-                      │
-          ┌───────────┴───────────┐
-          │   REPEAT ×12 BLOCKS   │
-          │                       │
-          │  ┌─────────────────┐  │
-          │  │   LayerNorm     │  │
-          │  └────────┬────────┘  │
-          │           │           │
-          │  ┌────────▼────────┐  │
-          │  │ MASKED MULTI-   │  │
-          │  │ HEAD ATTENTION  │  │
-          │  │                 │  │
-          │  │ X·W_Q → Q       │  │
-          │  │ X·W_K → K  ×12  │  │
-          │  │ X·W_V → V heads │  │
-          │  │                 │  │
-          │  │ Q·Kᵀ/√64        │  │
-          │  │  + causal mask  │  │  ← future tokens → -∞
-          │  │  → softmax      │  │
-          │  │  → Dropout(0.1) │  │  ← training only
-          │  │  ·V → concat    │  │
-          │  │  ·W_O → (T,768) │  │
-          │  └────────┬────────┘  │
-          │           │           │
-          │      + residual X     │  ← skip connection 1
-          │           │           │
-          │  ┌────────▼────────┐  │
-          │  │   LayerNorm     │  │
-          │  └────────┬────────┘  │
-          │           │           │
-          │  ┌────────▼────────┐  │
-          │  │  FEED-FORWARD   │  │
-          │  │  768→3072(GELU) │  │
-          │  │     →768        │  │
-          │  └────────┬────────┘  │
-          │           │           │
-          │      + residual       │  ← skip connection 2
-          │                       │
-          └───────────┬───────────┘
-                      │  (T, 768)  ← rich contextual vectors
-                      ▼
-         ┌────────────────────────┐
-         │     Final LayerNorm    │
-         └────────────┬───────────┘
-                      │
-         ┌────────────▼───────────┐
-         │   Linear Head          │
-         │   768 → 50,257 logits  │
-         └────────────┬───────────┘
-                      │  (T, 50257) — only LAST ROW used at inference
-                      ▼
-         ┌────────────────────────┐
-         │   DECODING STRATEGY    │
-         │                        │
-         │  1. top-k mask (k=25)  │  ← zero out all but top 25 logits
-         │  2. ÷ temperature(1.4) │  ← sharpen/flatten distribution
-         │  3. softmax → probs    │
-         │  4. multinomial sample │
-         └────────────┬───────────┘
-                      │  next token ID, e.g. 2651 ("forward")
-                      ▼
-         ┌────────────────────────┐
-         │   DETOKENIZE           │
-         │   2651 → "forward"     │
-         └────────────┬───────────┘
-                      │
-                      ▼
-         Append to input → repeat until [EOS] or max_length
-
-OUTPUT: "Every effort takes you forward ..."
+    EMBEDDING LAYER
+    tok_emb + pos_emb + Dropout
+         │ (4, 768)
+         ▼
+    ┌─────────────────┐
+    │  REPEAT ×12     │
+    │                 │
+    │  LayerNorm      │
+    │  ↓              │
+    │  MultiHead      │
+    │  Attention      │
+    │  + causal mask  │
+    │  + Dropout      │
+    │  + residual     │
+    │                 │
+    │  LayerNorm      │
+    │  ↓              │
+    │  FeedForward    │
+    │  768→3072→768   │
+    │  + Dropout      │
+    │  + residual     │
+    └────────┬────────┘
+             │ (4, 768)
+         FINAL NORM
+             │
+         OUT HEAD
+         768 → 50257
+             │ (4, 50257)
+    last row only ↓
+         DECODING
+         top-k → temperature → softmax → sample
+             │
+         "forward"
 ```
 
-## Shape Trace
+---
 
-| Stage | Shape | Note |
-|---|---|---|
-| Token IDs | (T,) | integers |
-| Embeddings | (T, 768) | tok + pos summed |
-| After embedding dropout | (T, 768) | training only |
-| Each block output | (T, 768) | unchanged shape |
-| Logits | (T, 50257) | all positions |
-| Inference logits | (50257,) | last row only |
-| Sampled token | scalar | one new token |
+## Key Facts to Remember
 
-## Dropout Placements (2 total)
+- **Training uses all positions:** during training, the loss is computed on all 4 positions simultaneously (teacher forcing). Inference uses only the last position.
+- **Causal mask enables parallel training:** because future tokens are masked, the model can be trained on all positions at once — no need to run forward passes sequentially.
+- **FFN has no token mixing:** all communication between tokens happens in attention. The FFN is applied independently to each token's vector.
+- **Residual connections are critical:** they allow gradients to flow directly through the network without passing through attention or FFN. Without them, training 12+ layers would be very difficult.
 
-| Where | When active |
-|---|---|
-| After embedding (tok+pos sum) | Training only |
-| After attention softmax weights | Training only |
-
-Both disabled at inference via `model.eval()`.
-
-## Per-Block Step-by-Step
-
-1. **LayerNorm** — normalize input before attention
-2. **Q, K, V projections** — `X · W_Q/K/V` → split into 12 heads (12, T, 64)
-3. **Scaled dot-product** — `Q · Kᵀ / √64`; scale prevents softmax saturation
-4. **Causal mask** — set upper-triangle scores to −∞; future tokens get 0 attention
-5. **Softmax** — convert scores to probabilities per row
-6. **Dropout(0.1)** — randomly zero some attention weights (training only)
-7. **Weighted sum** — `A · V`; concat 12 heads → (T, 768); project via W_O
-8. **Residual 1** — `attention_output + X`
-9. **LayerNorm** — normalize before FFN
-10. **FFN** — `(T,768) → Linear → (T,3072) → GELU → Linear → (T,768)`; per-token, no cross-token communication
-11. **Residual 2** — `ffn_output + input_to_ffn`
-
-## Key Facts
-
-- Inference uses last row only; earlier rows used during training (teacher forcing)
-- Forward pass re-runs on full sequence each step → why [[kv-caching]] matters
-- Causal mask enables parallel training while preserving autoregressive order
-- Decoding strategy applied only at final step; model forward is deterministic
-- FFN processes each token independently — all token mixing happens in attention
+---
 
 ## Related
 

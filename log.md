@@ -1,3 +1,27 @@
+## [2026-05-14] update | learning-path.md — Query Reading Order section added
+
+- Added 6-group Query Reading Order to learning-path.md (Groups A–F)
+- All 26 existing query files placed in prerequisite order
+- CLAUDE.md updated: future queries auto-inserted into correct position in learning-path.md
+
+## [2026-05-14] rewrite | All 26 query files converted to full readable articles
+
+- All wiki/queries/*.md rewritten from dense shorthand to full human-readable articles
+- Each file now has complete explanations, examples, tables, and simple language
+- llm-workflow-student-notes.md was already in full article format — date updated only
+- Follows new CLAUDE.md rule: queries = full articles for human reading
+
+## [2026-05-14] update | CLAUDE.md — query files now full readable articles
+
+- wiki/queries/ format changed from dense shorthand to full human-readable articles
+- wiki/concepts/ and wiki/sources/ remain dense (LLM lookup)
+- Reasoning: query files are for human revision, not LLM retrieval
+
+## [2026-05-13] write | GPT-2 Pretraining Implementation — Study Notes
+
+- Created: wiki/queries/gpt2-pretraining-implementation-notes.md
+- Covers: manual_seed, QKV biases, UTF-8 encoding, sliding window dataset, DataLoader setup, GPT2Model shapes, LayerNorm (eps/scale/shift/super), GELU, FeedForward, MultiHeadAttention shapes, weight tying (tok_emb ↔ out_head), nn.Parameter, device=x.device
+
 ## [2026-05-10] write | LLM Workflow — Student Notes
 
 - Created: wiki/queries/llm-workflow-student-notes.md
