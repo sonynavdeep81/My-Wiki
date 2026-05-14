@@ -16,7 +16,7 @@ confidence: high
 
 ## How it works
 
-During **training**: each activation is independently set to 0 with probability `p` (the dropout rate), and the remaining activations are scaled up by `1/(1-p)` to keep the expected value the same.
+During **training**: each activation is independently set to 0 with probability $p$ (the dropout rate), and the remaining activations are scaled up by $\frac{1}{1-p}$ to keep the expected value the same.
 
 During **inference**: dropout is disabled — all activations pass through unchanged.
 
@@ -54,7 +54,7 @@ GPT2Model
 | (3) post-attention | `TransformerBlock.forward` after `att(x)` | attention sublayer's output before residual |
 | (4) post-FFN | `TransformerBlock.forward` after `ff(x)` | FFN sublayer's output before residual |
 
-GPT-2 124M total dropout sites: `1 + 12 × 3 = 37`. All share the same `drop_rate=0.1`. All disabled automatically at inference via `model.eval()`.
+GPT-2 124M total dropout sites: $1 + 12 \times 3 = 37$. All share the same `drop_rate=0.1`. All disabled automatically at inference via `model.eval()`.
 
 ---
 

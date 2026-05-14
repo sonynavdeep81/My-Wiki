@@ -30,11 +30,11 @@ probs = torch.softmax(logits / temperature, dim=-1)
 
 | Temperature | Effect |
 |---|---|
-| `= 1.0` | Probabilities unchanged |
-| `< 1.0` | High probs → higher; low probs → lower (sharper, more confident) |
-| `> 1.0` | High probs → lower; low probs → higher (flatter, more random) |
-| `→ 0` | Fully greedy (argmax always wins) |
-| `→ ∞` | Fully uniform (all tokens equally likely) |
+| $T = 1.0$ | Probabilities unchanged |
+| $T < 1.0$ | High probs $\uparrow$; low probs $\downarrow$ (sharper, more confident) |
+| $T > 1.0$ | High probs $\downarrow$; low probs $\uparrow$ (flatter, more random) |
+| $T \to 0$ | Fully greedy (argmax always wins) |
+| $T \to \infty$ | Fully uniform (all tokens equally likely) |
 
 Notebook default: `temperature = 1.4` (creative, slightly wild).
 
@@ -52,7 +52,7 @@ probs = torch.softmax(logits / temperature, dim=-1)
 next_token = torch.multinomial(probs, num_samples=1)
 ```
 
-After masking, softmax converts `−∞` → `0`, so probability mass redistributes only over the top-k tokens.
+After masking, softmax converts $-\infty \to 0$, so probability mass redistributes only over the top-k tokens.
 
 Notebook default: `top_k = 25`.
 

@@ -19,9 +19,9 @@ confidence: high
 
 ## Mechanics
 
-1. Take the full system → measure metric `M_full`
-2. Remove component `X` → measure `M_{-X}`
-3. Drop = `M_full − M_{-X}`
+1. Take the full system $\to$ measure metric $M_{\text{full}}$
+2. Remove component $X$ $\to$ measure $M_{-X}$
+3. Drop $= M_{\text{full}} - M_{-X}$
 4. Repeat for every component you claim matters
 
 ## Output: Ablation Table

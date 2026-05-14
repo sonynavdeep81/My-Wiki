@@ -1,3 +1,13 @@
+## [2026-05-14] update | wiki-wide — KaTeX/Obsidian rendering conventions
+
+- CLAUDE.md: added "Markdown Rendering Conventions" section — math uses LaTeX ($...$ inline, $$...$$ block), backticks reserved for code identifiers, KaTeX-compatible commands only, ASCII diagrams preserved verbatim
+- feature-menu.md: added feature #9 "Markdown Rendering Conventions"
+- Converted math-in-backticks to LaTeX in hot concept pages: layer-normalization, cross-entropy-loss, gelu, dropout, cosine-decay, positional-embeddings, weight-tying, cross-attention, decoding-strategies, ablation-study
+- Converted math-in-backticks to LaTeX in hot query pages: layernorm-scale-shift-sharing, layernorm-count-gpt2, gpt2-parameter-count, input-to-output-workflow
+- Converted attention formula in wiki/sources/Attention_2023.md
+- Code identifiers (e.g. `bias=False`, `emb_dim=768`, `out_head`, PyTorch API names) intentionally left in backticks per the new rule
+- Files not yet swept have minimal math-in-backticks remaining; conversion is per-line judgment, will continue on touch
+
 ## [2026-05-14] update | learning-path.md — Query Reading Order section added
 
 - Added 6-group Query Reading Order to learning-path.md (Groups A–F)

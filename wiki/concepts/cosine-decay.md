@@ -18,13 +18,16 @@ After warmup, keeping LR constant risks overshooting the loss minima. Cosine dec
 
 ## Formula
 
-```
-progress = (step - warmup_steps) / (total_steps - warmup_steps)
-lr = min_lr + (peak_lr - min_lr) * 0.5 * (1 + cos(π × progress))
-```
+$$
+\text{progress} = \frac{\text{step} - \text{warmup\_steps}}{\text{total\_steps} - \text{warmup\_steps}}
+$$
 
-- At `progress=0`: `lr = peak_lr`
-- At `progress=1`: `lr = min_lr`
+$$
+\text{lr} = \text{min\_lr} + (\text{peak\_lr} - \text{min\_lr}) \cdot \tfrac{1}{2}\left(1 + \cos(\pi \cdot \text{progress})\right)
+$$
+
+- At $\text{progress} = 0$: $\text{lr} = \text{peak\_lr}$
+- At $\text{progress} = 1$: $\text{lr} = \text{min\_lr}$
 - Decay follows a half-cosine curve between those extremes
 
 ## Implementation (Raschka Appendix D)

@@ -24,10 +24,13 @@ Positional embeddings inject a **unique signal per position** so the model can d
 
 Uses fixed sine/cosine functions at different frequencies:
 
-```
-PE(pos, 2i)   = sin(pos / 10000^(2i/d_model))
-PE(pos, 2i+1) = cos(pos / 10000^(2i/d_model))
-```
+$$
+PE_{(pos,\,2i)} = \sin\!\left(\frac{pos}{10000^{2i/d_{\text{model}}}}\right)
+$$
+
+$$
+PE_{(pos,\,2i+1)} = \cos\!\left(\frac{pos}{10000^{2i/d_{\text{model}}}}\right)
+$$
 
 - No learned parameters — fully deterministic
 - Can extrapolate to sequence lengths unseen during training
@@ -50,14 +53,17 @@ final_input = token_vectors + position_vectors
 
 ### 3. Rotary Positional Embeddings (RoPE)
 
-Encodes position by **rotating** Q and K vectors in the attention computation rather than adding to embeddings:
+Encodes position by **rotating** $Q$ and $K$ vectors in the attention computation rather than adding to embeddings:
 
-```
-Q_rotated = rotate(Q, position)
-K_rotated = rotate(K, position)
-```
+$$
+Q_{\text{rotated}} = \text{rotate}(Q,\ \text{position})
+$$
 
-The dot product Q·Kᵀ then naturally encodes **relative** position between tokens, not absolute.
+$$
+K_{\text{rotated}} = \text{rotate}(K,\ \text{position})
+$$
+
+The dot product $Q \cdot K^{\top}$ then naturally encodes **relative** position between tokens, not absolute.
 
 - No extra parameters added to embeddings
 - Relative position awareness — "token i is 3 positions before token j"

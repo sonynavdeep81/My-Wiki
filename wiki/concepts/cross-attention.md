@@ -25,7 +25,10 @@ V  ←  encoder's output                   (what do I retrieve?)
 ```
 
 The computation is identical to self-attention:
-`CrossAttention(Q, K, V) = softmax(QK^T / √d_k) · V`
+
+$$
+\text{CrossAttention}(Q, K, V) = \text{softmax}\!\left(\frac{Q K^{\top}}{\sqrt{d_k}}\right) \cdot V
+$$
 
 The only difference is **where Q, K, V originate**.
 

@@ -35,7 +35,7 @@ These are inverse operations — it's natural for them to share weights. The mod
 
 ## Benefits
 
-1. **Parameter reduction**: saves 50,257 × 768 ≈ 38.6M parameters
+1. **Parameter reduction**: saves $50{,}257 \times 768 \approx 38.6\text{M}$ parameters
 2. **Training signal**: each gradient update on the output head also improves the input embeddings, and vice versa — faster convergence
 3. **Symmetry**: tokens that are semantically similar end up close in embedding space, which also makes them easy to predict as outputs
 

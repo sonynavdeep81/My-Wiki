@@ -18,7 +18,7 @@ confidence: high
 
 $$\text{GELU}(x) = x \cdot \Phi(x)$$
 
-where Φ(x) is the cumulative distribution function of the standard normal distribution.
+where $\Phi(x)$ is the cumulative distribution function of the standard normal distribution.
 
 In practice, a fast approximation is used:
 

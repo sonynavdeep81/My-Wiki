@@ -65,12 +65,12 @@ x = x + shortcut                          ← residual connection 1
 ```
 
 Inside MultiHeadAttention:
-- `Q = x @ W_Q`, `K = x @ W_K`, `V = x @ W_V` — project to queries, keys, values
-- Split into 12 heads, each with dimension 64 (768 / 12 = 64)
-- `att_scores = Q @ Kᵀ / √64` — scaled dot-product attention
-- Apply causal mask: set future positions to -∞ (after softmax these become 0)
-- `att_weights = softmax(att_scores)` → apply dropout on weights
-- `context = att_weights @ V` → concat 12 heads → project via W_O
+- $Q = x W_Q$, $K = x W_K$, $V = x W_V$ — project to queries, keys, values
+- Split into 12 heads, each with dimension 64 ($768 / 12 = 64$)
+- $\text{att\_scores} = Q K^{\top} / \sqrt{64}$ — scaled dot-product attention
+- Apply causal mask: set future positions to $-\infty$ (after softmax these become $0$)
+- $\text{att\_weights} = \text{softmax}(\text{att\_scores}) \to$ apply dropout on weights
+- $\text{context} = \text{att\_weights} \cdot V \to$ concat 12 heads $\to$ project via $W_O$
 
 ### FeedForward Sub-Block
 

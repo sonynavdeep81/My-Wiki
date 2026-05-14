@@ -18,12 +18,12 @@ Let's break down every component of GPT-2 small:
 
 | Component | Calculation | Parameters |
 |---|---|---|
-| Token embeddings (tok_emb) | 50,257 × 768 | ≈ 38.6M |
-| Positional embeddings (pos_emb) | 256 × 768 | ≈ 0.2M |
-| 12 × Attention (W_Q, W_K, W_V, W_O) | 12 × 4 × 768² | ≈ 28.3M |
-| 12 × FeedForward (768→3072→768) | 12 × 2 × 768 × 3072 | ≈ 56.6M |
+| Token embeddings (`tok_emb`) | $50{,}257 \times 768$ | $\approx 38.6\text{M}$ |
+| Positional embeddings (`pos_emb`) | $256 \times 768$ | $\approx 0.2\text{M}$ |
+| $12 \times$ Attention ($W_Q, W_K, W_V, W_O$) | $12 \times 4 \times 768^2$ | $\approx 28.3\text{M}$ |
+| $12 \times$ FeedForward ($768 \to 3072 \to 768$) | $12 \times 2 \times 768 \times 3072$ | $\approx 56.6\text{M}$ |
 | LayerNorms (scale + shift per block) | negligible | — |
-| **Total (unique parameters)** | | **≈ 124M** |
+| **Total (unique parameters)** | | $\mathbf{\approx 124\text{M}}$ |
 
 ---
 
@@ -45,10 +45,10 @@ self.out_head = nn.Linear(cfg['emb_dim'], cfg['vocab_size'], bias=False)
 ```
 
 So `model.parameters()` finds:
-- `tok_emb.weight` → 38.6M parameters
-- `out_head.weight` → 38.6M parameters (separate tensor)
+- `tok_emb.weight` $\to 38.6\text{M}$ parameters
+- `out_head.weight` $\to 38.6\text{M}$ parameters (separate tensor)
 
-Result: 124M + 38.6M extra = **~162M**
+Result: $124\text{M} + 38.6\text{M}$ extra $= \mathbf{\sim 162\text{M}}$
 
 ---
 

@@ -14,13 +14,13 @@ confidence: high
 
 ## Formula
 
-```
-CE = -log(p_correct)
-```
+$$
+\text{CE} = -\log(p_{\text{correct}})
+$$
 
-- `p_correct` = softmax probability assigned to the true token
-- High confidence on correct token → CE near 0
-- Low confidence or wrong token → CE large
+- $p_{\text{correct}}$ = softmax probability assigned to the true token
+- High confidence on correct token $\to$ CE near 0
+- Low confidence or wrong token $\to$ CE large
 - Averaged over all (non-masked) positions in the batch
 
 ## PyTorch API
@@ -50,11 +50,11 @@ loss = F.cross_entropy(logits.view(-1, vocab_size), targets.view(-1), ignore_ind
 
 ## Relationship to Perplexity
 
-```
-Perplexity = exp(cross_entropy_loss)
-```
+$$
+\text{Perplexity} = \exp(\text{cross\_entropy\_loss})
+$$
 
-If `loss = 3.0` → perplexity ≈ 20 (model is as confused as choosing uniformly over 20 tokens).
+If $\text{loss} = 3.0 \to \text{perplexity} \approx 20$ (model is as confused as choosing uniformly over 20 tokens).
 
 ## Relationship to Softmax
 

@@ -8,7 +8,7 @@ updated: 2026-05-14
 
 ## LayerNorm — Are Scale and Shift Shared Across Tokens?
 
-**Summary**: Yes. The learnable `scale (γ)` and `shift (β)` vectors are shared across every token in the sequence and every example in the batch. They are *per-feature*, not per-token. The normalization statistics (mean, variance) are computed *per token, fresh every time*; the affine transform that follows is the only learnable part — and it is global.
+**Summary**: Yes. The learnable scale ($\gamma$) and shift ($\beta$) vectors are shared across every token in the sequence and every example in the batch. They are *per-feature*, not per-token. The normalization statistics (mean, variance) are computed *per token, fresh every time*; the affine transform that follows is the only learnable part — and it is global.
 
 ---
 
@@ -18,7 +18,7 @@ In a Transformer block, LayerNorm is applied to every token's embedding. A natur
 
 > "There are 1024 tokens in my sequence. Does each token have its own scale and shift, or do they share?"
 
-The short answer: **they all share the same scale and shift**. Each of the 1024 tokens is normalized using the *same* learnable `(γ, β)` pair. But within a single token's 768-dim vector, every one of the 768 features has its own `γ` and `β` value.
+The short answer: **they all share the same scale and shift**. Each of the 1024 tokens is normalized using the *same* learnable $(\gamma, \beta)$ pair. But within a single token's 768-dim vector, every one of the 768 features has its own $\gamma$ and $\beta$ value.
 
 ---
 
@@ -27,19 +27,19 @@ The short answer: **they all share the same scale and shift**. Each of the 1024 
 GPT-2 124M uses `emb_dim = 768` and `context_length = 1024`. Inside a Transformer block:
 
 ```
-input  : (batch, seq_len, 768)     e.g. (2, 1024, 768)
-γ scale: (768,)                    one value per feature
-β shift: (768,)                    one value per feature
-output : (batch, seq_len, 768)
+input    : (batch, seq_len, 768)     e.g. (2, 1024, 768)
+γ scale  : (768,)                    one value per feature
+β shift  : (768,)                    one value per feature
+output   : (batch, seq_len, 768)
 ```
 
-Notice: `γ` and `β` have **only 768 entries each**. There is no `seq_len` dimension and no `batch` dimension. PyTorch broadcasts these vectors across the (batch, seq_len) axes automatically.
+Notice: $\gamma$ and $\beta$ have **only 768 entries each**. There is no `seq_len` dimension and no `batch` dimension. PyTorch broadcasts these vectors across the `(batch, seq_len)` axes automatically.
 
 That means a LayerNorm layer in GPT-2 has only:
 
-```
-2 × 768 = 1536 parameters
-```
+$$
+2 \times 768 = 1536 \text{ parameters}
+$$
 
 regardless of sequence length, batch size, or how many tokens you push through it.
 
@@ -47,30 +47,29 @@ regardless of sequence length, batch size, or how many tokens you push through i
 
 ## What Happens, Step by Step
 
-For a single token vector `x` of length 768:
+For a single token vector $x$ of length 768:
 
 **Step 1 — Compute statistics over its own 768 features:**
 
-```
-μ  = mean(x)           # scalar, computed over the 768 features of THIS token
-σ² = var(x)            # scalar, computed over the same 768 features
-```
+$$
+\mu = \text{mean}(x) \qquad \sigma^2 = \text{var}(x)
+$$
 
-These statistics are **per-token**. Every token in the sequence computes its own `μ` and `σ²` independently. Tokens do not share statistics with each other, and the batch is not mixed in.
+Both scalars, computed over the 768 features of *this* token. These statistics are **per-token**. Every token in the sequence computes its own $\mu$ and $\sigma^2$ independently. Tokens do not share statistics with each other, and the batch is not mixed in.
 
 **Step 2 — Normalize:**
 
-```
-x_hat = (x - μ) / sqrt(σ² + ε)     # shape (768,), mean ≈ 0, var ≈ 1
-```
+$$
+\hat{x} = \frac{x - \mu}{\sqrt{\sigma^2 + \varepsilon}} \quad \text{shape } (768,),\ \text{mean} \approx 0,\ \text{var} \approx 1
+$$
 
 **Step 3 — Apply the shared affine:**
 
-```
-y = γ * x_hat + β                  # element-wise, both γ and β are (768,)
-```
+$$
+y = \gamma \odot \hat{x} + \beta \quad \text{element-wise, both } \gamma \text{ and } \beta \text{ are } (768,)
+$$
 
-This is where `γ` and `β` come in. They are the **same vectors** for every token in the sequence and every example in the batch.
+This is where $\gamma$ and $\beta$ come in. They are the **same vectors** for every token in the sequence and every example in the batch.
 
 ---
 
@@ -95,25 +94,25 @@ For autoregressive language models, batch sizes vary wildly between training and
 
 ### 3. Tiny parameter count
 
-If `γ` and `β` were per-position (one pair for each of the 1024 positions), you would need:
+If $\gamma$ and $\beta$ were per-position (one pair for each of the 1024 positions), you would need:
 
-```
-2 × 1024 × 768 = 1,572,864 parameters per LayerNorm
-```
+$$
+2 \times 1024 \times 768 = 1{,}572{,}864 \text{ parameters per LayerNorm}
+$$
 
-GPT-2 124M has 25 LayerNorm layers (one per block ×2 + one final). That would balloon to ~39M parameters just for normalization — most of which would be wasted, since position-specific normalization rarely helps.
+GPT-2 124M has 25 LayerNorm layers (one per block $\times 2$ + one final). That would balloon to $\sim 39\text{M}$ parameters just for normalization — most of which would be wasted, since position-specific normalization rarely helps.
 
 Instead, the actual cost is:
 
-```
-2 × 768 × 25 = 38,400 parameters
-```
+$$
+2 \times 768 \times 25 = 38{,}400 \text{ parameters}
+$$
 
 That's three orders of magnitude smaller.
 
 ### 4. Position-agnostic modeling
 
-A subtle point: making `γ` and `β` per-position would *bake the sequence length into the model*. The model would only work for sequences of exactly 1024 tokens — you could not generalize to shorter sequences without padding tricks, and you could not extend to longer sequences at all. Sharing across positions keeps LayerNorm position-agnostic.
+A subtle point: making $\gamma$ and $\beta$ per-position would *bake the sequence length into the model*. The model would only work for sequences of exactly 1024 tokens — you could not generalize to shorter sequences without padding tricks, and you could not extend to longer sequences at all. Sharing across positions keeps LayerNorm position-agnostic.
 
 ---
 
@@ -129,21 +128,23 @@ x = [[[2.5, 4.8, 1.2, 5.5],     # token 0
 
 **Per-token normalization:**
 
-- Token 0: μ=3.5, σ≈1.71 → `x_hat₀ = [-0.58, 0.76, -1.34, 1.17]`
-- Token 1: μ=1.5, σ≈1.12 → `x_hat₁ = [-1.34, -0.45, 0.45, 1.34]`
-- Token 2: μ=9.0, σ=0    → `x_hat₂ = [0, 0, 0, 0]` (after ε)
+- Token 0: $\mu = 3.5,\ \sigma \approx 1.71 \to \hat{x}_0 = [-0.58,\ 0.76,\ -1.34,\ 1.17]$
+- Token 1: $\mu = 1.5,\ \sigma \approx 1.12 \to \hat{x}_1 = [-1.34,\ -0.45,\ 0.45,\ 1.34]$
+- Token 2: $\mu = 9.0,\ \sigma = 0\ \to \hat{x}_2 = [0,\ 0,\ 0,\ 0]$ (after $\varepsilon$)
 
 Statistics differ per token. Token 2's statistics had nothing to do with Token 0's.
 
-**Apply shared γ, β** (say `γ = [1.0, 1.0, 0.5, 2.0]`, `β = [0, 0, 1, 0]`):
+**Apply shared $\gamma, \beta$** (say $\gamma = [1.0,\ 1.0,\ 0.5,\ 2.0]$, $\beta = [0,\ 0,\ 1,\ 0]$):
 
-```
-y₀ = γ * x_hat₀ + β = [-0.58, 0.76, 0.33, 2.34]
-y₁ = γ * x_hat₁ + β = [-1.34, -0.45, 1.23, 2.68]
-y₂ = γ * x_hat₂ + β = [0, 0, 1, 0]
-```
+$$
+\begin{aligned}
+y_0 &= \gamma \odot \hat{x}_0 + \beta = [-0.58,\ 0.76,\ 0.33,\ 2.34] \\
+y_1 &= \gamma \odot \hat{x}_1 + \beta = [-1.34,\ -0.45,\ 1.23,\ 2.68] \\
+y_2 &= \gamma \odot \hat{x}_2 + \beta = [0,\ 0,\ 1,\ 0]
+\end{aligned}
+$$
 
-Same `γ` and `β` applied to all three tokens. The third feature always gets scaled by 0.5 and shifted by +1, regardless of which token it belongs to.
+Same $\gamma$ and $\beta$ applied to all three tokens. The third feature always gets scaled by $0.5$ and shifted by $+1$, regardless of which token it belongs to.
 
 ---
 
@@ -154,15 +155,15 @@ nn.LayerNorm(normalized_shape=768, eps=1e-5, elementwise_affine=True)
 ```
 
 - `normalized_shape=768` — normalize over the last dim of size 768.
-- `elementwise_affine=True` — create the learnable `weight` (γ) and `bias` (β), each shape `(768,)`.
+- `elementwise_affine=True` — create the learnable `weight` ($\gamma$) and `bias` ($\beta$), each shape `(768,)`.
 - Statistics are computed over the last dimensions matching `normalized_shape`, *for each token independently*.
 
 To inspect the params:
 
 ```python
 ln = nn.LayerNorm(768)
-ln.weight.shape   # torch.Size([768])  ← γ
-ln.bias.shape     # torch.Size([768])  ← β
+ln.weight.shape   # torch.Size([768])  ← gamma
+ln.bias.shape     # torch.Size([768])  ← beta
 sum(p.numel() for p in ln.parameters())  # 1536
 ```
 
@@ -172,11 +173,11 @@ sum(p.numel() for p in ln.parameters())  # 1536
 
 | Misconception | Reality |
 |---|---|
-| "Each token learns its own γ, β" | No. γ, β are shared across all tokens. |
-| "γ, β are scalars" | No. They are vectors of length `emb_dim`. One scalar per feature. |
+| "Each token learns its own $\gamma, \beta$" | No. $\gamma, \beta$ are shared across all tokens. |
+| "$\gamma, \beta$ are scalars" | No. They are vectors of length `emb_dim`. One scalar per feature. |
 | "LayerNorm has different params at different positions" | No. The same LayerNorm layer is applied identically at every position. |
 | "Stats are computed across the batch" | No. Stats are computed *within* each token, never across batch or sequence. |
-| "The model can learn to undo normalization completely" | Yes — when `γ = σ` and `β = μ`, the affine recovers the original `x`. This is why γ and β exist. |
+| "The model can learn to undo normalization completely" | Yes — when $\gamma = \sigma$ and $\beta = \mu$, the affine recovers the original $x$. This is why $\gamma$ and $\beta$ exist. |
 
 ---
 

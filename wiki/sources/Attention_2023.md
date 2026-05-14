@@ -42,9 +42,12 @@ Key hyperparameters (base model):
 ## Key Technical Contributions
 
 ### Scaled Dot-Product Attention
-`Attention(Q,K,V) = softmax(QK^T / √d_k) · V`
 
-Scaling by √d_k prevents softmax saturation when d_k is large (dot products grow in magnitude → extremely small gradients).
+$$
+\text{Attention}(Q, K, V) = \text{softmax}\!\left(\frac{Q K^{\top}}{\sqrt{d_k}}\right) \cdot V
+$$
+
+Scaling by $\sqrt{d_k}$ prevents softmax saturation when $d_k$ is large (dot products grow in magnitude $\to$ extremely small gradients).
 
 ### Multi-Head Attention
 Project Q, K, V h=8 times into d_k=64 subspaces, compute attention in parallel, concatenate:

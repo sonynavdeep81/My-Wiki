@@ -173,6 +173,22 @@ During Q&A, surface these tags explicitly rather than presenting contested claim
 
 Concept pages carry a `verified_against:` frontmatter field — the source name and date the page was last checked against a raw source. When a raw source is deleted or updated, treat all concept pages with `verified_against: [that source]` as potentially stale and flag them.
 
+## Markdown Rendering Conventions
+
+All wiki pages must render cleanly in **Obsidian** and **Markdown Preview Enhanced (VS Code)**. Follow these formatting rules everywhere:
+
+- **Math notation uses LaTeX, never backticks.**
+  - Inline math: `$...$` — e.g. write `$\gamma \cdot \hat{x} + \beta$`, not <code>\`γ · x̂ + β\`</code>
+  - Block math: `$$...$$` on its own lines — e.g. attention, normalization, loss formulas
+  - Keep formulas **KaTeX-compatible** (Obsidian and MPE both use KaTeX): stick to standard LaTeX commands; avoid `\begin{align}` (use `\begin{aligned}` inside `$$...$$` instead), avoid `\mathbb` for plain text, no custom macros.
+- **Backticks are for code only** — Python identifiers, function names, kwargs, file paths, config variables (`bias=True`, `emb_dim=768`, `torch.nn.GELU`). If the token names a variable in the codebase, it stays in backticks; if it is a mathematical symbol or formula, it becomes LaTeX.
+- **Greek letters and math symbols** ($\mu$, $\sigma$, $\gamma$, $\beta$, $\epsilon$, $\sqrt{}$, $\times$, $\approx$, $\rightarrow$, subscripts, superscripts) must be rendered via LaTeX — never raw Unicode inside backticks.
+- **Headings, bullets, and tables** stay clean Markdown — one `#` level per logical layer, hyphen bullets, GitHub-style pipe tables.
+- **ASCII diagrams, code blocks, and shape traces** are preserved verbatim — they are not math, do not LaTeX-ify them.
+- **Visual cleanliness:** blank line above/below block equations and tables; no trailing whitespace; one statement per line in math blocks.
+
+When updating existing files, convert genuine math expressions to LaTeX but leave code identifiers in backticks. When in doubt: if the symbol could appear in a paper, it is math; if it could appear in a Python source file, it is code.
+
 ## Storage Format by File Type
 
 Different file types serve different readers — format accordingly:

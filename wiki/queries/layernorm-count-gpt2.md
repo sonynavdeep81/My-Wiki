@@ -8,7 +8,7 @@ updated: 2026-05-14
 
 ## How Many LayerNorm Layers Does GPT-2 Have?
 
-**Summary**: GPT-2 124M has **25 LayerNorm layers** — two inside each of the 12 transformer blocks (Pre-LN: one before attention, one before FFN), plus one final LayerNorm before the output head. Each carries its own independent `(γ, β)` pair of shape `(768,)`. Together they account for `25 × 2 × 768 = 38,400` learnable parameters. Each block has its own LayerNorms because each block sits at a different depth and processes a different distribution.
+**Summary**: GPT-2 124M has **25 LayerNorm layers** — two inside each of the 12 transformer blocks (Pre-LN: one before attention, one before FFN), plus one final LayerNorm before the output head. Each carries its own independent $(\gamma, \beta)$ pair of shape `(768,)`. Together they account for $25 \times 2 \times 768 = 38{,}400$ learnable parameters. Each block has its own LayerNorms because each block sits at a different depth and processes a different distribution.
 
 ---
 
@@ -22,16 +22,16 @@ That is the count for a **single transformer block** plus the final norm. GPT-2 
 
 | Model | Blocks (`n_layers`) | LayerNorms |
 |---|---|---|
-| GPT-2 124M (small) | 12 | 12 × 2 + 1 = **25** |
-| GPT-2 355M (medium) | 24 | 24 × 2 + 1 = **49** |
-| GPT-2 774M (large) | 36 | 36 × 2 + 1 = **73** |
-| GPT-2 1.5B (XL) | 48 | 48 × 2 + 1 = **97** |
+| GPT-2 124M (small) | 12 | $12 \times 2 + 1 = \mathbf{25}$ |
+| GPT-2 355M (medium) | 24 | $24 \times 2 + 1 = \mathbf{49}$ |
+| GPT-2 774M (large) | 36 | $36 \times 2 + 1 = \mathbf{73}$ |
+| GPT-2 1.5B (XL) | 48 | $48 \times 2 + 1 = \mathbf{97}$ |
 
 The general formula:
 
-```
-total_layernorms = 2 × n_layers + 1
-```
+$$
+\text{total\_layernorms} = 2 \times n_{\text{layers}} + 1
+$$
 
 ---
 
@@ -75,30 +75,30 @@ Input: token_emb + pos_emb     # (batch, seq_len, 768)
 
 ## Parameter Count Contribution
 
-Each LayerNorm has only `2 × 768 = 1536` params (one `γ` and one `β` per feature, see [[layernorm-scale-shift-sharing]]).
+Each LayerNorm has only $2 \times 768 = 1536$ params (one $\gamma$ and one $\beta$ per feature, see [[layernorm-scale-shift-sharing]]).
 
 For GPT-2 124M:
 
-```
-25 LayerNorms × 1536 params  =  38,400 params total
-```
+$$
+25 \text{ LayerNorms} \times 1536 \text{ params} = 38{,}400 \text{ params total}
+$$
 
 That is roughly **0.03%** of the model's 124M parameters — tiny in absolute count, but architecturally critical for trainability.
 
 | Model | LayerNorms | LayerNorm params | % of total |
 |---|---|---|---|
-| GPT-2 124M | 25 | 38,400 | 0.03% |
-| GPT-2 355M | 49 | 49 × 2 × 1024 = 100,352 | 0.03% |
-| GPT-2 774M | 73 | 73 × 2 × 1280 = 186,880 | 0.02% |
-| GPT-2 1.5B | 97 | 97 × 2 × 1600 = 310,400 | 0.02% |
+| GPT-2 124M | 25 | $38{,}400$ | 0.03% |
+| GPT-2 355M | 49 | $49 \times 2 \times 1024 = 100{,}352$ | 0.03% |
+| GPT-2 774M | 73 | $73 \times 2 \times 1280 = 186{,}880$ | 0.02% |
+| GPT-2 1.5B | 97 | $97 \times 2 \times 1600 = 310{,}400$ | 0.02% |
 
-The LayerNorm contribution stays roughly flat as a percentage because it scales linearly with `n_layers × emb_dim`, while total params scale roughly with `n_layers × emb_dim²`.
+The LayerNorm contribution stays roughly flat as a percentage because it scales linearly with $n_{\text{layers}} \times d_{\text{emb}}$, while total params scale roughly with $n_{\text{layers}} \times d_{\text{emb}}^2$.
 
 ---
 
 ## Why Each Block Gets Its Own LayerNorm — Why Not Share?
 
-A natural follow-up: if `(γ, β)` are shared across all tokens within one LayerNorm, why not also share across blocks? It would save params.
+A natural follow-up: if $(\gamma, \beta)$ are shared across all tokens within one LayerNorm, why not also share across blocks? It would save params.
 
 **Answer: each block sees a different distribution.**
 
@@ -106,7 +106,7 @@ A natural follow-up: if `(γ, β)` are shared across all tokens within one Layer
 - Block 6 receives heavily attention-mixed representations — distribution is shaped by the attention patterns of blocks 1–5.
 - Block 12 receives deeply transformed, near-output representations — distribution is shaped to support the final classification into 50,257 vocabulary buckets.
 
-These distributions have different means, variances, and *useful directions in feature space*. Forcing one shared `(γ, β)` across all 25 LayerNorms would be a one-size-fits-all affine that suits no layer well — a ceiling on capacity for negligible param savings (38K out of 124M).
+These distributions have different means, variances, and *useful directions in feature space*. Forcing one shared $(\gamma, \beta)$ across all 25 LayerNorms would be a one-size-fits-all affine that suits no layer well — a ceiling on capacity for negligible param savings ($38\text{K}$ out of $124\text{M}$).
 
 The same logic explains why each block has its own attention weights, FFN weights, etc. Depth-specific parameters allow the network to learn depth-specific abstractions.
 
@@ -141,7 +141,7 @@ ln_layers = [m for m in model.modules() if isinstance(m, LayerNorm)]
 ## Related
 
 - [[layer-normalization]] — the concept page
-- [[layernorm-scale-shift-sharing]] — why `(γ, β)` are shared across tokens but not across layers
+- [[layernorm-scale-shift-sharing]] — why $(\gamma, \beta)$ are shared across tokens but not across layers
 - [[gpt2-parameter-count]] — full breakdown of GPT-2 124M's 124M (or 162M when tied weights are double-counted) parameters
 - [[gpt2-from-scratch]] — implementation patterns including Pre-LN ordering
 - [[residual-connections]] — the skip pattern that pairs with Pre-LN

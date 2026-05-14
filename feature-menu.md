@@ -1,7 +1,7 @@
 ---
 title: Wiki Feature Menu
 description: Features developed in the Agents wiki — pick what suits your wiki's purpose
-updated: 2026-05-05
+updated: 2026-05-14
 ---
 
 # Wiki Feature Menu
@@ -108,11 +108,23 @@ Features developed in the Agents learning wiki. Each is independent — pick onl
 
 ---
 
+## 9. Markdown Rendering Conventions (KaTeX + Obsidian + MPE)
+
+**What it does:** All wiki pages render cleanly in Obsidian and Markdown Preview Enhanced (VS Code). Math uses LaTeX ($...$ inline, $$...$$ block) with KaTeX-compatible commands. Backticks are reserved for code identifiers only. Greek letters and math symbols always use LaTeX, never raw Unicode in backticks.
+
+**Rule to add:** Math = LaTeX. Code = backticks. ASCII diagrams stay verbatim. One rule of thumb: if the symbol could appear in a paper, it's math; if it could appear in a Python source file, it's code.
+
+**Best for:** Any wiki rendered in Obsidian, VS Code, GitHub, or any KaTeX-aware previewer where readable formulas matter.
+
+**Not needed if:** Your wiki is text-only with no equations, or is consumed only by an LLM that ignores rendering.
+
+---
+
 ## Combinations That Work Well Together
 
 | Wiki Type | Recommended Features |
 |-----------|---------------------|
-| Learning wiki | 1, 2, 3, 4, 5, 7, 8 |
-| Research wiki | 1, 2, 3, 6, 7, 8 |
-| Reference wiki (fixed sources) | 1, 2, 6, 7 |
-| Presentation / notes wiki | 2, 4, 5, 7 |
+| Learning wiki | 1, 2, 3, 4, 5, 7, 8, 9 |
+| Research wiki | 1, 2, 3, 6, 7, 8, 9 |
+| Reference wiki (fixed sources) | 1, 2, 6, 7, 9 |
+| Presentation / notes wiki | 2, 4, 5, 7, 9 |
