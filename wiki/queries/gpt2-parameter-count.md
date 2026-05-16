@@ -19,7 +19,7 @@ Let's break down every component of GPT-2 small:
 | Component | Calculation | Parameters |
 |---|---|---|
 | Token embeddings (`tok_emb`) | $50{,}257 \times 768$ | $\approx 38.6\text{M}$ |
-| Positional embeddings (`pos_emb`) | $256 \times 768$ | $\approx 0.2\text{M}$ |
+| Positional embeddings (`pos_emb`) | $1024 \times 768$ | $\approx 0.8\text{M}$ |
 | $12 \times$ Attention ($W_Q, W_K, W_V, W_O$) | $12 \times 4 \times 768^2$ | $\approx 28.3\text{M}$ |
 | $12 \times$ FeedForward ($768 \to 3072 \to 768$) | $12 \times 2 \times 768 \times 3072$ | $\approx 56.6\text{M}$ |
 | LayerNorms (scale + shift per block) | negligible | — |
