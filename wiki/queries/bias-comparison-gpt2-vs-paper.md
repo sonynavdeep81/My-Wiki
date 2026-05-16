@@ -15,6 +15,7 @@ updated: 2026-05-14
 ## What Is a Bias in a Linear Layer?
 
 Every `nn.Linear` layer computes:
+
 ```
 output = input @ weight + bias
 ```
@@ -25,16 +26,16 @@ The `bias` is an optional learned vector added after the matrix multiply. Settin
 
 ## The Full Comparison Table
 
-| Component | GPT-2 (train from scratch) | GPT-2 (OpenAI checkpoint) | Attention Is All You Need |
-|---|:---:|:---:|:---:|
-| Token Embedding | No (lookup, no bias) | No | No (lookup, no bias) |
-| Positional Embedding | No (lookup, no bias) | No | N/A — sinusoidal, no params |
-| Q, K, V projections | **No** (`qkv_bias=False`) | **Yes** (`qkv_bias=True`) | **Yes** |
-| Output projection W_O | Yes | Yes | Yes |
-| FFN Layer 1 | Yes | Yes | Yes |
-| FFN Layer 2 | Yes | Yes | Yes |
-| LayerNorm β (shift) | Yes (learned shift) | Yes | Yes |
-| Output head (lm_head) | **No** (`bias=False`) | **No** (`bias=False`) | **No** (weight-tied, no bias) |
+| Component             | GPT-2 (train from scratch) | GPT-2 (OpenAI checkpoint) |   Attention Is All You Need   |
+| --------------------- | :------------------------: | :-----------------------: | :---------------------------: |
+| Token Embedding       |    No (lookup, no bias)    |            No             |     No (lookup, no bias)      |
+| Positional Embedding  |    No (lookup, no bias)    |            No             |  N/A — sinusoidal, no params  |
+| Q, K, V projections   | **No** (`qkv_bias=False`)  | **Yes** (`qkv_bias=True`) |            **Yes**            |
+| Output projection W_O |            Yes             |            Yes            |              Yes              |
+| FFN Layer 1           |            Yes             |            Yes            |              Yes              |
+| FFN Layer 2           |            Yes             |            Yes            |              Yes              |
+| LayerNorm β (shift)   |    Yes (learned shift)     |            Yes            |              Yes              |
+| Output head (lm_head) |   **No** (`bias=False`)    |   **No** (`bias=False`)   | **No** (weight-tied, no bias) |
 
 ---
 
@@ -46,7 +47,7 @@ This is where GPT-2 from scratch and the original paper diverge.
 
 **GPT-2 trained from scratch (`qkv_bias=False`):** Drops the Q/K/V bias. The reason is that [[layer-normalization]] already has a learned `shift` (β) parameter that provides a learned offset for each embedding dimension. Adding another bias in Q, K, V would be redundant — two parameters doing the same job.
 
-**OpenAI's released GPT-2 checkpoint (`qkv_bias=True`):** The original OpenAI training *did* include Q/K/V biases. This is purely historical — it was trained in 2019 before the community established that these biases are unnecessary. This is why the `qkv_bias` flag exists in `MultiHeadAttention.__init__`:
+**OpenAI's released GPT-2 checkpoint (`qkv_bias=True`):** The original OpenAI training _did_ include Q/K/V biases. This is purely historical — it was trained in 2019 before the community established that these biases are unnecessary. This is why the `qkv_bias` flag exists in `MultiHeadAttention.__init__`:
 
 ```python
 self.W_query = nn.Linear(d_model, d_model, bias=self.qkv_bias)

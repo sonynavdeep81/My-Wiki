@@ -98,6 +98,57 @@ Combines LoRA with **4-bit quantization** of the frozen base model weights. Furt
 
 PEFT is most valuable for instruction fine-tuning but can also be applied to classification when the base model is large.
 
+## Checkpoint Saving & Resume Training
+
+Save the best model whenever validation accuracy improves:
+
+```python
+if val_accuracy > val_acc:
+    val_acc = val_accuracy
+    torch.save({
+        'epoch': epoch + 1,
+        'val_accuracy': val_accuracy,
+        'model_state_dict': model.state_dict(),
+        'optimizer_state_dict': optimizer.state_dict(),
+        'train_losses': train_losses,
+        'val_losses': val_losses,
+        'epochs_seen': epochs_seen,
+    }, 'best_model.pth')
+```
+
+To resume: reinitialize model architecture + freeze strategy first, then load weights:
+
+```python
+model = GPT2Model(GPT_CONFIG_124M)
+# re-apply freeze + head replacement...
+model.load_state_dict(checkpoint['model_state_dict'])
+optimizer.load_state_dict(checkpoint['optimizer_state_dict'])
+epochs_seen = checkpoint['epochs_seen']
+for epoch in range(epochs_seen[-1], epochs_seen[-1] + 5):
+    ...
+```
+
+- Architecture must be rebuilt before loading state dict — weights load into structure, not the other way round
+- Resume with lower lr (e.g. `1e-5` vs initial `5e-5`) when continuing from a good checkpoint
+
+## Inference (Classification)
+
+```python
+LABEL_MAP = {0: 'ham', 1: 'spam'}
+
+padded = pad_tokens(tokenizer.encode(text), train_dataset.max_tokens)
+padded = torch.tensor(padded).unsqueeze(0).to(device)
+
+model.eval()
+with torch.no_grad():
+    outputs = model(padded).squeeze(0)
+
+print(LABEL_MAP[torch.argmax(outputs[-1, :]).item()])
+```
+
+- Pad/truncate to the same `max_tokens` used during training — model expects fixed-length input
+- `outputs[-1, :]` picks last token logits, consistent with training forward pass
+
 ## max_tokens Consistency Rule
 
 When building datasets for classification fine-tuning:

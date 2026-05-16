@@ -9,13 +9,16 @@
 ## Sources
 - [Decoder Architecture (Slide Deck)](wiki/sources/Decoder_archtecture.md) — 51-slide walkthrough of LLM internals from tokenization to the full decoder-only transformer
 - [GPT-2 Decoder — Architecture & Pretraining (Python)](wiki/sources/gpt2_decoder.md) — Colab-exported PyTorch script: 2 configs (ctx=256 scratch / ctx=1024 OpenAI), full architecture, sanity check, training, save/load, two inference passes (top-k → /T → softmax → multinomial), OpenAI weight loading w/ bias split
-- [Classification Fine-Tuning (Python)](wiki/sources/classification_fine_tuning.md) — GPT-2 spam classifier: SpamDataset, freeze strategy, head replacement (bias=True), accuracy training loop
+- [Classification Fine-Tuning (Python)](wiki/sources/classification_fine_tuning.md) — GPT-2 spam classifier: SpamDataset, freeze strategy, head replacement (bias=True), training loop, checkpoint save/load, inference
 - [Attention Is All You Need (Paper)](wiki/sources/Attention_2023.md) — Vaswani et al. 2017; encoder-decoder Transformer, scaled dot-product attention, sinusoidal PE, ReLU FFN, Post-LN
 - [Instruction Fine-Tuning (Notebook)](wiki/sources/instruction_fine_tuning.md) — GPT-2 355M instruction fine-tuning: Alpaca format, custom_collate, EOS stop token in generate(), LLM-as-judge evaluation via Groq
 - [Build a Large Language Model (From Scratch)](wiki/sources/Raschka-LLM-2025.md) — Raschka 2025 (Manning); full GPT-2 from-scratch book; parent source for gpt2_decoder, classification, and instruction fine-tuning code
 
 ## Queries
 - [LLM Workflow — Student Notes](wiki/queries/llm-workflow-student-notes.md) — Complete GPT-2 workflow from tokenization to predicted token; student-friendly with corrections on dropout, FFN, and W_O projection
+- [Classification Fine-Tuning Workflow — Spam Detection](wiki/queries/classification-finetuning-workflow.md) — End-to-end walkthrough: balancing, label encoding, tokenization, padding, freeze strategy, and last-token forward pass
+- [Padding Strategy — Classification vs Instruction Fine-Tuning](wiki/queries/padding-strategy-classification-vs-instruction.md) — Why classification pads to dataset max while instruction fine-tuning pads per batch; how to swap them
+- [SpamDataset — Truncation and Padding Lines Explained](wiki/queries/spamdataset-truncation-padding-lines.md) — What the two encoded_texts lines do; why truncation comes first; why the crash is in DataLoader not the model; model accepts any length up to 1024
 
 ## Concepts
 - [Large Language Models (LLMs)](wiki/concepts/large-language-models.md) — Neural nets trained on next-token prediction; parameters, multimodal, open vs closed

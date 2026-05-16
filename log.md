@@ -1,3 +1,27 @@
+## [2026-05-16] ingest | classification_fine_tuning.py (updated)
+
+- Conflict resolved: context_length corrected 256 → 1024 in source page and context-length-assert query
+- Updated wiki/sources/classification_fine_tuning.md — added checkpoint saving, checkpoint loading + resume, inference sections
+- Updated wiki/concepts/fine-tuning.md — added Checkpoint Saving & Resume Training, Inference sections
+- Updated wiki/queries/context-length-assert.md — all 256 examples replaced with 1024
+
+## [2026-05-14] query | SpamDataset Truncation and Padding Lines
+
+- Filed wiki/queries/spamdataset-truncation-padding-lines.md — truncation vs padding lines, why order matters, DataLoader crash vs model limit, model accepts any length up to 1024
+- Updated index.md and learning-path.md (Group F)
+
+## [2026-05-14] query | Padding Strategy — Classification vs Instruction Fine-Tuning
+
+- Filed wiki/queries/padding-strategy-classification-vs-instruction.md — why static vs dynamic padding; last-token indexing problem; how to swap with per-sample length tracking
+- Updated with two-part explanation: Part 1 clerk/form analogy (simple), Part 2 technical (positional embeddings, gradient flow, [:, -1, :] index shifting)
+- Corrected: positional embeddings are frozen in both tasks; static padding matters because the last transformer block (which IS trained) must consistently receive the same frozen positional vector
+- Updated index.md and learning-path.md (Group F, second entry)
+
+## [2026-05-14] query | Classification Fine-Tuning Workflow — Spam Detection
+
+- Filed wiki/queries/classification-finetuning-workflow.md — full article: dataset balancing, label encoding, tokenization, padding to training-set max_tokens, freeze strategy (head + last block + final norm), last-token forward pass
+- Updated index.md and learning-path.md (Group F, first entry)
+
 ## [2026-05-14] update | wiki-wide — KaTeX/Obsidian rendering conventions
 
 - CLAUDE.md: added "Markdown Rendering Conventions" section — math uses LaTeX ($...$ inline, $$...$$ block), backticks reserved for code identifiers, KaTeX-compatible commands only, ASCII diagrams preserved verbatim

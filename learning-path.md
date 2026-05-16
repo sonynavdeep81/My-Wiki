@@ -111,6 +111,9 @@ Q&A files in the order they should be read — each group assumes the previous g
 - [[ablation-study-explained]] — what an ablation study is; why every paper needs one; concrete table you could run on your GPT-2 build
 
 ### Group F — Fine-Tuning
+- [[classification-finetuning-workflow]] — end-to-end spam detection pipeline: balance → tokenize → pad → freeze → last-token forward pass
+- [[padding-strategy-classification-vs-instruction]] — why classification uses static dataset-wide padding while instruction FT uses per-batch dynamic padding
+- [[spamdataset-truncation-padding-lines]] — truncation then padding; why order matters; crash is in DataLoader not model; model accepts any length up to 1024
 - [[classification-finetuning-strategy]] — what to freeze and what to train for classification
 - [[dropout-during-finetuning]] — why drop_rate=0.0 during partial fine-tuning
 - [[instruction-finetuning-data-format]] — instruction + response pair format
