@@ -12,8 +12,6 @@ The LLM writes and maintains all files in wiki/. I rarely edit them directly.
 - wiki/sources/ → summary per raw source
 - wiki/entities/ → people, tools, papers, models
 - wiki/queries/ → saved Q&A outputs
-- wiki/gaps/ → one file per knowledge gap; created on ingest, removed when filled
-- wiki/experiments/ → one file per experiment run (for active research papers)
 - wiki/lint/ → lint run outputs (structural checks only)
 - index.md → master catalog with one-line summary per page
 - log.md → append-only log, format: ## [YYYY-MM-DD] action | title
@@ -27,8 +25,8 @@ The LLM writes and maintains all files in wiki/. I rarely edit them directly.
 4. Create wiki/sources/[filename].md with summary + key points + [[backlinks]]
 5. Create or UPDATE wiki/concepts/\*.md for each concept found
 6. Create or UPDATE wiki/entities/\*.md for tools/people mentioned
-7. **Gap tracking:** for each topic the source mentions but doesn't explain deeply, create or update wiki/gaps/[topic].md. If a new ingest fills an existing gap, delete that gap file.
-8. Update learning-path.md — insert new concept pages in the correct stage; remove newly filled gaps; add new gap placeholders
+7. **Gap tracking:** for each topic the source mentions but doesn't explain deeply, add a bullet under the correct stage in `learning-path.md § Gaps in This Path`. If a new ingest fills an existing gap, remove that bullet and promote it to a real page entry.
+8. Update learning-path.md — insert new concept pages in the correct stage; remove newly filled gap bullets; add new gap bullets where needed
 9. Update index.md — add new pages, update summaries
 10. Append to log.md
 
@@ -58,7 +56,7 @@ Lint is a **structural health check only** — knowledge gap discovery is handle
 - Find orphan pages (no inbound links)
 - Find broken wikilinks (references to pages that don't exist)
 - Review open contradiction flags — check if any were resolved by recent ingests
-- Check gap files — list which are still open, which are stale
+- Check `learning-path.md § Gaps in This Path` — list which gaps are still open
 - Check learning-path.md — verify all concept pages are placed; flag any missing
 - Append findings to wiki/lint/lint-[date].md
 
@@ -67,7 +65,7 @@ Lint is a **structural health check only** — knowledge gap discovery is handle
 ---
 
 title: [Page Title]
-type: concept | source | entity | query | gap | experiment
+type: concept | source | entity | query
 tags: [tag1, tag2]
 sources: [count]
 updated: [date]
@@ -147,18 +145,6 @@ ASSOCIATE PROFESSOR
 - Write so external apps (Gamma, Gemini, Claude design, etc.) can render it into a visual deck
 
 When producing a slide deck based on wiki content, follow learning-path.md stage order. Skip any stage listed under `## Gaps in This Path` (silently).
-
-## On Experiments (wiki/experiments/)
-
-For active research papers, track experiment runs as structured files: `wiki/experiments/[short-name].md`
-
-Required fields per experiment file:
-- `hypothesis:` what you expect to find
-- `config:` key hyperparameters / setup
-- `result:` outcome (numbers, observations)
-- `conclusion:` what it means; what to try next
-
-log.md remains a timeline; experiments are queryable by outcome.
 
 ## Claim Confidence Tagging
 
