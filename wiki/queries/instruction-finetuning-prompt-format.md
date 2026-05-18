@@ -38,11 +38,34 @@ appropriately completes the request.
 {response}
 ```
 
-- `### Instruction:` — the task description
-- `### Input:` — optional extra context (e.g., a paragraph to summarize). Omitted if not needed.
-- `### Response:` — the model's answer goes here
-
 This format became widely copied because Alpaca's code was open-sourced and easy to reproduce.
+
+---
+
+## Three Fields — Not Two
+
+The Alpaca template has three fields:
+
+| Field | Role | Required? |
+|---|---|---|
+| `instruction` | Describes the task | Always |
+| `input` | Context the task operates on | Optional |
+| `response` | Expected output | Always |
+
+`input` is omitted (or its block removed entirely) when no external context is needed (e.g., "List the planets of the solar system"). If `input` is always included even when blank, the model learns to expect it — omitting it at inference then breaks the template-matching reflex.
+
+---
+
+## Delimiters Are Strings, Not Special Tokens
+
+The markers `### Instruction:`, `### Input:`, `### Response:` are **plain text** — they get tokenized as regular subwords, not as reserved vocabulary entries.
+
+Contrast with actual special tokens:
+- `<|endoftext|>` — token ID 50256, reserved in GPT-2's vocabulary
+- `<|im_start|>` — ChatML format, a true special token
+- `<|user|>` — LLaMA-3 format, a true special token
+
+Plain-text delimiters can collide with content (a response that literally contains `### Response:` would confuse the model). Special tokens are guaranteed to be unambiguous.
 
 ---
 

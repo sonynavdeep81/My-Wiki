@@ -1,7 +1,7 @@
 # Wiki Index
 
 ## Navigation
-- [Learning Path](learning-path.md) — Canonical reading order across all concept pages (7 stages, 38 concepts, 7 gaps)
+- [Learning Path](learning-path.md) — Canonical reading order across all concept pages (7 stages, 40 concepts, 5 gaps)
 
 ## Queries
 - [GPT-2 Pretraining Implementation — Study Notes](wiki/queries/gpt2-pretraining-implementation-notes.md) — Q&A session: dataset creation, LayerNorm, MultiHeadAttention, weight tying, shapes, and PyTorch mechanics
@@ -18,6 +18,7 @@
 - [LLM Workflow — Student Notes](wiki/queries/llm-workflow-student-notes.md) — Complete GPT-2 workflow from tokenization to predicted token; student-friendly with corrections on dropout, FFN, and W_O projection
 - [Classification Fine-Tuning Workflow — Spam Detection](wiki/queries/classification-finetuning-workflow.md) — End-to-end walkthrough: balancing, label encoding, tokenization, padding, freeze strategy, and last-token forward pass
 - [Padding Strategy — Classification vs Instruction Fine-Tuning](wiki/queries/padding-strategy-classification-vs-instruction.md) — Why classification pads to dataset max while instruction fine-tuning pads per batch; how to swap them
+- [Instruction Fine-Tuning — Template Consistency](wiki/queries/instruction-finetuning-template-consistency.md) — Why training and inference templates must be identical; token-pattern reflex explained with training/inference examples and the dog analogy
 - [SpamDataset — Truncation and Padding Lines Explained](wiki/queries/spamdataset-truncation-padding-lines.md) — What the two encoded_texts lines do; why truncation comes first; why the crash is in DataLoader not the model; model accepts any length up to 1024
 
 ## Concepts
@@ -100,11 +101,12 @@
 - [Classification Fine-Tuning Strategy — What to Freeze and What to Train](wiki/queries/classification-finetuning-strategy.md) — train final head+block+norm; freeze all other 11 blocks; reasons for each
 - [SpamDataset — Classification Fine-Tuning Dataset Implementation](wiki/queries/spam-dataset-implementation.md) — PyTorch Dataset pattern: tokenize → truncate → pad → tensor; max_tokens consistency across splits
 - [Train vs Val vs Test Split](wiki/queries/train-val-test-split.md) — Model trains on train only; val guides human decisions (indirect leakage); test is final unbiased eval
-- [Instruction Fine-Tuning — Collate Padding Trick (batch_max_length +1)](wiki/queries/instruction-finetuning-collate-padding-trick.md) — pad to max_len+1; inputs=padded[:-1], targets=padded[1:]; extra token becomes last target position
-- [Instruction Fine-Tuning — Data Preparation Pipeline (5 Steps)](wiki/queries/instruction-finetuning-data-pipeline.md) — format → tokenize → pad → shift target left+append 50256 → replace padding with -100
-- [Instruction Fine-Tuning — Training Mechanics (Padding, Shift, Loss Masking)](wiki/queries/instruction-finetuning-training-mechanics.md) — dynamic padding, target=input+1, loss masked on instruction; only response tokens graded
 - [Instruction Fine-Tuning — Data Format (Instruction + Desired Response)](wiki/queries/instruction-finetuning-data-format.md) — Training pairs of (instruction, desired response); loss on response only; contrast with classification fine-tuning
-- [Instruction Fine-Tuning — Prompt Format (Alpaca and Others)](wiki/queries/instruction-finetuning-prompt-format.md) — No universal standard; Alpaca template popularized but training/inference format must match
+- [Instruction Fine-Tuning — Prompt Format (Alpaca and Others)](wiki/queries/instruction-finetuning-prompt-format.md) — Alpaca template: 3 fields (instruction/input/response); delimiters are plain text strings not special tokens; training format must match inference
+- [Instruction Fine-Tuning — Data Preparation Pipeline (5 Steps)](wiki/queries/instruction-finetuning-data-pipeline.md) — format (3 fields) → tokenize → pad+1 → shift → mask; common misunderstandings table
+- [Instruction Fine-Tuning — Collate Padding Trick (batch_max_length +1)](wiki/queries/instruction-finetuning-collate-padding-trick.md) — pad to max_len+1; inputs=padded[:-1], targets=padded[1:]; order of operations: max_length first, stop token second
+- [Instruction Fine-Tuning — Training Mechanics (Padding, Shift, Loss Masking)](wiki/queries/instruction-finetuning-training-mechanics.md) — dynamic padding, target=input+1, loss masked on padding; instruction tokens not masked in reference impl
+- [Instruction Fine-Tuning — Why Only Targets Are Masked (Not Inputs)](wiki/queries/instruction-finetuning-why-only-targets-masked.md) — inputs → model forward pass; targets → loss; -100 = excluded from loss, gradient, and weight update entirely
 - [Dropout During Fine-Tuning — Why Set drop_rate=0.0](wiki/queries/dropout-during-finetuning.md) — Dropout noise averages out at pretraining scale (~10⁹ looks) but not at fine-tune scale (~10⁴); turn it off when mostly-frozen + small data
 - [How do we evaluate LLMs? (MMLU & comparison strategy)](wiki/queries/llm-evaluation-mmlu.md) — Breadcrumb: 3 evaluation methods; MMLU structure; fair comparison = same-size models
 - [[optimizer-zero-grad]] — why zero_grad is needed each training step; gradient accumulation pattern

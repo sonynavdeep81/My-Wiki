@@ -64,6 +64,7 @@ Canonical reading order. Each stage builds on the previous.
 
 ## Stage 7: Evaluation & Scaling
 
+- [[LLM Evaluation]]
 - [[Perplexity]]
 - [[BLEU Score]]
 - [[Ablation Study]]
@@ -116,11 +117,13 @@ Q&A files in the order they should be read — each group assumes the previous g
 - [[spamdataset-truncation-padding-lines]] — truncation then padding; why order matters; crash is in DataLoader not model; model accepts any length up to 1024
 - [[classification-finetuning-strategy]] — what to freeze and what to train for classification
 - [[dropout-during-finetuning]] — why drop_rate=0.0 during partial fine-tuning
-- [[instruction-finetuning-data-format]] — instruction + response pair format
-- [[instruction-finetuning-prompt-format]] — Alpaca and other prompt templates
-- [[instruction-finetuning-data-pipeline]] — 5-step data preparation pipeline
-- [[instruction-finetuning-collate-padding-trick]] — batch_max_length +1 padding trick
-- [[instruction-finetuning-training-mechanics]] — dynamic padding, loss masking, instruction tokens
+- [[instruction-finetuning-data-format]] — instruction + response pair format; why model sees both sides; contrast with classification FT
+- [[instruction-finetuning-prompt-format]] — Alpaca template: 3 fields, delimiters are plain text strings; training format must match inference
+- [[instruction-finetuning-template-consistency]] — why templates must match at training and inference; dog analogy; Colab quick-reference bullets
+- [[instruction-finetuning-data-pipeline]] — 5-step pipeline with 3-field correction and common misunderstandings table
+- [[instruction-finetuning-collate-padding-trick]] — +1 padding trick; max_length computed first, stop token appended second
+- [[instruction-finetuning-training-mechanics]] — dynamic padding, loss masking; instruction tokens not masked in reference impl
+- [[instruction-finetuning-why-only-targets-masked]] — inputs → model; targets → loss; -100 = excluded from loss, gradient, and weight update
 
 ---
 

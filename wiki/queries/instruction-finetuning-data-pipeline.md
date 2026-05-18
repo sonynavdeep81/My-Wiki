@@ -24,14 +24,17 @@ Unlike classification fine-tuning where each input is a short text and the targe
 
 ## Step 1 — Format Using a Prompt Template
 
-Each raw (instruction, response) pair is wrapped in a template. The most common is the Alpaca format:
+Each raw entry has three fields: `instruction`, `input` (optional), and `output`. These are wrapped in the Alpaca template:
 
 ```
 ### Instruction:
-Convert 45 kilometers to meters.
+{instruction}
+
+### Input:
+{input}           ← omit this block entirely if input is empty
 
 ### Response:
-45 kilometers is 45,000 meters.
+{output}
 ```
 
 This adds delimiters that the model learns to recognize as task boundaries. At inference time, you provide everything up to and including `### Response:` and the model continues from there.
@@ -125,6 +128,18 @@ Step 4: Shift to create targets
 Step 5: Mask padding in targets
   targets: [  318, 281, ..., 50256,  -100,  -100,  -100]
 ```
+
+---
+
+## Common Misunderstandings
+
+| Mistake | Correction |
+|---|---|
+| Tokenize raw entry without wrapping | Always wrap in template first |
+| Think it's 2 fields (instruction + response) | It's 3 fields: instruction, input (optional), response |
+| Pad to `max_length` | Pad to `max_length + 1` (the +1 is for the shift) |
+| Stop token added in Dataset | Stop token is appended in `custom_collate`, not `InstructionDataset` |
+| Mask all 50256s in targets | Keep first 50256 as real EOS target; mask only the rest |
 
 ---
 

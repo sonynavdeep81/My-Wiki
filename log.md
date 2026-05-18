@@ -1,3 +1,74 @@
+## [2026-05-18] refactor | Consolidate instruction fine-tuning query files
+
+- Merged 5 files into existing files to reduce redundancy: 12 → 7 query files
+- three-fields-and-delimiters → absorbed into instruction-finetuning-prompt-format
+- template-training-vs-inference → absorbed into instruction-finetuning-template-consistency (Colab bullets added)
+- dataset-creation-steps → absorbed into instruction-finetuning-data-pipeline (misunderstandings table added)
+- collate-max-length-order → absorbed into instruction-finetuning-collate-padding-trick (order-of-operations section added)
+- ignore-index-explained → absorbed into instruction-finetuning-why-only-targets-masked (full -100 chain added)
+- Updated learning-path.md and index.md
+
+## [2026-05-18] query | Instruction Fine-Tuning — How ignore_index (-100) Works
+
+- Filed wiki/queries/instruction-finetuning-ignore-index-explained.md (format artifact)
+- -100 positions: loss not computed, gradient not computed, weights not updated; excluded not zeroed
+- Added to learning-path.md Group F and index.md
+
+## [2026-05-18] query | Instruction Fine-Tuning — Why Only Targets Are Masked (Not Inputs)
+
+- Filed wiki/queries/instruction-finetuning-why-only-targets-masked.md (format artifact)
+- inputs → model forward pass (no masking needed); targets → loss function (-100 = ignore_index)
+- Added to learning-path.md Group F and index.md
+
+## [2026-05-18] query | Instruction Fine-Tuning — custom_collate Order of Operations
+
+- Filed wiki/queries/instruction-finetuning-collate-max-length-order.md (format artifact)
+- Code computes max_length first (with +1 trick), then appends stop token — diagram is correct
+- Corrects earlier assumption that stop token should be appended before measuring length
+- Added to learning-path.md Group F and index.md
+
+## [2026-05-18] query | Instruction Fine-Tuning — Dataset Creation Steps (Corrected)
+
+- Filed wiki/queries/instruction-finetuning-dataset-creation-steps.md (format artifact)
+- 5-step pipeline with corrections: template wrap before tokenizing; pad to max+1; shift; mask only from second 50256
+- Added to learning-path.md Group F (after instruction-finetuning-training-mechanics) and index.md
+
+## [2026-05-18] query | Instruction Fine-Tuning — Template at Training vs Inference (Worked Example)
+
+- Filed wiki/queries/instruction-finetuning-template-training-vs-inference.md (format artifact)
+- Side-by-side training/inference example; shows exactly what breaks when delimiter changes
+- Added to learning-path.md Group F (after instruction-finetuning-template-consistency) and index.md
+
+## [2026-05-18] query | Instruction Fine-Tuning — Three-Field Template and Delimiter Strings
+
+- Filed wiki/queries/instruction-finetuning-three-fields-and-delimiters.md (breadcrumb)
+- Alpaca template has 3 fields: instruction/input/response; delimiters are plain text strings not special tokens
+- Added to learning-path.md Group F (after instruction-finetuning-prompt-format) and index.md
+
+## [2026-05-18] query | Instruction Fine-Tuning — Template Consistency
+
+- Filed wiki/queries/instruction-finetuning-template-consistency.md
+- Explains why training and inference templates must be identical; token-pattern reflex with side-by-side examples
+- Added to learning-path.md Group F and index.md
+
+## [2026-05-17] lint | Wiki Lint (run 8)
+
+- 4 genuine broken wikilinks: research-p3-sparse-lora, ingest-workflow, wikilinks, wiki-structure
+- 7 backslash typos in wikilinks (\ instead of |)
+- 0 orphan concept pages (initial report of 5 was false positive — all are linked)
+- 1 contradiction flag: instruction-fine-tuning masked vs unmasked tokens — correctly tagged [contested], no fix needed
+- Gap files directory empty — 5 gaps tracked in learning-path.md § Gaps only
+- Learning path: llm-evaluation.md was missing from Stage 7 — added; index updated to 40 concepts, 5 gaps
+- Filed: wiki/lint/lint-2026-05-17.md
+
+## [2026-05-17] ingest | classification_fine_tuning.py (re-ingested, updated)
+
+- No conflicts with existing wiki
+- Added: num_batches parameter rationale and usage pattern (10/20/None) to source page
+- Added: out_head (768,2) vs (768,1) design note
+- Added: .to(device) inference note
+- Added: optimizer re-definition artifact note in checkpoint resume section
+
 ## [2026-05-16] ingest | classification_fine_tuning.py (updated)
 
 - Conflict resolved: context_length corrected 256 → 1024 in source page and context-length-assert query

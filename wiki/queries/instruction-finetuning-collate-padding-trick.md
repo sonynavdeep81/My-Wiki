@@ -118,6 +118,23 @@ After -100:   [B,  C,  D,  50256,  -100,  -100]        ← loss computed only he
 
 ---
 
+## Order of Operations — max_length First, Stop Token Second
+
+A natural instinct is: append the stop token first, then measure max_length. The code does the opposite:
+
+```python
+# Step 1: max_length computed BEFORE stop token is appended
+max_length = max([len(item)+1 for item in batch])  # +1 pre-accounts for the stop token
+
+# Step 2 (inside loop): stop token appended AFTER max_length is known
+item += [pad_token_id]
+padded = item + [pad_token_id] * (max_length - len(item))
+```
+
+The `+1` folds the stop token into the max computation in one pass — avoiding a second loop over the batch. Both orderings give the same result; the code uses the compute-first approach for efficiency. The diagram is correct as drawn.
+
+---
+
 ## Related
 
 - [[instruction-finetuning-data-pipeline]]
