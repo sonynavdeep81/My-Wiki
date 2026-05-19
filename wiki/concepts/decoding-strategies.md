@@ -84,11 +84,13 @@ GPT-2 has no padding concept by design. For batched inference with inputs of dif
 model.eval()
 with torch.no_grad():
     for _ in range(max_length):
-        logits = model(token_ids)[:, -1, :]          # (batch, vocab)
+        logits = model(token_ids[:, -context_size:])[:, -1, :]  # sliding window
         top_values, _ = torch.topk(logits, k=top_k)
-        logits[logits < top_values[:, -1:]] = -inf
+        logits[logits < top_values[:, -1:]] = -inf              # [:, -1:] keeps dim for correct broadcast
         probs = torch.softmax(logits / temperature, dim=-1)
         next_token = torch.multinomial(probs, num_samples=1)
+        if next_token.item() == 50256:                          # .item() → plain int comparison
+            break
         token_ids = torch.cat([token_ids, next_token], dim=-1)
 ```
 

@@ -1,3 +1,17 @@
+## [2026-05-19] ingest | Re-updated raw/instruction_fine_tuning.py (2nd revision)
+
+- V1 generate() now has context_size sliding window + unsqueeze(-1) fix incorporated; only missing EOS stop + return
+- V2 generate() confirmed fully correct; model_device defined inside function
+- Evaluation: all test_data responses generated (tqdm loop), judge on first 10 only; safety guard for missing ### Response:; time.sleep(0.5) rate limit
+- Updated: wiki/sources/instruction_fine_tuning.md, wiki/concepts/instruction-fine-tuning.md
+
+## [2026-05-19] ingest | Updated raw/instruction_fine_tuning.py
+
+- Updated: wiki/sources/instruction_fine_tuning.md — two generate() versions (V1 buggy → V2 fixed), Groq vs LLaMA explanation block, evaluation section updated
+- Updated: wiki/concepts/instruction-fine-tuning.md — EOS + context_size section rewritten with both fixes (.item(), sliding window)
+- Updated: wiki/concepts/decoding-strategies.md — full generation loop now includes sliding window and .item() EOS check
+- No significant conflicts found; changes are additive
+
 ## [2026-05-18] refactor | Consolidate instruction fine-tuning query files
 
 - Merged 5 files into existing files to reduce redundancy: 12 → 7 query files

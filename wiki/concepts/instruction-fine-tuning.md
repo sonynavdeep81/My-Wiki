@@ -91,15 +91,24 @@ If tokenized full text > `context_length`, slicing `[:context_length]` may cut i
 
 Two loss trackers: `running_train/val_batch_losses` (batch-level) + `train/val_losses` (epoch-level). Two plots: intermediate batch chart + final epoch chart.
 
-## EOS Stop Token in generate()
+## EOS Stop Token and Context Window in generate()
 
 **[notebook]** After fine-tuning, the model emits token 50256 (`<|endoftext|>`) to signal end of response — this is correct behavior (it was trained this way). Without stopping at EOS, the model continues hallucinating new prompts after the response.
 
-Fix: add stop check inside generate loop:
-```python
-if next_token_id == 50256:
-    break
-```
+Three bugs in V1; V2 fixes all of them:
+
+| Bug | V1 | V2 |
+|---|---|---|
+| Context window | `model(token_ids[:, -context_size:])` present | same |
+| Broadcasting | `min_val = top_values[:, -1].unsqueeze(-1)` present | same |
+| EOS stop | missing — hallucinates after response | `if next_token_id.item() == 50256: break` |
+| Return value | missing — only `print(tokens)` | `return tokens` |
+
+Note: context_size and unsqueeze fixes were incorporated into V1 in the updated notebook (2026-05-19) — V1's only remaining bugs are missing EOS stop and missing `return`.
+
+- Without EOS stop: model continues generating new prompts after response ends
+- Without `return`: caller cannot use the generated text
+- `model_device` also moved inside V2 function for self-containment
 
 ## LLM-as-Judge Evaluation
 
