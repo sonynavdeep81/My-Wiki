@@ -85,6 +85,3 @@ The wiki is designed to grow — concept pages are the infrastructure that makes
 ---
 
 ## Related
-
-- [[wiki-structure]]
-- [[ingest-workflow]]

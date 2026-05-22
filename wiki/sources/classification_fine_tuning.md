@@ -3,7 +3,7 @@ title: Classification Fine-Tuning (Python)
 type: source
 tags: [fine-tuning, classification, spam, pytorch, gpt2, freeze, SpamDataset, checkpoint]
 sources: 1
-updated: 2026-05-16
+updated: 2026-05-17
 ---
 
 ## Classification Fine-Tuning (Python)
@@ -74,7 +74,30 @@ for param in model.final_norm.parameters():
 ```
 
 - `bias=True` on out_head — required for convergence; `bias=False` silently kills learning
+- `(768, 2)` kept intentionally over `(768, 1)` — binary works with 1 output but 2-class generalizes to multi-class with no code change
 - Unfreeze last block: preserves general features in lower layers; fine-tunes task-specific representations at top
+
+## `num_batches` Parameter — Approximate Accuracy During Training
+
+`cal_accuracy_loader` accepts an optional `num_batches` argument to control how many batches are evaluated:
+
+- `num_batches=None` → evaluates the entire dataset (true accuracy); used at the **end of training**
+- `num_batches=10` → used for a quick pre-training baseline check
+- `num_batches=20` → used inside the training loop (per epoch) for a fast approximate signal
+
+**Why approximate?** `cal_accuracy_loader` is called after every epoch. Evaluating the full dataset each time is slow. A partial evaluation (20 batches = 160 samples at batch_size=8) is enough to confirm training is progressing — exact accuracy is only needed at the final evaluation.
+
+```python
+# Pre-training check (fast)
+train_accuracy = cal_accuracy_loader(train_loader, model, device, num_batches=10)
+
+# During training loop (per epoch, fast approximate)
+val_accuracy = cal_accuracy_loader(val_loader, model, device, num_batches=20)
+
+# After training (true accuracy on full dataset)
+train_accuracy = cal_accuracy_loader(train_loader, model, device, num_batches=None)
+test_accuracy  = cal_accuracy_loader(test_loader,  model, device, num_batches=None)
+```
 
 ## Classification Forward Pass
 
@@ -145,6 +168,7 @@ for epoch in range(epochs_seen[-1], epochs_seen[-1] + 5):
 
 - Architecture + freeze must be re-applied **before** `load_state_dict` — the state dict only holds weights, not structure
 - Resume lr reduced to `1e-5` (was `5e-5`) — fine-tuning further from a good checkpoint
+- **Note:** the notebook also re-defines `optimizer` at `lr=5e-5` (line 590) immediately after loading the checkpoint optimizer state — this overwrites the loaded state; appears to be a notebook experiment artifact, not standard practice
 
 ## Inference
 
@@ -171,6 +195,7 @@ print(LABEL_MAP[predicted])
 ```
 
 - `unsqueeze(0)` adds the batch dimension (model expects `(batch, seq_len)`)
+- `.to(device)` on the padded tensor is required — model is on GPU; forgetting this raises a device mismatch error
 - `outputs[-1, :]` picks the last token's logits — same as training forward pass
 - `LABEL_MAP` reverses the integer encoding back to human-readable label
 

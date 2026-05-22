@@ -1,209 +1,46 @@
-# LLM Wiki — Schema & Rules
+# LLM Wiki — Schema & Rules (core)
+
+Loaded every turn — kept lean. Verbose templates live in `wiki/schema/` (loaded on demand). Generic session / token-hygiene / model-handoff rules: `~/.claude/CLAUDE.md` (global). Every rule here is mandatory.
+
+## Session start
+Read `STATE.md` first (focus, last decision, next action); keep it current per the global rule.
 
 ## Purpose
+Personal research wiki on "LLM internals and NLP" — based on Raschka, *Build a Large Language Model (From Scratch)* (2025) + the user's own code notebooks. The LLM writes/maintains all `wiki/` files.
 
-This is a personal research wiki on "LLM internals and NLP".
-The LLM writes and maintains all files in wiki/. I rarely edit them directly.
+## Directory structure
+- `raw/` → immutable sources, never modify
+- `wiki/concepts/` (one per idea), `wiki/sources/` (one per source), `wiki/entities/` (people/tools/papers/models) → dense LLM notes
+- `wiki/queries/` → user-facing answers (breadcrumb or format-artifact — see On Query)
+- `wiki/lint/` → structural checks
+- `index.md` (catalog), `log.md` (append-only `## [YYYY-MM-DD] action | title`), `learning-path.md` (7-stage reading order + `## Gaps in This Path`), `STATE.md` (session pointer)
 
-## Directory Structure
+## On Ingest ("ingest raw/file.md")
+1. Read source. 2. **Before writing: compare new claims vs existing concept pages; report conflicts with severity (minor/significant) + a reasoned position. Never silently resolve.** 3. Discuss takeaways briefly. 4. `wiki/sources/[file].md` (summary + key points + backlinks). 5. Create/update `wiki/concepts/*` — set `confidence:` + `verified_against:`; add inline `[well-established]`/`[contested]`/`[single-source]` tags. 6. Create/update `wiki/entities/*`. 7. Gap tracking: add bullets under the right stage in `learning-path.md § Gaps in This Path`; promote/remove filled gaps. 8. Update learning-path stage placements. 9. Update `index.md`. 10. Append `log.md`.
 
-- raw/ → immutable source documents. Never modify these.
-- wiki/concepts/ → concept articles (one per key idea)
-- wiki/sources/ → summary per raw source
-- wiki/entities/ → people, tools, papers, models
-- wiki/queries/ → saved Q&A outputs
-- wiki/lint/ → lint run outputs (structural checks only)
-- index.md → master catalog with one-line summary per page
-- log.md → append-only log, format: ## [YYYY-MM-DD] action | title
-- learning-path.md → canonical reading order across all concept pages
+## On Query
+1. `index.md` → relevant pages → read fully. 2. Synthesize with `[[wikilink]]` citations. 3. **Source transparency — label at the claim level:** `[book]` Raschka 2025 / `[notebook]` user code (`gpt2_decoder.py`, `classification_fine_tuning.py`, `instruction_fine_tuning.py`) / `[wiki]` / `[general knowledge]` / `[web]`. Never batch-label whole paragraphs. 4. **If the answer adds depth beyond the concept page, update that page immediately** (don't wait for ingest). 5. Ask: "Should I file this as a wiki page?" If yes, pick type: **breadcrumb** (summary + links; depth lives in concept pages — default) or **format artifact** (full content; format is the value). Then insert into `## Query Reading Order` in `learning-path.md` in dependency order. Surface `[contested]`/`[single-source]` tags explicitly.
 
-## On Ingest (when I say "ingest raw/filename.md"):
+## On Lint ("lint the wiki")
+Structural health only (gaps handled by gap tracking). Orphans; broken wikilinks; resolved-contradiction review; open gaps in `learning-path.md § Gaps`; verify every concept page is placed in the path. Append to `wiki/lint/lint-[date].md`.
 
-1. Read the source carefully
-2. **Before writing anything:** compare new claims against existing concept pages. Report any conflicts to the user with severity (minor / significant) and a reasoned position on which claim is more likely correct. Never silently resolve conflicts.
-3. Discuss key takeaways with me briefly
-4. Create wiki/sources/[filename].md with summary + key points + [[backlinks]]
-5. Create or UPDATE wiki/concepts/\*.md for each concept found
-6. Create or UPDATE wiki/entities/\*.md for tools/people mentioned
-7. **Gap tracking:** for each topic the source mentions but doesn't explain deeply, add a bullet under the correct stage in `learning-path.md § Gaps in This Path`. If a new ingest fills an existing gap, remove that bullet and promote it to a real page entry.
-8. Update learning-path.md — insert new concept pages in the correct stage; remove newly filled gap bullets; add new gap bullets where needed
-9. Update index.md — add new pages, update summaries
-10. Append to log.md
-
-## On Query (when I ask a question):
-
-1. Read index.md to find relevant pages
-2. Read those pages fully
-3. Synthesize answer with [[wikilink]] citations
-4. **Source transparency:** Label every claim with its source at the sentence or claim level:
-   - **[book]** — Raschka "Build a Large Language Model (From Scratch)" 2025
-   - **[notebook]** — user's code files (gpt2_decoder.py, classification_fine_tuning.py, instruction_fine_tuning.py)
-   - **[wiki]** — existing wiki concept/query pages
-   - **[general knowledge]** — model training knowledge not from user's sources
-   - **[web]** — fetched from online during the session
-   Never batch-label whole paragraphs — label at the claim level where sources differ.
-5. **Concept page update:** if the answer added depth not already in the relevant concept pages, update those pages immediately — do not wait for an ingest.
-6. Ask me: "Should I file this answer as a wiki page?"
-7. If yes, choose the type:
-   - After filing, insert the new query into the correct position in the **Query Reading Order** section of `learning-path.md` — place it in the group whose prerequisite knowledge it assumes, in dependency order within that group.
-   - **Breadcrumb** — short summary + links to concept pages. Use when the answer draws from existing pages and the depth now lives there.
-   - **Format artifact** — full content kept. Use when the output format itself is the value (study notes, audience-specific explainer, structured comparison). Default to breadcrumb.
-
-## On Lint (when I say "lint the wiki"):
-
-Lint is a **structural health check only** — knowledge gap discovery is handled continuously by gap tracking on ingest.
-
-- Find orphan pages (no inbound links)
-- Find broken wikilinks (references to pages that don't exist)
-- Review open contradiction flags — check if any were resolved by recent ingests
-- Check `learning-path.md § Gaps in This Path` — list which gaps are still open
-- Check learning-path.md — verify all concept pages are placed; flag any missing
-- Append findings to wiki/lint/lint-[date].md
-
-## Format for wiki pages:
-
----
-
-title: [Page Title]
-type: concept | source | entity | query
-tags: [tag1, tag2]
-sources: [count]
-updated: [date]
-verified_against: [source-name, YYYY-MM-DD]   # concept pages only
-confidence: high | medium | low               # concept pages only
-
----
-
-## [Title]
-
-**Summary**: One sentence.
-
-[Main content with [[wikilinks]] to related pages]
-
-## Related
-
-- [[Page Name]]
+## Page frontmatter
+`title / type (concept|source|entity|query) / tags / sources / updated`; concept pages add `verified_against: [source, date]` + `confidence: high|medium|low`. Then `## Title`, `**Summary**: one sentence.`, body with `[[wikilinks]]`, `## Related`.
 
 ## On Notebooks (.ipynb)
-
-When reading or updating wiki entries for notebook sources:
-- **Never rely solely on context-mode indexing** — it misses sections whose headers use `##` instead of `**`
-- Always verify the full section structure by running: `jq -r '.cells[] | select(.cell_type=="markdown") | .source[0]' notebook.ipynb` or equivalent Python to list all markdown cell first lines
-- Only after confirming the real structure should you update the wiki
-- **When updating from a new version:** for every detail present in the old wiki, explicitly verify it still exists in the new notebook before keeping it — do not assume anything carried over
+Never trust context-mode indexing alone (misses `##`-header cells). Verify with `jq -r '.cells[]|select(.cell_type=="markdown")|.source[0]' nb.ipynb`. Updating from a new version: verify every old wiki detail still exists before keeping it.
 
 ## On Research Topic Suggestions
+Before proposing anything: (1) never propose from intuition — prior-work scan first; (2) min 4 searches/topic (exact keyword / near-synonym / venue-specific / negative-result); (3) report honestly, kill scooped topics; (4) each survivor: ≥2 contributions, feasible under the user's budget (GPU VRAM, time, single person), explicit prior-work delta citations, a named venue; (5) UGC-CARE / low-tier: reproduction-on-small-scale OK if reframed with citations; (6) **UGC-CARE verification mandatory** — verify against https://ugccare.unipune.ac.in, never trust the journal's own claim; (7) never propose unless confident it survives review ("don't want to repent after a month"); (8) output per topic: one-liner / prior-work scan + citations / novel delta / 2 contributions / feasibility numbers / target venue / confidence.
 
-Whenever I ask for research topics (any phrasing: "suggest topics", "give me ideas", "what could we publish", etc.), follow this process **before proposing anything**:
+## Learning Path
+`learning-path.md` = 7-stage reading order (Foundations → Transformer Internals → GPT-2 Architecture → Training Mechanics → Inference & Decoding → Fine-Tuning & Adaptation → Evaluation & Scaling) + `## Gaps in This Path`. Update placements on ingest; verify all pages placed on lint.
 
-1. **Do not propose topics from intuition alone.** Every proposed topic must pass a thorough web-search + prior-work scan first.
-2. **Scan required per topic (minimum 4 searches):**
-   - Exact keyword match ("X on small LMs", "Y placement comparison")
-   - Near-synonym search (terms the authors would actually use)
-   - Venue-specific search (arXiv 2024-2026, EMNLP/ACL/NeurIPS/ICLR, relevant journals)
-   - Negative-result / reproduction search (to check if the finding is already known)
-3. **Report findings honestly:** If a topic has prior work that covers the claimed contribution, say so and kill the topic. Do not paper over prior work with minor axis twists.
-4. **Each surviving topic must have:**
-   - At least 2 concrete contributions (method + empirical, or empirical + practical)
-   - Feasibility under the user's stated budget (GPU VRAM, time, single person)
-   - Explicit prior-work citations showing the novel delta
-   - A realistic target venue (name it; don't say "some journal")
-5. **Venue realism:** For UGC-CARE / low-tier Scopus / Indian journals, the novelty bar is lower — reproduction-on-small-scale is acceptable if reframed with explicit prior-work citations. State this positioning openly.
-6. **UGC-CARE verification (mandatory):** Never trust a journal's own website, Scopus listing, or any third-party site claiming UGC-CARE indexing. Always verify directly against the official UGC-CARE list at https://ugccare.unipune.ac.in. A journal claiming UGC-CARE status without appearing on that list must be treated as unverified and flagged to the user.
-7. **Never propose a topic if I am not confident it will survive peer review.** The user has said: "I don't want to repent later after a month of work." Treat every proposal as if the user will start work immediately.
-8. **Output format when proposing:** For each topic → (a) one-line summary, (b) prior-work scan summary with citations, (c) novel delta, (d) 2 contributions, (e) feasibility numbers, (f) target venue, (g) confidence rating.
+## Confidence tagging & staleness
+Inline `[well-established]`/`[contested]`/`[single-source]` on claims; surface during Q&A, never present uncertain claims as settled. `verified_against:` = source + date last checked; when a source changes/deletes, flag pages verified against it as stale.
 
-## Learning Path (learning-path.md)
-
-`learning-path.md` defines the pedagogical reading order across all concept pages in 7 stages: Foundations → Transformer Internals → GPT-2 Architecture → Training Mechanics → Inference & Decoding → Fine-Tuning & Adaptation → Evaluation & Scaling. It has a `## Gaps in This Path` section listing topics that belong in the sequence but have no page yet.
-
-- On every ingest: insert new concept pages in the right stage; remove filled gaps; add new gap placeholders
-- On every lint run: verify all concept pages appear somewhere in the path
-
-## On Slide Decks
-
-Deliver slide decks as a single `.md` file. Never generate .pptx, build scripts, or image exports.
-
-**Slide 1 is always a Cover slide** with this exact structure:
-
-```
-## Slide 1 — Cover
-
-# [Presentation Title]
-
-*[Subtitle]*
-
-**Dr. Navdeep Singh**
-ASSOCIATE PROFESSOR
-*Computer Science & Engineering · Punjabi University, Patiala*
-```
-
-**All other slides:**
-- Start with `## Slide N — Title`
-- Content in plain bullet points — easy to understand, not jargon-heavy
-- No tables ever
-- Write so external apps (Gamma, Gemini, Claude design, etc.) can render it into a visual deck
-
-When producing a slide deck based on wiki content, follow learning-path.md stage order. Skip any stage listed under `## Gaps in This Path` (silently).
-
-## Claim Confidence Tagging
-
-Facts in concept pages may carry inline confidence tags:
-- `[well-established]` — consensus across multiple sources
-- `[contested]` — sources disagree; flag the conflict
-- `[single-source]` — only one source supports this; treat with caution
-
-During Q&A, surface these tags explicitly rather than presenting contested claims flatly.
-
-## Last Verified Field
-
-Concept pages carry a `verified_against:` frontmatter field — the source name and date the page was last checked against a raw source. When a raw source is deleted or updated, treat all concept pages with `verified_against: [that source]` as potentially stale and flag them.
-
-## Markdown Rendering Conventions
-
-All wiki pages must render cleanly in **Obsidian** and **Markdown Preview Enhanced (VS Code)**. Follow these formatting rules everywhere:
-
-- **Math notation uses LaTeX, never backticks.**
-  - Inline math: `$...$` — e.g. write `$\gamma \cdot \hat{x} + \beta$`, not <code>\`γ · x̂ + β\`</code>
-  - Block math: `$$...$$` on its own lines — e.g. attention, normalization, loss formulas
-  - Keep formulas **KaTeX-compatible** (Obsidian and MPE both use KaTeX): stick to standard LaTeX commands; avoid `\begin{align}` (use `\begin{aligned}` inside `$$...$$` instead), avoid `\mathbb` for plain text, no custom macros.
-- **Backticks are for code only** — Python identifiers, function names, kwargs, file paths, config variables (`bias=True`, `emb_dim=768`, `torch.nn.GELU`). If the token names a variable in the codebase, it stays in backticks; if it is a mathematical symbol or formula, it becomes LaTeX.
-- **Greek letters and math symbols** ($\mu$, $\sigma$, $\gamma$, $\beta$, $\epsilon$, $\sqrt{}$, $\times$, $\approx$, $\rightarrow$, subscripts, superscripts) must be rendered via LaTeX — never raw Unicode inside backticks.
-- **Headings, bullets, and tables** stay clean Markdown — one `#` level per logical layer, hyphen bullets, GitHub-style pipe tables.
-- **ASCII diagrams, code blocks, and shape traces** are preserved verbatim — they are not math, do not LaTeX-ify them.
-- **Visual cleanliness:** blank line above/below block equations and tables; no trailing whitespace; one statement per line in math blocks.
-
-When updating existing files, convert genuine math expressions to LaTeX but leave code identifiers in backticks. When in doubt: if the symbol could appear in a paper, it is math; if it could appear in a Python source file, it is code.
-
-## Storage Format by File Type
-
-Different file types serve different readers — format accordingly:
-
-### wiki/concepts/ and wiki/sources/ — Dense (LLM reads these)
-- Use tables, bullet key:value pairs, code snippets
-- No prose padding, no analogies, no "think of it like..." sentences
-- The LLM reads these frequently to answer questions — maximum information per line
-- Cut any line that restates another
-
-### wiki/queries/ — Full readable articles (human reads these)
-- Write as a complete article from A to Z — simple, easy-to-understand language
-- Use examples, tables, code snippets with explanations
-- Explain the why, not just the what
-- A student should be able to read this file without asking any follow-up questions
-- Do NOT use dense shorthand — this file is for human revision, not LLM lookup
-
-### All file types — preserve as-is:
-- **ASCII diagrams** — keep exactly; they convey shape/flow/connections more densely than any alternative
-- **Code snippets** — already dense; do not paraphrase
-- **Shape traces and math** — already dense; do not paraphrase
-
----
+## Formatting, storage & slides
+Math = LaTeX (KaTeX-safe), backticks for code only; dense notes for concepts/sources/entities, readable articles for queries. Full rules: `wiki/schema/formatting.md`. Slide decks: single `.md`, cover + bullet slides, no tables — template `wiki/schema/slide-format.md`; follow learning-path order, skip `## Gaps` stages.
 
 ## On Self-Improvement
-
-**Auto-update `feature-menu.md`:** Whenever a new feature is added to this wiki (new workflow, new rule, new structural pattern), regenerate `feature-menu.md` immediately to reflect the current state.
-
-**Proactive suggestions:** Surface improvement ideas to the user proactively — do not wait to be asked. This covers two kinds:
-- **Weaknesses:** repeated gaps in the same area, stale concept pages, workflow friction, structural inconsistency.
-- **Positive improvements:** new features, richer examples, better structure, missing workflows, or anything that would make the wiki more useful — even if nothing is broken.
-Keep suggestions short: one sentence on the idea, one sentence on why it would help. Suggest occasionally, not on every session.
+Keep `feature-menu.md` current when a new feature/rule/pattern is added. Surface improvement ideas proactively (weaknesses + positive), one sentence each, occasionally.

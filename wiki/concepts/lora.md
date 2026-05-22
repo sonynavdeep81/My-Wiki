@@ -39,7 +39,7 @@ Trainable params: 2 × r × d per layer (vs d² for full fine-tuning).
 
 Original paper: Q and V projections only.
 Later work: also K, FFN layers — more coverage, more params.
-**Key open question**: which layers matter most varies by task → see [[research-p3-sparse-lora]] (P3 paper).
+**Key open question**: which layers matter most varies by task — varies by model and dataset.
 
 ## Variants
 
@@ -60,5 +60,4 @@ Later work: also K, FFN layers — more coverage, more params.
 
 - [[fine-tuning]]
 - [[gpt2-from-scratch]]
-- [[research-p3-sparse-lora]]
 - [[optimizer]]

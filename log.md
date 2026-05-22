@@ -575,3 +575,7 @@
 - Created wiki/queries/ablation-study-explained.md (full readable article in simple language): why ablation is mandatory, common confusions, practical tips, GPT-2-specific ablation table the user could run.
 - Added [[Ablation Study]] to learning-path.md Stage 7 (Evaluation & Scaling).
 - Added [[ablation-study-explained]] to Query Reading Order Group E (Evaluation).
+
+## [2026-05-22] restructure | token-efficiency rollout
+- Slimmed CLAUDE.md (209 -> ~60 lines); moved Markdown/storage/slide templates to wiki/schema/ (formatting.md, slide-format.md), loaded on demand. All behavioral rules preserved.
+- Added STATE.md (session resume pointer). Generic session/token/model-handoff rules now in global ~/.claude/CLAUDE.md.
