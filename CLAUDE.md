@@ -5,6 +5,12 @@ Loaded every turn — kept lean. Verbose templates live in `wiki/schema/` (loade
 ## Session start
 Read `STATE.md` first (focus, last decision, next action); keep it current per the global rule.
 
+## Dilemma rule
+When uncertain about scope, intent, or which file to touch — **ask rather than assume.** A one-line question is cheaper than a misdirected edit pass. If the answer is a durable insight, add it here.
+
+## Minimal file scope rule
+**Only touch files directly relevant to what the user asked.** No opportunistic cross-reference edits. Exceptions: broken links blocking the current task; `STATE.md` and `log.md` (always updated by convention).
+
 ## Purpose
 Personal research wiki on "LLM internals and NLP" — based on Raschka, *Build a Large Language Model (From Scratch)* (2025) + the user's own code notebooks. The LLM writes/maintains all `wiki/` files.
 
