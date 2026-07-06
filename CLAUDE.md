@@ -5,6 +5,12 @@ Loaded every turn — kept lean. Verbose templates live in `wiki/schema/` (loade
 ## Session start
 Read `STATE.md` first (focus, last decision, next action); keep it current per the global rule.
 
+## Wiki hygiene
+- Also read `LESSONS.md` at session start.
+- Every new file under `wiki/` must be linked in `index.md` in the same session it's created.
+- Run `./orphan-check.sh` and `./broken-link-check.sh` at session start and before every commit; fix anything found (some noise is expected on title-case display-name links — use judgment).
+- When corrected on a process mistake, append the rule to `LESSONS.md` immediately.
+
 ## Dilemma rule
 When uncertain about scope, intent, or which file to touch — **ask rather than assume.** A one-line question is cheaper than a misdirected edit pass. If the answer is a durable insight, add it here.
 
