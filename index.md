@@ -81,6 +81,7 @@
 - [Lint — 2026-04-24](wiki/lint/lint-2026-04-24.md) — 11 orphans fixed; 0 broken links in active pages; 3 gaps flagged
 - [Lint — 2026-04-18](wiki/lint/lint-2026-04-18.md) — 0 orphans; 1 broken link fixed (bleu-score backslash); 5 knowledge gaps persist (LoRA priority)
 - [Lint — 2026-05-05](wiki/lint/lint-2026-05-05.md) — 2 orphans, 2 raw files to re-check, 2 missing concept pages (Instruction Fine-Tuning, Cross-Entropy Loss)
+- [Lint — 2026-05-17](wiki/lint/lint-2026-05-17.md) — structural health check; genuine broken links found (research-p3-sparse-lora, ingest-workflow); capitalized display-name variants confirmed benign
 
 ## Queries
 - [Input Text to Output Tokens](wiki/queries/input-to-output-workflow.md) — End-to-end workflow with shape trace and ASCII diagram
